@@ -1,0 +1,66 @@
+/**
+ * Design tokens — the single source of truth for the visual system.
+ * Tailwind v4 reads this @theme block and generates matching utility
+ * classes (e.g. --color-brand → bg-brand, text-brand, border-brand).
+ *
+ * Nothing here encodes final brand decisions — swap the values once
+ * design direction is confirmed. Keep utility usage in components
+ * pointed at these tokens rather than raw hex/px values so a future
+ * rebrand is a one-file change.
+ */
+
+@theme {
+  /* ---- Color: neutral scale (placeholder, swap for brand palette) ---- */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f7f7f8;
+  --color-neutral-100: #eeeeef;
+  --color-neutral-200: #d8d8db;
+  --color-neutral-300: #b4b4ba;
+  --color-neutral-400: #8a8a92;
+  --color-neutral-500: #67676f;
+  --color-neutral-600: #4d4d54;
+  --color-neutral-700: #38383e;
+  --color-neutral-800: #222226;
+  --color-neutral-900: #131316;
+  --color-neutral-950: #0a0a0c;
+
+  /* ---- Color: brand (placeholder — replace once identity is set) ---- */
+  --color-brand: #2f5bff;
+  --color-brand-foreground: #ffffff;
+
+  /* ---- Color: semantic surfaces ---- */
+  --color-background: var(--color-neutral-0);
+  --color-foreground: var(--color-neutral-950);
+
+  /* ---- Typography ---- */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  /* ---- Motion ---- */
+  --ease-signature: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 200ms;
+  --duration-base: 400ms;
+  --duration-slow: 800ms;
+
+  /* ---- Layout ---- */
+  --container-content: 1280px;
+  --spacing-section: clamp(4rem, 8vw, 8rem);
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  * {
+    @apply border-neutral-200;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
