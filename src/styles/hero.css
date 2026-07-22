@@ -1,0 +1,2854 @@
+/**
+ * Hero section — v6 "premium enterprise" direction.
+ *
+ * Structural reference: greeting → headline → search on top, a big
+ * dot-matrix "25+" stat paired with a tabbed "What We Do"/"DFSA
+ * Resources" card carousel on the bottom. Background follows the
+ * 4-layer brief (oversized brand watermark, soft neutral gradient
+ * lighting, a barely-there dot texture, and slow ambient
+ * drift + mouse parallax) — kept deliberately colorless so the single
+ * forest-green accent still reads as the one deliberate pop of color,
+ * same restrained-accent idea as the last two rounds. Still a strict
+ * single-viewport (no scroll) composition.
+ */
+
+.hero-scope {
+  --hero-surface-dark: #10140f;
+  --hero-ink-rgb: 17, 22, 16;
+  --hero-cool-rgb: 100, 112, 128;
+  --hero-accent: #a31e2e;
+  --hero-accent-rgb: 163, 30, 46;
+  --hero-accent-soft: rgba(163, 30, 46, 0.12);
+  --hero-gold: #ae9867;
+  --hero-glass-bg: rgba(255, 255, 255, 0.12);
+  --hero-glass-bg-strong: rgba(255, 255, 255, 0.2);
+  --hero-glass-border: rgba(255, 255, 255, 0.26);
+  --hero-glass-border-strong: rgba(255, 255, 255, 0.48);
+  --hero-text-primary: #ffffff;
+  --hero-text-secondary: rgba(255, 255, 255, 0.8);
+  --hero-text-tertiary: rgba(255, 255, 255, 0.58);
+  --hero-text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.9), 0 2px 10px rgba(0, 0, 0, 0.6), 0 6px 26px rgba(0, 0, 0, 0.4);
+  --hero-text-on-dark: #f7f6f3;
+  --hero-text-on-dark-secondary: rgba(247, 246, 243, 0.62);
+  --hero-font-sans: var(--site-font-sans);
+  --hero-font-display: var(--site-font-display);
+  --hero-font-serif: var(--font-fraunces), Georgia, serif;
+  --hero-font-dot: var(--font-dot), monospace;
+  --hero-space-1: 6px;
+  --hero-space-2: 12px;
+  --hero-space-3: 18px;
+  --hero-space-4: 24px;
+  --hero-space-5: 32px;
+  --hero-radius-sm: 8px;
+  --hero-radius-md: 12px;
+  --hero-radius-lg: 16px;
+  --hero-radius-pill: 999px;
+  --hero-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --hero-dur-fast: 180ms;
+  --hero-dur-base: 400ms;
+  --hero-dur-slow: 800ms;
+  --hero-shadow-soft: 0 12px 28px -18px rgba(17, 22, 16, 0.13);
+  --hero-shadow-elevated: 0 24px 48px -20px rgba(17, 22, 16, 0.17);
+  background: radial-gradient(120% 100% at 20% 0%, #fafbfc 0%, #f6f7fa 55%, #eef0f4 100%);
+  color: var(--hero-text-primary);
+  height: 100dvh;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  font-family: var(--hero-font-sans);
+}
+
+/* Light-mode variant for testing a light/white background image
+   (hero bg 2.png) in place of the dark video — flips text + glass
+   tokens to dark-on-light so everything stays legible, and softens
+   the hardcoded white-tinted card/widget gradients that would
+   otherwise nearly disappear against a light image. Toggled from
+   HeroBackground.tsx's HERO_BG_MODE via Hero.tsx; switch that one
+   constant back to "video" to instantly restore the dark look. */
+.hero-scope.hero-scope--light-bg {
+  /* ~5% darker than the #fbf8f5 tried previously (each RGB channel
+     scaled by 0.95: 251,248,245 -> 238,236,233) per feedback, so the
+     white watermark + cards read with more contrast/prominence
+     against the page. */
+  background: #eeece9;
+  --hero-glass-bg: rgba(17, 22, 16, 0.05);
+  --hero-glass-bg-strong: rgba(17, 22, 16, 0.09);
+  --hero-glass-border: rgba(17, 22, 16, 0.14);
+  --hero-glass-border-strong: rgba(17, 22, 16, 0.26);
+  --hero-text-primary: #14161a;
+  --hero-text-secondary: rgba(20, 22, 26, 0.72);
+  --hero-text-tertiary: rgba(20, 22, 26, 0.52);
+  --hero-text-shadow: none;
+}
+/* The watermark's opacity swing (0.045–0.065) was tuned for the base
+   near-white gradient and all but disappeared here — a dedicated,
+   more visible drift range for this background instead of the base
+   hero-watermark-drift keyframe. */
+.hero-scope.hero-scope--light-bg .hero-watermark {
+  animation: hero-watermark-drift-visible 30s var(--hero-ease) infinite alternate;
+  /* Nudged down further still (was -56px) per follow-up feedback, so
+     the mark's top edge clears the search block by more room.
+     .hero-bg has overflow:hidden, so the extra bit that now sits
+     below the fold is simply cropped, not stretching the section. */
+  bottom: -100px;
+}
+/* logo.svg is a single flat file: the DFSA mark occupies roughly the
+   top ~72% of its height, with the "Dubai Financial Services
+   Authority" wordmark sat directly beneath it filling the rest. As a
+   background watermark, that wordmark reads as clutter/is legally
+   awkward once oversized — the header's own logo still carries the
+   full lockup with the wordmark intact, only this decorative
+   background copy needs it gone. A gradient mask (not a hard crop)
+   fades the mark's own bottom edge out smoothly right where the
+   wordmark begins, so it reads as an intentional soft fade rather
+   than a clipped-off image. */
+.hero-scope.hero-scope--light-bg .hero-watermark img {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 84%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 84%);
+}
+@keyframes hero-watermark-drift-visible {
+  from {
+    transform: translate(0, 0);
+    /* 0.8 (previous round) read as too strong per follow-up feedback —
+       dialed back to a lighter flat value, still comfortably visible
+       against the page background. Still pure white underneath
+       (filter: brightness(0) invert(1) on the base rule is untouched). */
+    opacity: 0.35;
+  }
+  to {
+    transform: translate(-14px, -12px);
+    opacity: 0.35;
+  }
+}
+/* The gradient blooms (Layer 2) are literal CSS gradients — explicitly
+   not wanted here, the background must read as a flat solid fill with
+   no gradient anywhere in it. Fully disabled for this theme (was
+   briefly made always-faintly-visible for some ambient movement, but
+   that reads as a soft gradient wash, which is exactly what's not
+   wanted). The watermark drift + dot-texture drift still provide the
+   "dynamic" movement without introducing any gradient shapes. */
+.hero-scope.hero-scope--light-bg .hero-bg-shape {
+  display: none;
+}
+.hero-scope.hero-scope--light-bg .hero-pub-widget {
+  background: #ffffff;
+  border: none;
+  box-shadow: 0 16px 32px -20px rgba(17, 22, 16, 0.18);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+/* Bottom info strip, Option 2 only — no boxed white pill, no border:
+   it should read as sitting directly on the page background, full
+   width, per feedback that this shouldn't look like a distinct card.
+   Option 1 keeps the white pill (needed for contrast against the
+   video). */
+/* Ticker is a sibling of .hero-content-grid now, not a child (see
+   Hero.tsx) — for Option 2, position:absolute (below) pins it to
+   .hero-main's own bottom edge regardless of how much space the rows
+   above take up, so it reads as genuinely fixed to the hero section's
+   bottom rather than wherever the content above happened to end. */
+.hero-scope.hero-scope--light-bg .hero-content-grid {
+  /* Top row (greeting/headline/search) is a fixed 60% per feedback;
+     the "What We Do" row is 1fr rather than a matching literal 20% so
+     it consumes *all* remaining space instead of leaving the ~20%
+     dead gap the literal 60%+20% version left unfilled — this is the
+     "height should be till the bottom of the page" fix, and it also
+     directly gives the bigger cards below (see .hero-service-card)
+     the real room they need. */
+  grid-template-rows: 60% 1fr;
+  /* Reserves clear space between the bottom row (stat + What We Do
+     cards) and the ticker below — the ticker itself carries no bottom
+     offset of its own (see bottom:0 below), so this margin is the
+     *only* thing keeping the two from overlapping/touching. */
+  margin-bottom: 56px;
+}
+.hero-scope.hero-scope--light-bg .hero-news-ticker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* Flush with the true bottom edge of the hero section — no bottom
+     margin/offset on the ticker itself per feedback; separation from
+     the content above comes entirely from .hero-content-grid's own
+     margin-bottom above. */
+  bottom: 0;
+  width: auto;
+  margin: 0;
+  background: transparent;
+  border: none;
+  border-top: 1px solid rgba(17, 22, 16, 0.08);
+  /* Matching border on the bottom edge too, per feedback — was
+     top-only before. */
+  border-bottom: 1px solid rgba(17, 22, 16, 0.08);
+  border-radius: 0;
+  box-shadow: none;
+  /* .hero-main's own 32px edge padding no longer applies once this is
+     absolutely positioned against it (left:0/right:0 reach its true
+     outer edge) — so this strip runs full device-width, with a
+     smaller 20px inset of its own so "Latest Publications" and the
+     marquee text don't literally touch the screen edge. */
+  padding-left: 20px;
+  padding-right: 20px;
+}
+/* Ticker's active tab ("Latest Publications" by default) — switched
+   from the red gradient pill to a plain black, fully-rounded pill.
+   Red is already doing double duty on the search area's mic/submit
+   button and the "25+" stat; a third red chip here read as
+   over-emphasized, per feedback. */
+.hero-scope.hero-scope--light-bg .hero-ticker-tab {
+  border-radius: var(--hero-radius-pill);
+}
+.hero-scope.hero-scope--light-bg .hero-ticker-tab.is-active {
+  background: rgb(var(--hero-ink-rgb));
+  box-shadow: none;
+}
+/* :not(.is-featured) so this doesn't clobber the featured card's own
+   accent-gradient background/border further down the sheet — a plain
+   class-selector specificity fight would otherwise let this win. */
+.hero-scope.hero-scope--light-bg .hero-service-card:not(.is-featured) {
+  background: #ffffff;
+  border: none;
+  box-shadow: 0 16px 32px -20px rgba(17, 22, 16, 0.18);
+}
+.hero-scope.hero-scope--light-bg .hero-service-card:not(.is-featured):hover {
+  background: #ffffff;
+  border: none;
+  box-shadow: 0 24px 48px -18px rgba(17, 22, 16, 0.26);
+}
+.hero-scope.hero-scope--light-bg .hero-service-card.is-featured {
+  border: none;
+}
+.hero-scope.hero-scope--light-bg .hero-pub-dot {
+  background: rgba(17, 22, 16, 0.22);
+}
+
+/* What We Do card row, Option 2 — square corners (no radius), a
+   shorter card (scaled down from the taller reference mockup), a
+   plain arrow nav with no circular chip, and a red "underline" under
+   every card's title that flips to white on hover/active (when the
+   card itself goes red), instead of a permanently-red one card. */
+.hero-scope.hero-scope--light-bg .hero-card-row-nav button {
+  width: auto;
+  height: auto;
+  border: none;
+  border-radius: 0;
+  color: rgb(var(--hero-ink-rgb));
+}
+.hero-scope.hero-scope--light-bg .hero-card-row-nav button:hover {
+  border-color: transparent;
+  color: var(--hero-accent);
+}
+.hero-scope.hero-scope--light-bg .hero-service-card {
+  border-radius: 16px;
+  /* Shorter boxes per feedback. A DEFINITE height (not just min-height)
+     is what actually shrinks them: the card row stretches its items to
+     fill its flex height, and stretch only applies when the cross size
+     is auto — so a fixed height opts out of the stretch and pins the
+     card to this height. Content floor is ~135px (20px pad + 40px icon
+     + 2-line title + underline + 20px pad), so this leaves a small,
+     even gap. */
+  height: 148px;
+  min-height: 0;
+  /* Uniform 20px padding on all sides per feedback (was 24px with a
+     40px+ bottom). The icon sits at the top and the title + underline
+     are pushed to the bottom via margin-top:auto on the title below,
+     so the layout no longer relies on an asymmetric bottom padding. */
+  padding: 20px;
+  justify-content: flex-start;
+}
+.hero-scope.hero-scope--light-bg .hero-service-card-icon {
+  width: 40px;
+  height: 40px;
+  /* Left-aligns the icon glyph within its own box instead of centering
+     it — centering could visually offset the icon from the title's
+     left edge below it, depending on how the glyph sits in its own
+     viewBox. */
+  justify-content: flex-start;
+}
+.hero-scope.hero-scope--light-bg .hero-service-card-title {
+  /* 14px so the longest two-line label ("Obtain or Manage your /
+     Authorisation / Registration") fits on two lines within the card's
+     ~167px text column — at 15px+ that second line overflows to a third
+     line. See ACTION_CARDS / splitTitle in ServiceCardRow.tsx. */
+  font-size: 14px;
+  line-height: 1.2;
+  /* Pushes the title (and the underline that flows right after it) to
+     the bottom of the card, with the icon left at the top — replaces
+     the old justify-content:space-between + big bottom-padding trick. */
+  margin-top: auto;
+  /* Always reserve exactly two lines so every card's title block is the
+     same height and lines up across the row, even for shorter titles. */
+  min-height: 2.4em;
+}
+.hero-scope.hero-scope--light-bg .hero-service-card:not(.is-featured):hover {
+  /* User-supplied hover image (public/images/Hover image.png — already
+     tinted in the brand red) instead of the flat accent-gradient this
+     used to be, per feedback. */
+  background: url("/images/Hover%20image.png") center / cover no-repeat;
+}
+.hero-scope.hero-scope--light-bg .hero-service-card:not(.is-featured):hover .hero-service-card-icon,
+.hero-scope.hero-scope--light-bg
+  .hero-service-card:not(.is-featured):hover
+  .hero-service-card-title {
+  color: #ffffff;
+}
+/* "What We Do" / "DFSA Resources" tabs — line/underline style instead
+   of the rounded pill-with-gradient-fill Option 1 uses. Per feedback:
+   plain black text, no rounded corners, no background chip — just an
+   underline (border-bottom) marking the active tab, which reads
+   cleaner and doesn't compete with the search bar / stat block for
+   red accent attention. */
+.hero-scope.hero-scope--light-bg .hero-card-tabs {
+  /* Wider than the base 8px — plain text tabs need more breathing
+     room between them than pill buttons did. */
+  gap: 22px;
+}
+.hero-scope.hero-scope--light-bg .hero-card-tab {
+  padding: 4px 0 8px;
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+}
+.hero-scope.hero-scope--light-bg .hero-card-tab.is-active {
+  color: rgb(var(--hero-ink-rgb));
+  background: none;
+  border-color: rgb(var(--hero-ink-rgb));
+  box-shadow: none;
+  text-shadow: none;
+}
+.hero-scope.hero-scope--light-bg .hero-card-tab:hover:not(.is-active) {
+  background: none;
+  border-color: rgba(var(--hero-ink-rgb), 0.3);
+  color: rgb(var(--hero-ink-rgb));
+}
+.hero-scope.hero-scope--light-bg .hero-card-row {
+  /* Matches the row-head's own 24px gap above (was 12px, shared with
+     Option 1) — keeps the "lands exactly in the gap" invariant intact
+     for the shadow-bleed trick (see the base rule) without touching
+     Option 1. */
+  padding-top: 24px;
+  margin-top: -24px;
+}
+.hero-scope.hero-scope--light-bg .hero-service-card-underline {
+  /* Flows directly beneath the title (title has margin-top:auto, so
+     the pair sits at the bottom of the card) instead of being
+     absolutely positioned — keeps a consistent gap under the title
+     regardless of the card's uniform 20px padding. */
+  align-self: stretch;
+  margin-top: 12px;
+  height: 2px;
+  background: var(--hero-accent);
+  /* Hidden at rest per feedback — the underline only reveals on
+     hover (and on the featured card), no longer a permanently-red
+     bar under every card. */
+  opacity: 0;
+  transition:
+    background 220ms var(--hero-ease),
+    opacity 220ms var(--hero-ease);
+}
+.hero-scope.hero-scope--light-bg .hero-service-card:hover .hero-service-card-underline,
+.hero-scope.hero-scope--light-bg .hero-service-card.is-featured .hero-service-card-underline {
+  /* White because the card's own background turns red (hover image /
+     featured accent) when the bar is revealed. */
+  background: #ffffff;
+  opacity: 1;
+}
+
+/* "25+" in the exact brand red supplied (distinct from --hero-accent,
+   which is tuned slightly differently elsewhere on the page). */
+.hero-scope.hero-scope--light-bg .hero-stat-block-number,
+.hero-scope.hero-scope--light-bg .hero-stat-block-plus {
+  color: #b3282e;
+}
+
+/* In Option 1 the service cards opt out of the row's stretch with a
+   DEFINITE 148px height (see the .hero-service-card rule further down),
+   so they sit top-aligned inside a taller row. Pin the news card to the
+   same height and top-align it too, otherwise align-items:stretch would
+   let it grow to the full row height and stand taller than the cards. */
+.hero-scope.hero-scope--light-bg .hero-news-card {
+  height: 148px;
+  align-self: flex-start;
+}
+
+/* Bigger label, deliberately broken across 2 lines (see the <br/> in
+   HeroStat.tsx) rather than left to wrap unpredictably — reads as an
+   intentional two-line label instead of an accidental overflow. */
+.hero-scope.hero-scope--light-bg .hero-stat-block-label {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* Search widget, Option 2 only — a plain pure-white card (not the
+   translucent glass recipe used elsewhere) with the exact drop
+   shadow supplied from Figma (X -1.07 / Y 31.45 / blur 49.36 /
+   spread 0 / #000 @ 9%), no border (the shadow alone gives it
+   definition against the light image), a narrower "compact" width,
+   and a grey pill around the category dropdown. Deliberately no
+   glow/tint or mic-button ripple here — kept plain per feedback. */
+.hero-scope.hero-scope--light-bg .hero-search-wrap {
+  max-width: 460px;
+}
+.hero-scope.hero-scope--light-bg .hero-search-shell {
+  background: #ffffff;
+  border: none;
+  box-shadow: -1.07px 31.45px 49.36px 0px rgba(0, 0, 0, 0.09);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  /* Base padding is 6px on every side; nudged just the right side up
+     by 4px (to 10px) so the mic button sits with a touch more room
+     from the pill's right edge, per feedback. */
+  padding-right: 10px;
+}
+.hero-scope.hero-scope--light-bg .hero-search-shell.is-focused {
+  background: #ffffff;
+  border: none;
+}
+/* Suggestions dropdown (trending/recent + publications) — pure white
+   to match the search bar itself, rather than the dark frosted-glass
+   panel meant for Option 1's video background. The open/close
+   transition already exists on the base rule below; this just fixes
+   the color so text stays legible against it. */
+.hero-scope.hero-scope--light-bg .hero-search-panel {
+  background: #ffffff;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: -1.07px 31.45px 49.36px 0px rgba(0, 0, 0, 0.09);
+}
+.hero-scope.hero-scope--light-bg .hero-result-item:hover {
+  background: rgba(179, 40, 46, 0.07);
+  color: #14161a;
+}
+.hero-scope.hero-scope--light-bg .hero-search-category-wrap {
+  background: rgba(17, 22, 16, 0.05);
+  border-right: none;
+  border-radius: var(--hero-radius-pill);
+  margin: 0 2px 0 0;
+}
+.hero-scope.hero-scope--light-bg .hero-search-category {
+  /* More generous than the previous pass — both the left/right
+     padding and the gap before the chevron read too tight. */
+  padding: 8px 32px 8px 18px;
+}
+.hero-scope.hero-scope--light-bg .hero-search-category-wrap svg {
+  right: 12px;
+}
+/* Option 2 dropped the Publications widget from the top row (see
+   Hero.tsx), freeing up the whole row's width — let the search bar
+   center within that full width rather than staying pinned to the
+   left edge of the now-unnecessarily-narrow text column. The
+   headline/greeting text itself is unaffected (still starts at the
+   left; only the search bar's own box is centered underneath it). */
+.hero-scope.hero-scope--light-bg .hero-top-block {
+  max-width: none;
+  /* Greeting + headline + search bar all centered together as one
+     block, per feedback — not just the search bar on its own. */
+  text-align: center;
+}
+.hero-scope.hero-scope--light-bg .hero-search-wrap {
+  margin-inline: auto;
+}
+.hero-scope.hero-scope--light-bg .hero-headline {
+  /* More breathing room between the two lines, and nudged down away
+     from the greeting above it, per feedback. */
+  line-height: 1.3;
+  margin-top: 14px;
+}
+.hero-scope.hero-scope--light-bg .hero-logo {
+  /* Option 2 now renders logo-color.svg (real maroon + gold brand
+     colors, see FloatingNav.tsx) directly against the light
+     background — no color-forcing filter needed, just a soft
+     drop-shadow for legibility. */
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.12));
+}
+
+/* ---- Option 2: same video background, Option 1's info/layout ----
+   Per feedback: keep Option 2's own video exactly as it is, but reuse
+   Option 1's structural layout (grid proportions, card sizing, the
+   ticker pinned to the hero's true bottom edge, no separate
+   Publications widget) instead of Option 2's original layout.
+   Deliberately NOT a copy of .hero-scope--light-bg's *colors* — that
+   variant redefines --hero-text-primary/--hero-glass-* to
+   dark-on-light values for a flat page background, which would be
+   unreadable directly over moving video footage. So this block only
+   touches structure/position/sizing. Everything that sits directly on
+   the video with no card behind it — greeting, headline — is simply
+   left alone, so it keeps inheriting the base .hero-scope's white
+   text + legibility shadow. The search bar, the "What We Do" cards,
+   and the ticker's own translucent white pill are also left alone
+   materially (only sized/positioned here) — all three already use the
+   site's frosted-glass recipe, which is exactly the "glassmorphism,
+   not opaque white" look asked for over video, so there's nothing to
+   override. The featured-news card (bottom-row left column) is always
+   an opaque white card regardless of theme, so it needs no color
+   treatment either — only its height, to match the shorter cards. */
+.hero-scope.hero-scope--video-v2 .hero-content-grid {
+  grid-template-rows: 60% 1fr;
+  margin-bottom: 56px;
+}
+/* Widget-less top row now centers the same way Option 1's does. */
+.hero-scope.hero-scope--video-v2 .hero-top-block {
+  max-width: none;
+  text-align: center;
+}
+.hero-scope.hero-scope--video-v2 .hero-search-wrap {
+  margin-inline: auto;
+}
+.hero-scope.hero-scope--video-v2 .hero-headline {
+  line-height: 1.3;
+  margin-top: 14px;
+}
+
+/* Ticker: Option 1's pinned-to-the-true-bottom-edge position and
+   full device-width sizing — but its own translucent white pill
+   background/border/shadow are kept as-is (not flattened to Option
+   1's fully transparent strip), since the ticker's item text is
+   always dark ink regardless of theme and needs that opaque backing
+   to stay legible directly over the video. Flattened to square
+   corners since a rounded pill sitting flush against the true screen
+   edge reads oddly. */
+.hero-scope.hero-scope--video-v2 .hero-news-ticker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  margin: 0;
+  border-radius: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+/* Plain black active-tab pill instead of the red gradient — purely a
+   style match for Option 1, no legibility concern either way since
+   both are opaque with white text. */
+.hero-scope.hero-scope--video-v2 .hero-ticker-tab.is-active {
+  background: rgb(var(--hero-ink-rgb));
+  box-shadow: none;
+  border-radius: var(--hero-radius-pill);
+}
+
+/* Card-row nav arrows: Option 1's plain-arrow structure (no circular
+   glass chip), colored white/legible instead of dark ink since these
+   sit directly on the video, not on a card. */
+.hero-scope.hero-scope--video-v2 .hero-card-row-nav button {
+  width: auto;
+  height: auto;
+  border: none;
+  border-radius: 0;
+  color: var(--hero-text-primary);
+}
+.hero-scope.hero-scope--video-v2 .hero-card-row-nav button:hover {
+  border-color: transparent;
+  color: var(--hero-accent);
+}
+
+/* "What We Do" cards: Option 1's sizing (16px corners, a shorter
+   fixed 148px height instead of the row's stretch, 20px padding,
+   bigger-but-still-compact 14px title) but deliberately NOT Option
+   1's opaque white fill — per feedback, these should stay
+   glassmorphism instead, matching the search bar's frosted-glass
+   material so the video shows blurred through the card rather than
+   being covered by a solid card. That glass recipe (tinted
+   translucent gradient + blur + saturate + soft border/glow, brighter
+   on hover) is already the site's base .hero-service-card styling —
+   simply not overriding its background/border/box-shadow/backdrop-
+   filter/hover/text-color here lets it apply untouched, same white
+   icon/title text every other video-legible element already uses.
+   :not(.is-featured) is only needed on the underline color below —
+   the featured card keeps its own opaque maroon-gradient background
+   regardless, unaffected by any of this. */
+.hero-scope.hero-scope--video-v2 .hero-service-card {
+  border-radius: 16px;
+  height: 148px;
+  min-height: 0;
+  padding: 20px;
+  justify-content: flex-start;
+}
+.hero-scope.hero-scope--video-v2 .hero-service-card-icon {
+  width: 40px;
+  height: 40px;
+  justify-content: flex-start;
+}
+.hero-scope.hero-scope--video-v2 .hero-service-card-title {
+  font-size: 14px;
+  line-height: 1.2;
+  margin-top: auto;
+  min-height: 2.4em;
+}
+.hero-scope.hero-scope--video-v2 .hero-card-row {
+  padding-top: 24px;
+  margin-top: -24px;
+}
+/* Hidden at rest, same as Option 1 — the underline only reveals on
+   hover (and on the featured card), not a permanently-visible bar.
+   Stays the brand-red accent throughout (not swapped to white on
+   hover here) since the hover state below is a light glass brighten,
+   not Option 1's dark hover-image photo, so red keeps working as
+   contrast. Only the featured card (its own opaque maroon-gradient
+   background) still needs the white swap. */
+.hero-scope.hero-scope--video-v2 .hero-service-card-underline {
+  align-self: stretch;
+  margin-top: 12px;
+  height: 2px;
+  background: var(--hero-accent);
+  opacity: 0;
+  transition:
+    background 220ms var(--hero-ease),
+    opacity 220ms var(--hero-ease);
+}
+.hero-scope.hero-scope--video-v2 .hero-service-card:hover .hero-service-card-underline {
+  opacity: 1;
+}
+.hero-scope.hero-scope--video-v2 .hero-service-card.is-featured .hero-service-card-underline {
+  background: #ffffff;
+  opacity: 1;
+}
+
+/* Featured-news card: matches the service cards' new shorter 148px
+   height (it's always an opaque white card regardless of theme, so
+   no color treatment needed, just this size/alignment match). */
+.hero-scope.hero-scope--video-v2 .hero-news-card {
+  height: 148px;
+  align-self: flex-start;
+}
+
+/* ---- Splash-to-hero handoff (both themes) ----
+   SplashLoader shows the real header logo large + a 0→100 count for a
+   fixed 3s (LOAD_MS), then the logo itself measures and animates
+   ("morphs") into the exact spot/size of the real header logo below —
+   see the getBoundingClientRect handoff in SplashLoader.tsx. That move
+   takes 900ms (MORPH_MS), landing at 3.9s, and the splash's own fade
+   (see .hero-splash's opacity transition above) finishes 500ms after
+   that, at 4.4s — everything below is timed to start at or after 4.4s
+   so it's never running underneath the still-opaque splash. (An
+   earlier version of the splash had a stray `transition-delay: 1s` on
+   `visibility` with no matching opacity fade to justify it, which held
+   the splash's opaque background onscreen for a full extra second
+   *after* it should've cleared — during which every one of these
+   entrance animations played out and finished while still hidden
+   behind it. By the time the splash actually lifted, everything was
+   already sitting at its final, static, "arrived" state — no motion
+   was visible even though the CSS had, technically, already run. Fixed
+   above; the delays below are re-timed to this corrected schedule.)
+
+   Rather than one block fading in all at once, each piece of hero
+   copy gets its own delay so they arrive one by one: header chrome,
+   then greeting, then headline, then the search bar, then the stat
+   and "What We Do" heading together, then each service card in its
+   own staggered turn (see the inline animationDelay in
+   ServiceCardRow.tsx), then the news ticker last.
+
+   .hero-navbar-center carries its own permanent
+   `transform: translateX(-50%)` (it's absolutely positioned and that's
+   what keeps it centered) — a naive `transform: translateY(...)` here
+   would *replace* that instead of adding to it (an element only ever
+   has one `transform` value), silently breaking both the centering and
+   the animation itself. It gets its own keyframe that folds the
+   translateX back in at every step; .hero-navbar-right has no
+   transform of its own so it can use the plain one. .hero-service-card
+   deliberately animates opacity only (see ServiceCardRow.tsx) — it
+   already uses `transform` for its own hover lift, and a permanently-
+   present `forwards`-filled animation on the same property would keep
+   "owning" transform afterward and silently block that hover effect. */
+.hero-scope .hero-navbar-center {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-22px);
+  animation: hero-nav-center-drop-in 950ms var(--hero-ease) 4.4s forwards;
+}
+.hero-scope .hero-navbar-right {
+  opacity: 0;
+  transform: translateY(-22px);
+  animation: hero-nav-drop-in 950ms var(--hero-ease) 4.4s forwards;
+}
+.hero-scope .hero-eyebrow-greeting {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: hero-content-rise-in 900ms var(--hero-ease) 4.65s forwards;
+}
+.hero-scope .hero-headline {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: hero-content-rise-in 900ms var(--hero-ease) 4.9s forwards;
+}
+/* Real bug fix: this used to animate `transform: translateY(24px)`
+   like its siblings above, via hero-content-rise-in. Any element with
+   a transform value other than "none" — even the harmless-looking
+   translateY(0) this settles on once the (forwards-filled) animation
+   ends — permanently creates its own stacking context. That silently
+   sealed the search results dropdown (.hero-search-panel, z-index:50)
+   and the category "All" dropdown (.hero-category-panel, z-index:30)
+   inside .hero-search-wrap's own local stacking order: their z-index
+   values could no longer compete against completely separate later
+   DOM siblings like the "What We Do" cards, which is exactly why both
+   dropdowns were rendering underneath that section instead of on top
+   of it. Opacity-only (matching the same fix already applied to
+   .hero-service-card above, for the analogous "transform ownership"
+   reason) avoids creating that stacking context at all. */
+.hero-scope .hero-search-wrap {
+  opacity: 0;
+  animation: hero-fade-in 900ms var(--hero-ease) 5.15s forwards;
+}
+.hero-scope .hero-stat-block,
+.hero-scope .hero-news-card {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: hero-content-rise-in 900ms var(--hero-ease) 5.4s forwards;
+}
+.hero-scope .hero-card-row-head {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: hero-content-rise-in 800ms var(--hero-ease) 5.4s forwards;
+}
+.hero-scope .hero-service-card {
+  opacity: 0;
+  animation: hero-fade-in 700ms var(--hero-ease) forwards;
+  animation-delay: calc(5.6s + var(--card-index, 0) * 110ms);
+}
+/* Applied once the user has switched tabs for the first time — see
+   ServiceCardRow.tsx. Tab switches remount a whole new card set, which
+   would otherwise replay the multi-second staggered delay above on
+   every click; this drops straight to a quick, undelayed fade instead. */
+.hero-scope .hero-service-card--settled {
+  opacity: 0;
+  animation: hero-fade-in 220ms var(--hero-ease) forwards;
+  animation-delay: 0s;
+}
+.hero-scope .hero-news-ticker {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: hero-content-rise-in 900ms var(--hero-ease) 5.6s forwards;
+}
+@keyframes hero-nav-center-drop-in {
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+@keyframes hero-nav-drop-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes hero-content-rise-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes hero-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-scope * {
+  box-sizing: border-box;
+}
+.hero-scope ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.hero-scope a {
+  color: inherit;
+  text-decoration: none;
+}
+/* Real bug fix: this reset used to be written as `.hero-scope button`
+   (1 class + 1 type = specificity 0,1,1), which is HIGHER than a
+   plain single-class button rule like `.hero-navbar-menu-btn` or
+   `.hero-search-submit` (0,1,0) — meaning this reset's own
+   `background: none` and `color: inherit` were silently beating those
+   buttons' own declared background/color, regardless of which came
+   later in the file. That's exactly what made the hamburger circle
+   (and, it turns out, the theme-toggle chip and the search submit
+   button) never actually render their intended background — this
+   reset was winning every time. Wrapping `button` in :where() drops
+   its contribution to specificity to zero, so the whole selector is
+   equivalent to a single class (0,1,0) again: still resets every
+   button's default browser chrome, but now a same-specificity,
+   later-declared button class correctly wins by normal source order,
+   the way it was always supposed to. */
+.hero-scope :where(button) {
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scope * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  /* The splash-to-hero handoff below still schedules its reveal via
+     animation-delay (kept in sync with LOAD_MS/MORPH_MS in
+     SplashLoader.tsx) — zero that out too, otherwise reduced-motion
+     users would sit looking at an empty hero for ~4s after the
+     (already-fast) splash has gone, waiting on a delay meant to
+     overlap with it. */
+  .hero-scope .hero-navbar-center,
+  .hero-scope .hero-navbar-right,
+  .hero-scope .hero-eyebrow-greeting,
+  .hero-scope .hero-headline,
+  .hero-scope .hero-search-wrap,
+  .hero-scope .hero-stat-block,
+  .hero-scope .hero-news-card,
+  .hero-scope .hero-card-row-head,
+  .hero-scope .hero-service-card,
+  .hero-scope .hero-news-ticker {
+    animation-delay: 0s !important;
+  }
+}
+
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-inline: var(--hero-space-5);
+  width: 100%;
+}
+.hero-skip-link {
+  position: fixed;
+  top: -60px;
+  left: 16px;
+  z-index: 1000;
+  background: rgb(var(--hero-ink-rgb));
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--hero-radius-sm);
+  font-weight: 600;
+  font-size: 14px;
+  transition: top var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-skip-link:focus {
+  top: 16px;
+}
+.hero-scope :focus-visible {
+  outline: 2px solid var(--hero-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ===================== SPLASH PAGE ===================== */
+/* Renders outside .hero-scope entirely (see page.tsx — SplashLoader is
+   a sibling of the Hero tree, not nested inside it), so it deliberately
+   does NOT use any var(--hero-*) token from .hero-scope's own custom
+   properties — those aren't in scope here. (An earlier version of this
+   file did reference them from these rules; an unresolved var() inside
+   an animation/transition shorthand invalidates the *entire* shorthand,
+   silently dropping the animation altogether — which is why the splash
+   previously looked empty: the logo/loader/label never actually faded
+   in, they just sat at their base opacity:0 forever. Every value below
+   is intentionally a literal, not a var(), to avoid that trap again.)
+
+   The splash page: the same colored brand logo used in the header
+   (see FloatingNav.tsx), shown large on a light surface, with a black
+   0→100 count running for LOAD_MS (~3s). Once that finishes, the logo
+   *itself* measures the real header logo's on-screen rect and animates
+   ("morphs") into it — a live FLIP, not a hand-tuned keyframe, so it
+   lands correctly at any viewport size, becoming the header's logo.
+   Everything else here (progress bar, percent, label) fades out of the
+   way while that happens — see SplashLoader.tsx. */
+.hero-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+  background: radial-gradient(120% 100% at 20% 0%, #ffffff 0%, #f7f7f8 55%, #eef0f4 100%);
+  opacity: 1;
+  /* Fades out (500ms) once React marks it hidden, and only then flips
+     to visibility:hidden — the delay here MUST match the opacity
+     duration exactly, otherwise the splash either vanishes with a hard
+     cut mid-fade, or (the bug this replaces) sits fully opaque on
+     screen for longer than intended, hiding the hero's own entrance
+     animations behind it until they've already finished running. */
+  transition:
+    opacity 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 500ms;
+}
+.hero-splash.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.hero-splash-logo {
+  display: block;
+  width: 200px;
+  height: auto;
+  opacity: 0;
+  /* Only opacity is animated here — transform is left free for the JS
+     morph below (an active "forwards"-filled animation on the same
+     property would otherwise pin transform and fight the transition). */
+  animation: hero-splash-logo-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 6px 22px rgba(17, 22, 16, 0.16));
+  will-change: transform;
+}
+@keyframes hero-splash-logo-in {
+  to {
+    opacity: 1;
+  }
+}
+.hero-splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  transition: opacity 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hero-splash--morphing .hero-splash-content {
+  opacity: 0;
+}
+.hero-splash-progress-track {
+  width: 200px;
+  height: 3px;
+  background: rgba(17, 22, 16, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+  opacity: 0;
+  animation: hero-splash-rise-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
+}
+@keyframes hero-splash-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-splash-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #000000;
+}
+.hero-splash-percent {
+  /* Brand sans (Niveau Grotesk) — not --font-dot, the pixelated
+     LCD-style numeral font used elsewhere for stat widgets. */
+  font-family: var(--site-font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #000000;
+  opacity: 0;
+  animation: hero-splash-rise-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+}
+.hero-splash-label {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(17, 22, 16, 0.45);
+  opacity: 0;
+  animation: hero-splash-rise-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-splash,
+  .hero-splash-content,
+  .hero-splash-logo,
+  .hero-splash-progress-track,
+  .hero-splash-percent,
+  .hero-splash-label {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+  }
+  .hero-splash {
+    transition-delay: 0s !important;
+  }
+}
+
+/* ===================== BACKGROUND — 4 LAYERS ===================== */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.hero-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Subtle scrim so white text stays legible over whatever the footage
+   is doing — darker toward the bottom/left where most of the text
+   and cards sit, fading to nearly nothing elsewhere so the video
+   itself stays the star, not washed out by a flat overlay. */
+.hero-bg-video-scrim {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(8, 10, 8, 0.32);
+  background-image:
+    linear-gradient(180deg, rgba(8, 10, 8, 0.1) 0%, rgba(8, 10, 8, 0.5) 100%),
+    linear-gradient(90deg, rgba(8, 10, 8, 0.38) 0%, rgba(8, 10, 8, 0) 55%);
+  pointer-events: none;
+}
+/* Light variant — used by Option 1 (decorative) now that its header
+   footage sits behind dark-on-light text. Washes the video toward the
+   page's light base so the greeting/headline/search and the white
+   cards keep their contrast, strongest at the bottom where the stat +
+   card row live. Tune the opacities here if the footage needs to read
+   more (lower) or the text needs more contrast (higher). */
+.hero-bg-video-scrim--light {
+  background-color: rgba(240, 239, 234, 0.14);
+  background-image:
+    linear-gradient(180deg, rgba(240, 239, 234, 0.05) 0%, rgba(240, 239, 234, 0.34) 100%),
+    linear-gradient(90deg, rgba(240, 239, 234, 0.28) 0%, rgba(240, 239, 234, 0) 55%);
+}
+
+/* Static-image test mode (see HERO_BG_MODE in HeroBackground.tsx) —
+   Next's fill prop handles position/inset/width/height, this just
+   needs object-fit so the image covers the frame like the video does. */
+.hero-bg-image {
+  object-fit: cover;
+}
+
+/* Wrapper that receives the JS mouse-parallax transform (Layer 4) */
+.hero-bg-parallax {
+  position: absolute;
+  inset: -20px;
+  transition: transform 600ms var(--hero-ease);
+  will-change: transform;
+}
+
+/* Layer 1: oversized brand watermark — the logo turned solid white,
+   extremely large, bottom-and-horizontally-centered. The base
+   background is a light cool gray (not pure white), so a white shape
+   at low opacity reads as a faint embedded brightening rather than
+   needing a shadow trick to be perceivable. Kept behind everything
+   (z-index 0) and allowed to show softly through the search bar /
+   cards above via their own translucency.
+   Centering uses left:0/right:0/margin-inline:auto rather than the
+   more usual left:50%+transform:translateX(-50%) specifically so the
+   `transform` property stays free for the drift keyframes below to
+   animate translate() on its own, without one fighting the other. */
+.hero-watermark {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  bottom: 24px;
+  width: 66%;
+  min-width: 640px;
+  opacity: 0.055;
+  /* No blur — a crisp, sharp SVG render, not a soft/blurred one. */
+  filter: brightness(0) invert(1);
+  pointer-events: none;
+  animation: hero-watermark-drift 30s var(--hero-ease) infinite alternate;
+}
+.hero-watermark img {
+  width: 100%;
+  height: auto;
+}
+@keyframes hero-watermark-drift {
+  from {
+    transform: translate(0, 0);
+    opacity: 0.045;
+  }
+  to {
+    transform: translate(-14px, 16px);
+    opacity: 0.065;
+  }
+}
+
+/* Layer 2: soft neutral gradient blooms — no color, just diffused
+   "daylight". Still tied to the active What-We-Do card the way the
+   old video tint was, but restrained to cool grays per the brief. */
+.hero-bg-shape {
+  position: absolute;
+  right: -8%;
+  top: -10%;
+  width: 62%;
+  height: 80%;
+  opacity: 0;
+  border-radius: 48% 52% 60% 40% / 55% 45% 55% 45%;
+  filter: blur(50px);
+  transition: opacity 1.2s var(--hero-ease);
+  animation: hero-bloom-drift 26s ease-in-out infinite alternate;
+}
+.hero-bg-shape.is-active {
+  opacity: 1;
+}
+.hero-bg-shape:nth-child(2) {
+  animation-delay: -4s;
+}
+.hero-bg-shape:nth-child(3) {
+  animation-delay: -9s;
+}
+.hero-bg-shape:nth-child(4) {
+  animation-delay: -14s;
+}
+.hero-bg-shape:nth-child(5) {
+  animation-delay: -19s;
+}
+@keyframes hero-bloom-drift {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-24px, 18px);
+  }
+  100% {
+    transform: translate(16px, -14px);
+  }
+}
+
+/* Layer 3: subtle dot texture — tiny, dense, and now gently animated
+   (a slow diagonal drift) rather than static; part of the main
+   background only (no longer duplicated on the header pill). The
+   background-position keyframe travels exactly one tile (18px), so
+   the loop is seamless. */
+.hero-dot-texture {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(var(--hero-cool-rgb), 0.22) 0.6px, transparent 1px);
+  background-size: 18px 18px;
+  opacity: 0.05;
+  pointer-events: none;
+  animation: hero-dot-drift 50s linear infinite;
+}
+@keyframes hero-dot-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 18px 18px;
+  }
+}
+
+/* ===================== HEADER: free logo + centered text nav + right-side controls ===================== */
+.hero-navbar-outer {
+  position: fixed;
+  top: 28px;
+  left: 40px;
+  right: 40px;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hero-space-4);
+  transition:
+    top var(--hero-dur-base) var(--hero-ease),
+    left var(--hero-dur-base) var(--hero-ease),
+    right var(--hero-dur-base) var(--hero-ease),
+    width var(--hero-dur-base) var(--hero-ease),
+    padding var(--hero-dur-base) var(--hero-ease),
+    background-color var(--hero-dur-base) var(--hero-ease),
+    border-color var(--hero-dur-base) var(--hero-ease),
+    box-shadow var(--hero-dur-base) var(--hero-ease),
+    backdrop-filter var(--hero-dur-base) var(--hero-ease),
+    transform var(--hero-dur-base) var(--hero-ease);
+}
+.hero-navbar-outer.is-scrolled {
+  top: 14px;
+  left: 50%;
+  right: auto;
+  width: min(820px, calc(100vw - 64px));
+  min-height: 58px;
+  padding: 8px 10px 8px 18px;
+  border-radius: var(--hero-radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  background-color: rgba(247, 246, 243, 0.78);
+  box-shadow: 0 18px 54px -28px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(22px) saturate(1.25);
+  transform: translateX(-50%);
+}
+.hero-navbar-left {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.hero-logo {
+  height: 58px;
+  width: auto;
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.35));
+  transition:
+    height var(--hero-dur-base) var(--hero-ease),
+    filter var(--hero-dur-base) var(--hero-ease);
+}
+.hero-navbar-outer.is-scrolled .hero-logo {
+  height: 36px;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.18));
+}
+
+.hero-navbar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  transition:
+    gap var(--hero-dur-base) var(--hero-ease),
+    transform var(--hero-dur-base) var(--hero-ease);
+}
+.hero-navbar-outer.is-scrolled .hero-navbar-center {
+  position: static;
+  left: auto;
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 0;
+  gap: 16px;
+  opacity: 1;
+  animation: none;
+  transform: none;
+}
+.hero-navbar-center a {
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--hero-text-secondary);
+  text-shadow: var(--hero-text-shadow);
+  transition:
+    color var(--hero-dur-fast) var(--hero-ease),
+    font-size var(--hero-dur-base) var(--hero-ease),
+    text-shadow var(--hero-dur-base) var(--hero-ease);
+  white-space: nowrap;
+}
+.hero-navbar-outer.is-scrolled .hero-navbar-center a {
+  font-size: 12.5px;
+  color: rgba(23, 24, 27, 0.68);
+  text-shadow: none;
+}
+.hero-navbar-center a:hover {
+  color: var(--hero-text-primary);
+}
+.hero-navbar-outer.is-scrolled .hero-navbar-center a:hover {
+  color: rgb(var(--hero-ink-rgb));
+}
+
+.hero-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  transition:
+    gap var(--hero-dur-base) var(--hero-ease),
+    transform var(--hero-dur-base) var(--hero-ease);
+}
+.hero-navbar-outer.is-scrolled .hero-navbar-right {
+  gap: 6px;
+  opacity: 1;
+  animation: none;
+  transform: translateY(0);
+}
+
+/* Demo-only Option 1 / 2 switch (video vs. image background theme) —
+   same bigger iOS-style segmented-switch recipe as the EN / AR toggle
+   below. Dark chip like the rest of the right-side cluster now, not
+   theme-scoped translucency, so the inactive-label color is fixed to
+   the on-dark token rather than the theme's --hero-text-secondary
+   (which is dark ink in Option 2 and would be unreadable here). */
+.hero-theme-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 52px;
+  padding: 4px;
+  border-radius: var(--hero-radius-pill);
+  background: var(--hero-surface-dark);
+  border: 1px solid rgba(247, 246, 243, 0.12);
+  box-shadow: var(--hero-shadow-soft);
+}
+.hero-theme-toggle-thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  border-radius: var(--hero-radius-pill);
+  background: #ffffff;
+  /* Same drop-shadow as the search bar / hamburger, per feedback, in
+     place of the previous ad-hoc soft shadow. */
+  box-shadow: -1.07px 31.45px 49.36px 0px rgba(0, 0, 0, 0.09);
+  transition: transform var(--hero-dur-base) var(--hero-ease);
+}
+.hero-theme-toggle-thumb.is-two {
+  transform: translateX(100%);
+}
+.hero-theme-toggle-option {
+  position: relative;
+  z-index: 1;
+  /* Widened to match the track's own 52px height, per feedback, so the
+     whole toggle reads rounder/wider rather than a narrow rectangle. */
+  width: 52px;
+  text-align: center;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--hero-text-on-dark-secondary);
+  transition: color var(--hero-dur-base) var(--hero-ease);
+}
+.hero-theme-toggle-option.is-active {
+  color: rgb(var(--hero-ink-rgb));
+}
+
+/* Single-label language switch — shows only the currently active
+   language at any time (not both EN + عربي at once); tapping flips to
+   the other language. Used to be its own standalone dark chip; it now
+   lives inline inside .hero-profile-pill (see below), so it no longer
+   needs its own background/border/shadow — just a thin divider to
+   separate it from the bell next to it, echoing how the bell and
+   avatar are already grouped in that same pill.
+   Selector is scoped under .hero-profile-pill (not just
+   `.hero-profile-lang` alone) so it out-specifies the base
+   `.hero-scope button { color: inherit; }` reset a few rules up —
+   without that, the reset was winning (equal-looking rule, but
+   `.hero-scope button` has 2 selector parts vs. this class's 1) and
+   the button was inheriting the page's dark ink color, rendering
+   basically invisible against this same dark chip. */
+.hero-profile-pill .hero-profile-lang {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--hero-text-on-dark);
+  /* Widened from just padding-right:12px (and an implicit 0 on the
+     left) — the chip read as too cramped/tight per feedback. */
+  padding-left: 14px;
+  padding-right: 16px;
+  margin-right: 2px;
+  border-right: 1px solid rgba(247, 246, 243, 0.16);
+  transition: color var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-profile-pill .hero-profile-lang:hover {
+  /* A brighter white rather than the brand red — this chip is dark,
+     so a red hover read oddly here; a lighter/whiter shade keeps it
+     understated and consistent with the bell/avatar not changing
+     color on hover either. */
+  color: #ffffff;
+}
+
+/* Language switch + notification + profile picture merged into one
+   chip. Dark (--hero-surface-dark, the same tone as the fullscreen
+   menu overlay) rather than white, and a bit taller — this isn't
+   theme-scoped, it reads the same in both Option 1 and Option 2. */
+.hero-profile-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 8px 10px 8px 16px;
+  border-radius: var(--hero-radius-pill);
+  background: var(--hero-surface-dark);
+  border: 1px solid rgba(247, 246, 243, 0.12);
+  box-shadow: var(--hero-shadow-soft);
+  transition:
+    height var(--hero-dur-base) var(--hero-ease),
+    padding var(--hero-dur-base) var(--hero-ease),
+    gap var(--hero-dur-base) var(--hero-ease),
+    box-shadow var(--hero-dur-base) var(--hero-ease);
+}
+.hero-navbar-outer.is-scrolled .hero-profile-pill {
+  height: 42px;
+  gap: 6px;
+  padding: 6px 8px 6px 13px;
+  box-shadow: none;
+}
+.hero-bell {
+  /* Matches the lang chip's own divider-driven spacing (12px padding
+     + 2px margin before the pill's 10px gap = 24px total) so the
+     EN-to-bell and bell-to-avatar gaps read as the same distance
+     instead of the avatar sitting noticeably closer. */
+  margin-right: 14px;
+}
+.hero-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(247, 246, 243, 0.14);
+  flex-shrink: 0;
+  object-fit: cover;
+  transition:
+    width var(--hero-dur-base) var(--hero-ease),
+    height var(--hero-dur-base) var(--hero-ease);
+}
+.hero-navbar-outer.is-scrolled .hero-avatar {
+  width: 28px;
+  height: 28px;
+}
+.hero-bell {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hero-text-on-dark);
+}
+.hero-bell-dot {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hero-accent);
+  border: 1.5px solid var(--hero-surface-dark);
+}
+
+.hero-navbar-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--hero-surface-dark);
+  color: var(--hero-text-on-dark);
+  border: 1px solid rgba(247, 246, 243, 0.12);
+  box-shadow: var(--hero-shadow-soft);
+  flex-shrink: 0;
+  transition:
+    color var(--hero-dur-fast) var(--hero-ease),
+    transform var(--hero-dur-fast) var(--hero-ease),
+    width var(--hero-dur-base) var(--hero-ease),
+    height var(--hero-dur-base) var(--hero-ease),
+    box-shadow var(--hero-dur-base) var(--hero-ease);
+}
+.hero-navbar-outer.is-scrolled .hero-navbar-search-btn {
+  width: 42px;
+  height: 42px;
+  box-shadow: none;
+}
+.hero-navbar-search-btn:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Hamburger: white circle (kept separate from the dark profile/lang/theme
+   chips) + a plain two-line icon (see TwoLinesIcon). Per feedback the
+   black ring was competing with the white fill and reading as "not
+   pure white" — dropped it entirely so the circle is unmistakably a
+   plain white disc, defined purely by the same drop-shadow used on
+   the search bar (identical to it, no border at all), matching how
+   the search box itself has no border either. */
+.hero-navbar-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: rgb(var(--hero-ink-rgb));
+  border: none;
+  box-shadow: -1.07px 31.45px 49.36px 0px rgba(0, 0, 0, 0.09);
+  flex-shrink: 0;
+  transition:
+    color var(--hero-dur-fast) var(--hero-ease),
+    transform var(--hero-dur-fast) var(--hero-ease),
+    width var(--hero-dur-base) var(--hero-ease),
+    height var(--hero-dur-base) var(--hero-ease),
+    box-shadow var(--hero-dur-base) var(--hero-ease);
+}
+.hero-navbar-outer.is-scrolled .hero-navbar-menu-btn {
+  width: 42px;
+  height: 42px;
+  box-shadow: none;
+}
+.hero-navbar-menu-btn:hover {
+  color: var(--hero-accent);
+  transform: translateY(-1px);
+}
+
+/* ---- Fullscreen menu overlay (deliberate solid-dark beat) ---- */
+.hero-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background:
+    radial-gradient(circle at 80% 18%, rgba(var(--hero-accent-rgb), 0.22), transparent 34%),
+    linear-gradient(135deg, #050505 0%, #151111 52%, #270811 100%);
+  color: var(--hero-text-on-dark);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.985);
+  transform-origin: top center;
+  transition:
+    opacity var(--hero-dur-base) var(--hero-ease),
+    transform var(--hero-dur-base) var(--hero-ease),
+    visibility 0s linear var(--hero-dur-base);
+}
+.hero-menu-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition-delay: 0s;
+}
+.hero-mega {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.hero-mega-top {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  min-height: 78px;
+  border-bottom: 1px solid rgba(247, 246, 243, 0.12);
+  opacity: 0;
+  transform: translateY(-14px);
+  transition:
+    opacity 520ms var(--hero-ease),
+    transform 520ms var(--hero-ease);
+}
+.hero-menu-overlay.is-open .hero-mega-top {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hero-mega-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgba(247, 246, 243, 0.12);
+  color: #ffffff;
+  transition:
+    color var(--hero-dur-fast) var(--hero-ease),
+    background var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-mega-close:hover {
+  color: var(--hero-accent);
+  background: rgba(255, 255, 255, 0.04);
+}
+.hero-mega-search {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding-inline: clamp(24px, 4vw, 58px);
+  color: rgba(247, 246, 243, 0.88);
+}
+.hero-mega-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-family: var(--site-font-sans);
+  font-size: clamp(1.45rem, 2.6vw, 2.25rem);
+  font-weight: 400;
+  outline: none;
+}
+.hero-mega-search input::placeholder {
+  color: rgba(247, 246, 243, 0.42);
+}
+.hero-mega-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(320px, 42vw) 1fr;
+}
+.hero-mega-links {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(247, 246, 243, 0.12);
+}
+.hero-mega-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 108px;
+  padding: 0 clamp(24px, 4vw, 58px);
+  border-bottom: 1px solid rgba(247, 246, 243, 0.08);
+  color: rgba(247, 246, 243, 0.48);
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  transform: translateX(-24px);
+  transition:
+    opacity 560ms var(--hero-ease),
+    transform 560ms var(--hero-ease),
+    color var(--hero-dur-fast) var(--hero-ease),
+    background var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-menu-overlay.is-open .hero-mega-links a {
+  opacity: 1;
+  transform: translateX(0);
+}
+.hero-menu-overlay.is-open .hero-mega-links a:nth-child(1) {
+  transition-delay: 80ms;
+}
+.hero-menu-overlay.is-open .hero-mega-links a:nth-child(2) {
+  transition-delay: 140ms;
+}
+.hero-menu-overlay.is-open .hero-mega-links a:nth-child(3) {
+  transition-delay: 200ms;
+}
+.hero-mega-links a svg {
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity var(--hero-dur-fast) var(--hero-ease),
+    transform var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-mega-links a:hover,
+.hero-mega-links a:focus-visible,
+.hero-mega-links a.is-active {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.055);
+  transition-delay: 0ms;
+}
+.hero-mega-links a:hover svg,
+.hero-mega-links a:focus-visible svg,
+.hero-mega-links a.is-active svg {
+  opacity: 1;
+  transform: translateX(0);
+}
+.hero-mega-panel {
+  min-height: 0;
+  padding: clamp(44px, 6vw, 78px) clamp(32px, 6vw, 86px);
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.035);
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 620ms var(--hero-ease) 180ms,
+    transform 620ms var(--hero-ease) 180ms;
+}
+.hero-menu-overlay.is-open .hero-mega-panel {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hero-mega-kicker {
+  margin: 0 0 18px;
+  color: rgba(247, 246, 243, 0.44);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hero-mega-panel h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(2.1rem, 5vw, 4.6rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+}
+.hero-mega-summary {
+  max-width: 620px;
+  margin: clamp(20px, 3vw, 34px) 0 0;
+  color: rgba(247, 246, 243, 0.68);
+  font-size: clamp(1rem, 1.4vw, 1.3rem);
+  line-height: 1.55;
+}
+.hero-mega-panel-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: clamp(34px, 5vw, 58px);
+}
+.hero-mega-panel-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 86px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.94);
+  color: rgb(var(--hero-ink-rgb));
+  font-size: 16px;
+  transition:
+    transform var(--hero-dur-fast) var(--hero-ease),
+    background var(--hero-dur-fast) var(--hero-ease),
+    border-color var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-mega-panel-links a:hover,
+.hero-mega-panel-links a:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(var(--hero-accent-rgb), 0.52);
+  background: #ffffff;
+  color: var(--hero-accent);
+}
+.hero-mega-footer {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 3vw, 42px);
+  min-height: 70px;
+  padding-inline: clamp(24px, 4vw, 58px);
+  border-top: 1px solid rgba(247, 246, 243, 0.12);
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 520ms var(--hero-ease) 240ms,
+    transform 520ms var(--hero-ease) 240ms;
+}
+.hero-menu-overlay.is-open .hero-mega-footer {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hero-mega-footer a {
+  color: rgba(247, 246, 243, 0.48);
+  font-size: 13px;
+  transition: color var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-mega-footer a:hover,
+.hero-mega-footer a:focus-visible {
+  color: #ffffff;
+}
+
+/* ===================== MAIN VIEWPORT LAYOUT ===================== */
+.hero-main {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 110px var(--hero-space-5) 44px;
+}
+.hero-content-grid {
+  /* position:relative is load-bearing here, not decorative: .hero-bg
+     (the video layer) is position:absolute, which makes it paint in
+     the browser'''s "positioned elements" layer above any plain
+     static content, regardless of DOM order. Without this, every
+     plain-text child here (greeting, headline, stat number, tabs)
+     rendered *underneath* the video and was completely hidden — only
+     the search bar and cards showed, because those happen to have
+     their own position:relative for unrelated reasons (dropdown
+     anchoring, absolute progress-fill children) and got lifted into
+     the same layer as the video by accident. */
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  /* Just the top row (greeting/headline/search) and bottom row
+     (stat + card carousel) — the ticker is no longer a child of this
+     grid at all (see Hero.tsx), it's a sibling under .hero-main so it
+     can be positioned/sized against the hero section's own edges
+     independently of however much space these two rows take up. */
+  grid-template-rows: 1fr 1fr;
+  row-gap: var(--hero-space-3);
+}
+
+/* ---- Top row: greeting/headline/search on the left, the latest-
+   publications widget on the right, both vertically centered
+   together within the top third of the content grid ---- */
+.hero-top-row {
+  position: relative;
+  z-index: 20;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+.hero-top-block {
+  max-width: 600px;
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.hero-eyebrow-greeting {
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  font-weight: 400;
+  color: var(--hero-text-primary);
+  text-shadow: var(--hero-text-shadow);
+  margin: 0 0 6px;
+}
+.hero-headline {
+  font-family: var(--hero-font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.9rem, 3.6vw, 3.1rem);
+  line-height: 1.1;
+  margin: 0 0 28px;
+  color: var(--hero-text-primary);
+  text-shadow: var(--hero-text-shadow);
+}
+
+.hero-search-wrap {
+  position: relative;
+  z-index: 30;
+  max-width: 760px;
+  width: 100%;
+}
+.hero-search-shell {
+  display: flex;
+  align-items: stretch;
+  background: var(--hero-glass-bg);
+  border: 1px solid var(--hero-glass-border);
+  border-radius: var(--hero-radius-pill);
+  padding: 6px;
+  box-shadow: var(--hero-shadow-soft);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-search-shell.is-focused {
+  border-color: var(--hero-glass-border-strong);
+  background: rgba(255, 255, 255, 0.96);
+}
+.hero-search-category-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  /* Width is set inline from React, in `ch` units sized off the
+     selected option's own character count ("All" stays narrow,
+     "Public Register" grows) — plain <select> sizing can't do this on
+     its own, since browsers size a <select> to fit its *widest*
+     option rather than the one currently showing. See HeroSearch.tsx.
+     No overflow:hidden here on purpose — the `ch` estimate is
+     approximate (proportional fonts aren't monospaced), so a little
+     visual give beats ever clipping the selected option's text. */
+  border-right: 1px solid var(--hero-glass-border);
+  color: var(--hero-text-tertiary);
+  transition: width var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-search-category-wrap svg {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.hero-search-category {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--hero-text-secondary);
+  font-size: 13px;
+  font-weight: 400;
+  width: 100%;
+  text-align: left;
+  /* A bit more breathing room to the right of the chevron than a bare
+     minimum gap. */
+  padding: 0 30px 0 14px;
+}
+
+/* Custom category dropdown panel — replaces the native <select>'s own
+   browser-drawn popup (which came with its own focus outline/border
+   that couldn't be restyled away). Pure white + a soft shadow so it
+   reads the same floating "sheet" regardless of which hero background
+   it's sitting over. */
+.hero-category-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 168px;
+  background: #ffffff;
+  border-radius: var(--hero-radius-md);
+  box-shadow: -1.07px 31.45px 49.36px 0px rgba(0, 0, 0, 0.14);
+  padding: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition:
+    opacity var(--hero-dur-fast) var(--hero-ease),
+    transform var(--hero-dur-fast) var(--hero-ease),
+    visibility 0s linear var(--hero-dur-fast);
+  z-index: 120;
+}
+.hero-category-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity var(--hero-dur-fast) var(--hero-ease),
+    transform var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-category-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  border-radius: var(--hero-radius-sm);
+  font-size: 13px;
+  color: #17181b;
+  transition:
+    background var(--hero-dur-fast) var(--hero-ease),
+    color var(--hero-dur-fast) var(--hero-ease);
+}
+/* Hover-only highlight, no border — exactly what was asked for in
+   place of the native select's focus outline. */
+.hero-category-option:hover {
+  background: rgba(179, 40, 46, 0.08);
+}
+.hero-category-option.is-active {
+  background: var(--hero-accent);
+  color: #ffffff;
+}
+.hero-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--hero-text-primary);
+  font-size: 14px;
+  padding: 12px 14px;
+  font-family: var(--hero-font-sans);
+}
+.hero-search-input::placeholder {
+  color: var(--hero-text-tertiary);
+}
+.hero-search-input:focus {
+  outline: none;
+}
+.hero-search-submit {
+  /* Back to a normal trailing flex child — sits at the search bar's
+     right corner (vertically centered by the shell's own
+     align-items:stretch + its own fixed height), not centered across
+     the whole bar. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--hero-accent);
+  color: #fff;
+  flex-shrink: 0;
+  transition: transform var(--hero-dur-fast);
+}
+.hero-search-submit:hover {
+  transform: scale(1.05);
+}
+.hero-search-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  right: auto;
+  width: min(760px, calc(100vw - 48px));
+  z-index: 120;
+  background: rgba(18, 20, 20, 0.55);
+  border: 1px solid var(--hero-glass-border);
+  border-radius: var(--hero-radius-lg);
+  box-shadow: var(--hero-shadow-elevated);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 28px 34px;
+  opacity: 0;
+  transform: translateX(-50%) translateY(-6px) scale(0.98);
+  pointer-events: none;
+  transition: all var(--hero-dur-base) var(--hero-ease);
+}
+.hero-search-panel.is-open {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+  pointer-events: auto;
+}
+.hero-search-panel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+}
+.hero-search-panel h4 {
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hero-text-tertiary);
+  margin: 0 0 14px 44px;
+}
+.hero-result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hero-result-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  text-align: left;
+  gap: 12px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: var(--hero-radius-sm);
+  font-size: 12.5px;
+  color: var(--hero-text-secondary);
+  transition: all var(--hero-dur-fast);
+}
+.hero-result-item:hover {
+  background: rgba(var(--hero-ink-rgb), 0.04);
+  color: var(--hero-text-primary);
+}
+.hero-result-item.is-active {
+  background: rgba(var(--hero-accent-rgb), 0.08);
+  color: rgb(var(--hero-ink-rgb));
+}
+.hero-result-item span {
+  min-width: 0;
+}
+.hero-result-item .hero-tag {
+  font-size: 10.5px;
+  color: var(--hero-text-tertiary);
+}
+/* Recent-search rows: icon + label inline, left-aligned like every
+   other row in this panel (was a wrapped pill list before, which read
+   inconsistently against the publications column's plain left-aligned
+   rows). */
+.hero-result-item-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.hero-result-item-label svg {
+  width: 20px;
+  flex: 0 0 20px;
+}
+.hero-result-list > .hero-result-item:not(:has(.hero-result-item-label)) {
+  padding-left: 44px;
+}
+.hero-search-feedback {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.9)),
+    radial-gradient(circle at 0% 0%, rgba(var(--hero-accent-rgb), 0.12), transparent 40%);
+  border: 1px solid rgba(var(--hero-accent-rgb), 0.16);
+  box-shadow: 0 18px 40px -30px rgba(23, 24, 27, 0.34);
+  color: rgb(var(--hero-ink-rgb));
+}
+.hero-search-feedback-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(var(--hero-accent-rgb), 0.1);
+  color: var(--hero-accent);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+.hero-search-feedback-copy {
+  min-width: 0;
+}
+.hero-search-feedback-copy span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--hero-accent);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.hero-search-feedback-copy strong {
+  display: block;
+  overflow: hidden;
+  color: rgb(var(--hero-ink-rgb));
+  font-size: 15.5px;
+  font-weight: 400;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hero-search-feedback-copy p {
+  margin: 4px 0 0;
+  color: rgba(var(--hero-ink-rgb), 0.6);
+  font-size: 12px;
+  line-height: 1.35;
+}
+.hero-search-feedback-action {
+  flex-shrink: 0;
+  padding: 11px 16px;
+  border-radius: var(--hero-radius-pill);
+  background: #17181b;
+  color: #ffffff !important;
+  font-size: 11.5px;
+  white-space: nowrap;
+  transition:
+    background var(--hero-dur-fast) var(--hero-ease),
+    transform var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-search-feedback-action:hover {
+  background: var(--hero-accent);
+  transform: translateY(-1px);
+}
+
+/* ---- Latest-publications widget: sits beside the search bar,
+   reuses the same frosted-glass recipe as the service cards ---- */
+.hero-pub-widget {
+  flex-shrink: 0;
+  width: 320px;
+  padding: 18px 20px;
+  border-radius: var(--hero-radius-lg);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%);
+  border: 1px solid var(--hero-glass-border-strong);
+  box-shadow:
+    var(--hero-shadow-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+.hero-pub-widget-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.hero-pub-widget-eyebrow {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hero-text-tertiary);
+}
+.hero-pub-widget-arrows {
+  display: flex;
+  gap: 6px;
+}
+.hero-pub-widget-arrows button {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hero-text-secondary);
+  border: 1px solid var(--hero-glass-border);
+  transition: all var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-pub-widget-arrows button:hover {
+  color: var(--hero-text-primary);
+  border-color: var(--hero-text-primary);
+}
+.hero-pub-widget-body {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+}
+.hero-pub-widget-thumb {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--hero-radius-md);
+  background: linear-gradient(155deg, var(--hero-accent) 0%, #4a1019 100%);
+}
+.hero-pub-widget-text {
+  min-width: 0;
+}
+.hero-pub-widget-title {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--hero-text-primary);
+  margin: 0 0 8px;
+  text-shadow: var(--hero-text-shadow);
+}
+.hero-pub-widget-date {
+  font-size: 12px;
+  color: var(--hero-text-tertiary);
+  margin: 0;
+}
+.hero-pub-widget-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 14px;
+}
+/* Small rounded-rectangle "pills" rather than round dots — both the
+   resting and active states, the active one just grows longer. */
+.hero-pub-dot {
+  width: 12px;
+  height: 5px;
+  border-radius: var(--hero-radius-pill);
+  background: rgba(255, 255, 255, 0.32);
+  transition: all var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-pub-dot.is-active {
+  width: 22px;
+  background: var(--hero-accent);
+}
+
+/* ---- Bottom row: featured news card + tabbed card carousel ---- */
+.hero-bottom-row {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  /* Push the whole row (news card + service cards) further down its
+     grid track per feedback — the cards sit at the track's top by
+     default (fixed-height cards don't stretch), so this reserves space
+     above them. */
+  padding-top: 72px;
+  display: flex;
+  /* stretch (not center) so .hero-card-row-wrap gets a real height —
+     the now-portrait, much-taller cards need concrete space to grow
+     into via the row's flex:1, not an auto-sized one. */
+  align-items: stretch;
+  /* Gap between the featured news card and the service-card row.
+     Widened from 28px so the card row sits a little further right and
+     the individual cards read a touch narrower, per feedback. */
+  gap: 40px;
+  /* This row is a grid item (the content-grid's bottom row track),
+     and grid items default to min-width:auto — meaning without this,
+     the row could refuse to shrink below its content's natural
+     min-content width and overflow past .hero-main's right padding
+     entirely (this is what caused the card row + nav arrows to bleed
+     off the right edge of the viewport, cutting off the "next"
+     arrow). Mirrors the same min-width:0 already used on
+     .hero-card-row-wrap below. */
+  min-width: 0;
+}
+
+.hero-stat-block {
+  /* Liquid (percentage) width, not a fixed px — this is what pushes
+     "What We Do" in from the left edge, while the stat itself stays
+     flush left with zero margin. Narrowed from 32% per feedback that
+     "What We Do" should move further left (less of a gap). */
+  flex: 0 0 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* Aligns the "25+" with the top of the What We Do *card* itself,
+     not the tabs/nav row sitting above it in the other column — an
+     approximate offset matching that row's own height (~30px) plus
+     its 12px margin-bottom, since the two columns don't share a grid
+     that would otherwise align them automatically. */
+  padding-top: 42px;
+}
+.hero-stat-block-number {
+  font-family: var(--hero-font-display);
+  /* Light weight per feedback — bigger but not bold. */
+  font-weight: 300;
+  font-size: clamp(6rem, 11vw, 9.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  color: var(--hero-text-primary);
+  text-shadow: var(--hero-text-shadow);
+  margin: 0;
+}
+.hero-stat-block-plus {
+  font-size: 0.62em;
+  color: var(--hero-text-primary);
+  text-shadow: var(--hero-text-shadow);
+}
+.hero-stat-block-label {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--hero-text-tertiary);
+  text-shadow: var(--hero-text-shadow);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hero-card-row-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.hero-card-row-head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.hero-card-tabs {
+  display: flex;
+  gap: 8px;
+}
+.hero-card-tab {
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--hero-text-secondary);
+  text-shadow: var(--hero-text-shadow);
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: all var(--hero-dur-fast);
+}
+.hero-card-tab.is-active {
+  color: #ffffff;
+  background: linear-gradient(155deg, var(--hero-accent) 0%, #6e1520 100%);
+  border-color: rgba(var(--hero-accent-rgb), 0.9);
+  box-shadow:
+    0 6px 18px rgba(var(--hero-accent-rgb), 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+.hero-card-tab:hover:not(.is-active) {
+  color: var(--hero-text-primary);
+  border-color: var(--hero-glass-border);
+  background: var(--hero-glass-bg);
+}
+.hero-card-row-nav {
+  display: flex;
+  /* Widened from 8px — the two arrows were reading too close together. */
+  gap: 20px;
+}
+.hero-card-row-nav button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--hero-glass-border);
+  color: var(--hero-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--hero-dur-fast);
+}
+.hero-card-row-nav button:hover {
+  border-color: var(--hero-text-primary);
+  color: var(--hero-text-primary);
+}
+
+.hero-card-row {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* Room for the hover lift (translateY(-6px) below) plus shadow bleed
+     — overflow-x:auto forces overflow-y to compute as auto too, so
+     without this the card's top edge gets clipped mid-hover. The
+     negative margin cancels the padding's effect on the surrounding
+     layout, landing in the row-head's own 12px margin-bottom gap —
+     kept at 12px (not widened) because the hover shadow's y-offset is
+     positive (cast downward), so there's nothing worth reserving
+     above the card; widening this would instead risk the row's own
+     (invisible but still clickable) padding overlapping the row-head's
+     tabs/arrows above it. */
+  padding-top: 12px;
+  margin-top: -12px;
+  /* Mirrors the padding-top/margin-top trick above, but for the hover
+     lift's shadow bleeding *below* the card — without this, the same
+     overflow-x:auto-forces-overflow-y:auto issue clipped the bottom of
+     the hover glow flush against the card's own edge. Widened from
+     12px to 44px: the Option 2 hover shadow (0 24px 48px -18px) casts
+     mostly downward, and 12px was cutting it off well before its blur
+     faded out — this direction is safe to grow since there's a real
+     56px gap below the whole row (see .hero-content-grid's
+     margin-bottom) before anything else (the ticker) sits. */
+  padding-bottom: 44px;
+  margin-bottom: -44px;
+  /* Cards approaching the left/right edges fade out instead of being
+     hard-clipped by the scroll boundary — a soft "merge" rather than
+     a visible cut-off. This is the "somewhere in the middle" case;
+     .is-at-start/.is-at-end below override it so a side with nothing
+     further to scroll never fades (see ServiceCardRow.tsx). Narrowed
+     from 40px to 18px per feedback that the wider fade was cutting
+     across a card's own corner rather than sitting in the gap between
+     cards — a tighter zone reads as a soft edge vignette instead of a
+     visible slice through card content. */
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 18px,
+    #000 calc(100% - 18px),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 18px,
+    #000 calc(100% - 18px),
+    transparent 100%
+  );
+}
+/* At rest (scrolled fully left) — nothing further left to fade, so the
+   first card renders fully opaque. */
+.hero-card-row.is-at-start {
+  mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 18px), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 18px), transparent 100%);
+}
+/* Scrolled fully right — nothing further right to fade. */
+.hero-card-row.is-at-end {
+  mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 100%);
+}
+/* All cards fit without scrolling at all — no fade either side. */
+.hero-card-row.is-at-start.is-at-end {
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+.hero-card-row::-webkit-scrollbar {
+  display: none;
+}
+.hero-card-row.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
+}
+.hero-service-card {
+  position: relative;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  /* Sized as a fraction of the row's width (not a fixed px) so all five
+     cards fill the row evenly on a wide viewport, with no scrolling.
+     The row's 10px gap is baked into the formula: 4 gaps for 5 cards.
+     On narrower viewports the cards keep this share and the row
+     overflows into a native/touch scroller instead. */
+  width: calc((100% - 4 * 10px) / 5);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 178px;
+  padding: var(--hero-space-3);
+  border-radius: var(--hero-radius-lg);
+  /* Subtle-but-visible tint (not a gradient that fades to near-0%
+     opacity at the bottom) so the card never reads as "blank" — the
+     glass blur still does most of the work, this is just a floor. */
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--hero-glass-border-strong);
+  box-shadow:
+    var(--hero-shadow-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  overflow: hidden;
+  text-align: left;
+  transition:
+    transform var(--hero-dur-base) var(--hero-ease),
+    background var(--hero-dur-base) var(--hero-ease),
+    border-color var(--hero-dur-base) var(--hero-ease),
+    box-shadow var(--hero-dur-base) var(--hero-ease);
+}
+.hero-service-card:hover {
+  transform: translateY(-6px);
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 22px 44px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.hero-service-card-icon {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hero-text-primary);
+}
+.hero-service-card-title {
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--hero-text-primary);
+  line-height: 1.3;
+}
+.hero-service-card.is-active {
+  border-color: var(--hero-glass-border-strong);
+}
+.hero-service-card.is-featured {
+  background: linear-gradient(155deg, var(--hero-accent) 0%, #4a1019 100%);
+  border-color: transparent;
+}
+.hero-service-card.is-featured .hero-service-card-icon,
+.hero-service-card.is-featured .hero-service-card-title {
+  color: #fff;
+}
+
+/* ===================== FEATURED NEWS CARD (bottom-row left column) ===================== */
+/* Replaces the old big "25+" stat. A white card sized as a fraction of
+   the row (not a fixed px) so it tracks the row's width like the
+   service cards do, and stretched via .hero-bottom-row's
+   align-items:stretch to exactly match the service cards' height.
+   Laid out horizontally: a contained (rounded, not full-bleed) photo
+   thumbnail on the left, text on the right. */
+.hero-news-card {
+  position: relative;
+  /* Sits above the rest of the hero background while staying locked to
+     the bottom strip during scroll. */
+  z-index: 4;
+  flex: 0 0 26%;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 16px 32px -20px rgba(17, 22, 16, 0.18);
+  overflow: hidden;
+  transition:
+    transform var(--hero-dur-base) var(--hero-ease),
+    box-shadow var(--hero-dur-base) var(--hero-ease);
+}
+.hero-news-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px -18px rgba(17, 22, 16, 0.26);
+}
+.hero-news-card-link {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  height: 100%;
+  text-decoration: none;
+}
+.hero-news-card-thumb {
+  position: relative;
+  flex: 0 0 42%;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(17, 22, 16, 0.06);
+  animation: hero-news-fade 450ms var(--hero-ease);
+}
+.hero-news-card-img {
+  object-fit: cover;
+}
+.hero-news-card-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 2px 4px 2px 0;
+  animation: hero-news-fade 450ms var(--hero-ease);
+}
+.hero-news-card-tag {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: linear-gradient(155deg, var(--hero-accent) 0%, #6e1520 100%);
+}
+.hero-news-card-title {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.28;
+  color: rgb(var(--hero-ink-rgb));
+  /* Clamp to the available height so a long headline never pushes the
+     date out of the fixed-height card. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.hero-news-card-date {
+  margin-top: auto;
+  font-size: 11px;
+  color: rgba(var(--hero-ink-rgb), 0.55);
+}
+/* Slide indicators — pinned to the card's bottom-right corner, clear of
+   the date (which sits bottom-left in the text column). The active dot
+   stretches into a short pill in the brand red. */
+.hero-news-card-dots {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hero-news-card-dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(var(--hero-ink-rgb), 0.22);
+  transition:
+    width var(--hero-dur-fast) var(--hero-ease),
+    background var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-news-card-dot:hover {
+  background: rgba(var(--hero-ink-rgb), 0.4);
+}
+.hero-news-card-dot.is-active {
+  width: 16px;
+  background: var(--hero-accent);
+}
+@keyframes hero-news-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ===================== NEWS TICKER (bottom, single slim row) ===================== */
+.hero-news-ticker {
+  /* Option 1 only in practice — Option 2 overrides this to
+     position:absolute below, where a top margin on an
+     only-`bottom`-anchored box is inert. Preserves the same gap
+     above the ticker that the content grid's own row-gap used to
+     provide back when the ticker was still one of its grid rows. */
+  margin-top: var(--hero-space-3);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 8px 10px 8px 18px;
+  border-radius: var(--hero-radius-lg);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--hero-glass-border);
+  box-shadow: var(--hero-shadow-soft);
+  overflow: hidden;
+}
+.hero-ticker-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.hero-ticker-tab {
+  font-size: 12.5px;
+  font-weight: 400;
+  padding: 8px 14px;
+  border-radius: var(--hero-radius-md);
+  color: rgba(var(--hero-ink-rgb), 0.55);
+  white-space: nowrap;
+  transition: all var(--hero-dur-fast) var(--hero-ease);
+}
+.hero-ticker-tab:hover {
+  color: rgb(var(--hero-ink-rgb));
+}
+.hero-ticker-tab.is-active {
+  color: #ffffff;
+  background: linear-gradient(155deg, var(--hero-accent) 0%, #6e1520 100%);
+  box-shadow: 0 6px 16px rgba(var(--hero-accent-rgb), 0.35);
+}
+.hero-ticker-viewport {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 20px;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 24px,
+    #000 calc(100% - 24px),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 24px,
+    #000 calc(100% - 24px),
+    transparent 100%
+  );
+}
+.hero-ticker-track {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 40px;
+  white-space: nowrap;
+  width: max-content;
+  animation: hero-ticker-scroll 26s linear infinite;
+}
+.hero-ticker-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.hero-ticker-text {
+  font-size: 13px;
+  color: rgb(var(--hero-ink-rgb));
+}
+.hero-ticker-time {
+  font-size: 11.5px;
+  color: rgba(var(--hero-ink-rgb), 0.4);
+  white-space: nowrap;
+}
+@keyframes hero-ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-height: 760px) {
+  .hero-main {
+    padding-top: 86px;
+  }
+  .hero-headline {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    margin-bottom: 16px;
+  }
+  .hero-stat-block-number {
+    font-size: clamp(3.2rem, 6.5vw, 4.4rem);
+  }
+  .hero-service-card {
+    min-height: 150px;
+  }
+  .hero-pub-widget {
+    width: 260px;
+    padding: 14px 16px;
+  }
+  .hero-pub-widget-body {
+    min-height: 50px;
+  }
+  .hero-news-ticker {
+    padding: 6px 8px 6px 14px;
+  }
+}
+@media (max-width: 1180px) {
+  .hero-scope {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+  .hero-bottom-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero-stat-block {
+    flex-basis: auto;
+    padding-top: 0;
+  }
+  .hero-news-card {
+    /* Stacked above the card row now, not beside it — take the full
+       column width and a fixed height instead of stretching to a
+       sibling's. */
+    flex-basis: auto;
+    min-height: 180px;
+  }
+  .hero-service-card {
+    /* Narrower viewport — show ~4.5 cards instead of 7. */
+    width: calc((100% - 3.5 * 10px) / 4.5);
+    min-height: 160px;
+  }
+  .hero-top-row {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+  }
+  .hero-pub-widget {
+    width: auto;
+  }
+  .hero-news-ticker {
+    flex-wrap: wrap;
+    height: auto;
+  }
+  .hero-ticker-viewport {
+    width: 100%;
+  }
+}
+@media (max-width: 860px) {
+  .hero-navbar-center {
+    display: none;
+  }
+}
+@media (max-width: 720px) {
+  .hero-navbar-outer {
+    top: 14px;
+    left: 18px;
+    right: 18px;
+  }
+  .hero-navbar-outer.is-scrolled {
+    left: 18px;
+    right: 18px;
+    width: auto;
+    min-height: 54px;
+    padding: 7px 8px 7px 12px;
+    transform: none;
+  }
+  .hero-profile-lang {
+    display: none;
+  }
+  .hero-theme-toggle {
+    display: none;
+  }
+  .hero-logo {
+    height: 40px;
+  }
+  .hero-main {
+    padding: 74px 18px 18px;
+  }
+  .hero-mega-top {
+    grid-template-columns: 72px 1fr;
+    min-height: 68px;
+  }
+  .hero-mega-search {
+    gap: 14px;
+    padding-inline: 18px;
+  }
+  .hero-mega-body {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+  .hero-mega-links {
+    border-right: none;
+  }
+  .hero-mega-links a {
+    min-height: 82px;
+    padding-inline: 22px;
+    font-size: clamp(1.7rem, 9vw, 2.7rem);
+  }
+  .hero-mega-panel {
+    overflow: visible;
+    padding: 28px 22px 34px;
+  }
+  .hero-mega-panel-links {
+    grid-template-columns: 1fr;
+  }
+  .hero-mega-footer {
+    display: none;
+  }
+  .hero-service-card {
+    /* Phone-width viewport — show ~2.2 cards instead of 3.5. */
+    width: calc((100% - 1.2 * 10px) / 2.2);
+    min-height: 170px;
+  }
+}
+
+/* ---- Scene variants (neutral cool-gray blooms, no color per brief) ---- */
+.hero-bg-shape[data-scene="0"] {
+  background: radial-gradient(
+    60% 55% at 60% 30%,
+    rgba(var(--hero-cool-rgb), 0.14) 0%,
+    rgba(var(--hero-cool-rgb), 0.04) 55%,
+    transparent 78%
+  );
+}
+.hero-bg-shape[data-scene="1"] {
+  background: radial-gradient(
+    58% 52% at 66% 24%,
+    rgba(var(--hero-cool-rgb), 0.13) 0%,
+    rgba(var(--hero-cool-rgb), 0.03) 55%,
+    transparent 78%
+  );
+}
+.hero-bg-shape[data-scene="2"] {
+  background: radial-gradient(
+    62% 58% at 55% 34%,
+    rgba(var(--hero-cool-rgb), 0.15) 0%,
+    rgba(var(--hero-cool-rgb), 0.04) 58%,
+    transparent 80%
+  );
+}
+.hero-bg-shape[data-scene="3"] {
+  background: radial-gradient(
+    58% 50% at 62% 20%,
+    rgba(var(--hero-cool-rgb), 0.12) 0%,
+    rgba(var(--hero-cool-rgb), 0.03) 52%,
+    transparent 76%
+  );
+}
+.hero-bg-shape[data-scene="4"] {
+  background: radial-gradient(
+    60% 56% at 58% 28%,
+    rgba(var(--hero-cool-rgb), 0.14) 0%,
+    rgba(var(--hero-cool-rgb), 0.04) 56%,
+    transparent 78%
+  );
+}

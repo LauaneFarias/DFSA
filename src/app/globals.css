@@ -1,2 +1,64 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
+
+:root {
+  --site-font-sans: var(--font-niveau), ui-sans-serif, system-ui, sans-serif;
+  --site-font-display: var(--site-font-sans);
+}
+
+html[data-font-version="graphik"] {
+  --site-font-sans:
+    "Graphik", "Graphik Web", "Graphik LC", var(--font-niveau), ui-sans-serif, system-ui, sans-serif;
+  --site-font-display: var(--site-font-sans);
+}
+
+body {
+  font-family: var(--site-font-sans);
+}
+
+.font-version-switcher {
+  position: fixed;
+  left: 22px;
+  bottom: 22px;
+  z-index: 350;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  background: rgba(247, 246, 243, 0.78);
+  box-shadow: 0 18px 44px -26px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(18px) saturate(1.2);
+}
+
+.font-version-switcher button {
+  min-width: 70px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: rgba(23, 24, 27, 0.62);
+  font-family: var(--site-font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  transition:
+    background 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.font-version-switcher button.is-active {
+  background: #17181b;
+  color: #ffffff;
+}
+
+@media (max-width: 720px) {
+  .font-version-switcher {
+    left: 18px;
+    bottom: 16px;
+  }
+
+  .font-version-switcher button {
+    min-width: 62px;
+  }
+}

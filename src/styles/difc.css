@@ -1,0 +1,384 @@
+/**
+ * "Start your DIFC journey" — fifth section, normal page scroll. Bold
+ * dark-maroon CTA banner, self-contained tokens.
+ */
+.difc-section {
+  --difc-accent: #a31e2e;
+  --difc-accent-rgb: 163, 30, 46;
+  --difc-gold: #ae9867;
+  --difc-gold-rgb: 174, 152, 103;
+  --difc-card-padding: 20px;
+  --difc-radius-pill: 999px;
+  --difc-radius-lg: 20px;
+  --difc-radius-panel: 40px;
+  /* Matches --news-page-bg in news.css — the same light background as
+     Latest News's own outer container, so the maroon panel now sits
+     inset inside it (see .difc-panel) instead of the section itself
+     running full-bleed maroon edge to edge. */
+  --difc-outer-bg: #eeece9;
+  --difc-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  background: var(--difc-outer-bg);
+  font-family: var(--site-font-sans);
+  padding: 50px 0;
+}
+
+/* ---- Inset panel — left/right margin comes from .difc-container's
+   own padding-inline below, rounded corners here. Background is now a
+   running video (see .difc-panel-bg) rather than the flat maroon
+   gradient this used to be. ---- */
+.difc-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(36px, 5vw, 60px);
+  min-height: clamp(480px, 62vh, 660px);
+  justify-content: center;
+  border-radius: var(--difc-radius-panel);
+  color: #ffffff;
+  padding: clamp(48px, 6vw, 88px) clamp(24px, 3.4vw, 56px);
+  overflow: hidden;
+}
+@media (max-width: 720px) {
+  .difc-panel {
+    border-radius: 28px;
+    min-height: 0;
+  }
+}
+
+/* Full-bleed looping video (same autoplay/muted/loop/playsInline +
+   reduced-motion-pauses pattern as HeroBackground.tsx/SiteFooter.tsx),
+   clipped to the panel's own rounded corners via the overflow:hidden
+   above instead of running edge to edge like the footer's version.
+   The scrim keeps the white header/card text legible regardless of
+   what the footage is doing underneath. */
+.difc-panel-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.difc-panel-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.difc-panel-scrim {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(20, 8, 10, 0.32);
+  background-image: linear-gradient(
+    155deg,
+    rgba(110, 21, 32, 0.55) 0%,
+    rgba(0, 0, 0, 0.28) 55%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  pointer-events: none;
+}
+
+/* This padding-inline is the left/right margin around the maroon
+   panel — same role .news-container's own padding-inline plays around
+   .news-panel. */
+.difc-container {
+  width: 100%;
+  padding-inline: 32px;
+}
+@media (max-width: 720px) {
+  .difc-container {
+    padding-inline: 18px;
+  }
+}
+
+/* Header/grid need to sit above the absolutely-positioned video + scrim
+   (z-index: 0) inside .difc-panel. */
+.difc-panel > .difc-header,
+.difc-panel > .difc-grid {
+  position: relative;
+  z-index: 1;
+}
+
+/* Full-width intro band — replaces the old side-by-side split (which
+   made this section read the same as Our Approach). Copy sits on its
+   own row above the card grid. */
+.difc-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(28px, 5vw, 72px);
+  width: 100%;
+}
+.difc-eyebrow {
+  margin: 0;
+  flex: 0 0 auto;
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  color: #ffffff;
+}
+.difc-header-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  width: min(100%, 430px);
+}
+.difc-header-desc {
+  margin: 0;
+  font-size: clamp(14px, 1vw, 16px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.76);
+}
+.difc-heading {
+  margin: 0;
+  font-weight: 400;
+  /* Was clamp(2.4rem, 4.6vw, 3.4rem) — bigger than the hero's own h1
+     (clamp(1.9rem, 3.6vw, 3.1rem)), which breaks the hierarchy since
+     this is an h2. Brought in line with the other h2 section titles
+     (matches .approach-heading/.news-heading) so every secondary
+     section reads at one consistent, clearly-smaller-than-h1 size. */
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  max-width: 14ch;
+}
+/* Standard site CTA — same solid-white-pill + dark circular arrow
+   recipe as .about-cta/.news-cta, so "Learn more" reads identically
+   across every section, including this dark banner. */
+.difc-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding: 6px 6px 6px 24px;
+  border-radius: var(--difc-radius-pill);
+  border: none;
+  background: #ffffff;
+  color: #17181b;
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  transition: box-shadow 220ms var(--difc-ease);
+}
+.difc-cta-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #17181b;
+  color: #ffffff;
+  flex-shrink: 0;
+  transition:
+    transform 220ms var(--difc-ease),
+    background 220ms var(--difc-ease);
+}
+.difc-cta:hover .difc-cta-icon {
+  background: var(--difc-accent);
+  transform: translateX(3px);
+}
+
+/* Card grid — replaces the old expand-on-click accordion (which was
+   effectively the same interaction/layout as Our Approach's list) with
+   a static bento-style grid: every authorisation type shows its icon,
+   title and description at once. Reshuffled per feedback: a 3-column
+   track where the first (feature) card is pinned to column 1 and
+   spans both rows top-to-bottom — full end-to-end height — while the
+   remaining four cards auto-flow into the other two columns as a
+   plain 2-row x 2-column block beside it. */
+.difc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(220px, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+.difc-grid > .difc-card:first-child {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.difc-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 0;
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--difc-card-padding);
+  border-radius: var(--difc-radius-lg);
+  border: none;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.35);
+  transition:
+    transform 260ms var(--difc-ease),
+    box-shadow 260ms var(--difc-ease);
+}
+.difc-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.4);
+}
+.difc-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+.difc-card-title {
+  margin: 0;
+  margin-top: auto;
+  font-size: clamp(18px, 1.25vw, 22px);
+  font-weight: 400;
+  line-height: 1.18;
+  max-width: 16ch;
+}
+.difc-card-desc {
+  margin: -4px 0 0;
+  font-size: clamp(13px, 0.92vw, 15px);
+  line-height: 1.5;
+  max-width: 42ch;
+}
+
+/* Hover-reveal arrow — every card is a real link through to its own
+   (not-yet-built) page, so hovering lifts the card (see .difc-card:hover
+   above) and fades in a red circular arrow badge top-right, same
+   reveal-on-hover convention as .resources-card-arrow. */
+.difc-card-arrow {
+  position: absolute;
+  top: var(--difc-card-padding);
+  right: var(--difc-card-padding);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--difc-accent);
+  color: #ffffff;
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition:
+    opacity 220ms var(--difc-ease),
+    transform 220ms var(--difc-ease);
+}
+.difc-card:hover .difc-card-arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* One consistent card colour (white) for every tile, per feedback
+   against the earlier four-different-colours treatment. */
+.difc-card--white {
+  background: #ffffff;
+  color: #17181b;
+}
+.difc-card--white .difc-card-icon {
+  background: rgba(var(--difc-accent-rgb), 0.1);
+  color: var(--difc-accent);
+}
+.difc-card--white .difc-card-desc {
+  color: rgba(23, 24, 27, 0.62);
+}
+
+/* The one exception: a single dark burgundy gradient feature tile
+   standing in for a background-image card. */
+.difc-card--feature {
+  position: relative;
+  /* No fixed height needed — grid-row: 1 / 3 plus the default grid
+     stretch already makes this card fill the full combined height of
+     the 2x2 block beside it. */
+  background:
+    radial-gradient(
+      68% 74% at 86% 90%,
+      rgba(196, 80, 85, 0.5) 0%,
+      rgba(196, 80, 85, 0.18) 38%,
+      rgba(196, 80, 85, 0) 74%
+    ),
+    linear-gradient(135deg, #17181b 0%, #2b151d 26%, #5a1a28 54%, #8d2434 82%, #c45055 100%);
+  color: #ffffff;
+  overflow: hidden;
+}
+.difc-card--feature::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      70% 80% at 4% 4%,
+      rgba(10, 8, 12, 0.68) 0%,
+      rgba(10, 8, 12, 0.24) 46%,
+      rgba(10, 8, 12, 0) 78%
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.35) 100%);
+  pointer-events: none;
+}
+.difc-card--feature > * {
+  position: relative;
+  z-index: 1;
+}
+.difc-card--feature .difc-card-icon {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--difc-accent);
+}
+.difc-card--feature .difc-card-desc {
+  color: rgba(255, 255, 255, 0.8);
+}
+.difc-card--feature .difc-card-title {
+  margin-top: auto;
+  font-size: clamp(19px, 1.45vw, 24px);
+  max-width: none;
+  white-space: nowrap;
+}
+.difc-card--feature .difc-card-desc {
+  max-width: 30ch;
+}
+/* .difc-card--feature > * (above) resets every direct child to
+   position:relative for the dark-scrim stacking — this puts the arrow
+   badge's own position:absolute back, and swaps it to a white badge
+   with a red icon so it still reads clearly against the gold/maroon
+   gradient instead of a red-on-red badge disappearing into it. */
+.difc-card--feature .difc-card-arrow {
+  position: absolute;
+  background: #ffffff;
+  color: var(--difc-accent);
+}
+
+@media (max-width: 900px) {
+  .difc-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .difc-header-action {
+    width: min(100%, 520px);
+  }
+  /* Feature card moves to its own full-width row on top, the other
+     four keep their 2x2 block underneath. */
+  .difc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: auto;
+  }
+  .difc-grid > .difc-card:first-child {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    min-height: 220px;
+  }
+}
+@media (max-width: 560px) {
+  .difc-grid {
+    grid-template-columns: 1fr;
+  }
+  .difc-grid > .difc-card:first-child {
+    grid-column: 1;
+  }
+}

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DFSA — Hero Section Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ===================== DESIGN TOKENS ===================== */
+  :root{
+    --bg-void:#05060a;
+    --bg-surface:#0b0d12;
+    --bg-elevated: rgba(255,255,255,.045);
+    --glass-bg: rgba(9,11,16,.55);
+    --glass-bg-strong: rgba(9,11,16,.78);
+    --glass-border: rgba(255,255,255,.09);
+    --glass-border-strong: rgba(255,255,255,.18);
+    --text-primary:#f5f6f8;
+    --text-secondary: rgba(245,246,248,.66);
+    --text-tertiary: rgba(245,246,248,.42);
+    --accent-blue:#5b8def;
+    --accent-blue-dim: rgba(91,141,239,.16);
+    --accent-gold:#cba35c;
+    --accent-gold-dim: rgba(203,163,92,.14);
+    --line: rgba(255,255,255,.10);
+    --line-strong: rgba(255,255,255,.18);
+
+    --font-sans:'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-display:'Fraunces', ui-serif, Georgia, serif;
+
+    --space-1:8px; --space-2:16px; --space-3:24px; --space-4:32px; --space-5:40px;
+    --space-6:48px; --space-7:64px; --space-8:80px; --space-9:96px; --space-10:120px;
+
+    --radius-sm:8px; --radius-md:14px; --radius-lg:22px; --radius-xl:28px; --radius-pill:999px;
+
+    --ease-signature: cubic-bezier(.16,1,.3,1);
+    --duration-fast:200ms; --duration-base:450ms; --duration-slow:900ms;
+
+    --shadow-soft: 0 20px 60px -24px rgba(0,0,0,.6);
+    --shadow-elevated: 0 30px 90px -24px rgba(0,0,0,.7);
+    --container: 1360px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior:auto !important; }
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; background:var(--bg-void); color:var(--text-primary);
+    font-family:var(--font-sans); -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ul{ list-style:none; margin:0; padding:0; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; }
+  img,svg{ display:block; max-width:100%; }
+
+  .skip-link{
+    position:fixed; top:-60px; left:16px; z-index:1000;
+    background:var(--text-primary); color:var(--bg-void);
+    padding:12px 20px; border-radius:var(--radius-sm); font-weight:600; font-size:14px;
+    transition:top var(--duration-fast) var(--ease-signature);
+  }
+  .skip-link:focus{ top:16px; }
+
+  :focus-visible{ outline:2px solid var(--accent-blue); outline-offset:3px; border-radius:4px; }
+
+  .container{ max-width:var(--container); margin:0 auto; padding-inline:var(--space-6); }
+
+  /* ===================== SPLASH LOADER ===================== */
+  #splash{
+    position:fixed; inset:0; z-index:999; background:var(--bg-void);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:28px;
+    transition: opacity var(--duration-slow) var(--ease-signature), visibility 0s linear var(--duration-slow);
+  }
+  #splash.is-hidden{ opacity:0; visibility:hidden; pointer-events:none; }
+  #splash .mark{ width:96px; height:96px; }
+  #splash .mark path, #splash .mark circle{
+    stroke-dasharray: 340; stroke-dashoffset:340;
+    animation: draw 1.4s var(--ease-signature) forwards;
+  }
+  #splash .grid-line{ opacity:0; animation: fadeGrid 1.2s var(--ease-signature) forwards; }
+  #splash .grid-line:nth-child(2){ animation-delay:.08s; }
+  #splash .grid-line:nth-child(3){ animation-delay:.16s; }
+  #splash .grid-line:nth-child(4){ animation-delay:.24s; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  @keyframes fadeGrid{ to{ opacity:.35; } }
+  #splash .label{
+    font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--text-tertiary);
+    opacity:0; animation: riseIn .6s var(--ease-signature) .9s forwards;
+  }
+  @keyframes riseIn{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:translateY(0);} }
+  #splash .progress-track{
+    width:220px; height:2px; background:var(--line); border-radius:2px; overflow:hidden;
+    opacity:0; animation: riseIn .6s var(--ease-signature) .9s forwards;
+  }
+  #splash .progress-fill{
+    height:100%; width:0%; background:linear-gradient(90deg, var(--accent-blue), var(--accent-gold));
+    transition: width 1.6s var(--ease-signature);
+  }
+
+  /* ===================== NAV ===================== */
+  .nav{
+    position:fixed; top:0; left:0; right:0; z-index:200;
+    padding: 22px 0;
+    transition: padding var(--duration-base) var(--ease-signature), background var(--duration-base) var(--ease-signature), border-color var(--duration-base) var(--ease-signature);
+    border-bottom:1px solid transparent;
+  }
+  .nav.is-solid{
+    padding:14px 0;
+    background:var(--glass-bg-strong);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border-bottom:1px solid var(--glass-border);
+  }
+  .nav-inner{ display:flex; align-items:center; justify-content:space-between; gap:var(--space-4); }
+  .logo{ display:flex; align-items:center; gap:10px; font-weight:600; font-size:15px; letter-spacing:.02em; }
+  .logo .logo-mark{ width:28px; height:28px; }
+  .nav-primary{ display:flex; align-items:center; gap:var(--space-4); }
+  .nav-primary a{
+    position:relative; font-size:14px; font-weight:500; color:var(--text-secondary);
+    padding:8px 2px; transition:color var(--duration-fast) var(--ease-signature);
+  }
+  .nav-primary a::after{
+    content:''; position:absolute; left:0; right:0; bottom:2px; height:1px; background:var(--accent-gold);
+    transform:scaleX(0); transform-origin:left; transition:transform var(--duration-base) var(--ease-signature);
+  }
+  .nav-primary a:hover, .nav-primary a:focus-visible{ color:var(--text-primary); }
+  .nav-primary a:hover::after, .nav-primary a:focus-visible::after{ transform:scaleX(1); }
+
+  .nav-secondary{ display:flex; align-items:center; gap:var(--space-3); }
+  .icon-btn{
+    display:flex; align-items:center; justify-content:center; width:36px; height:36px;
+    border-radius:50%; border:1px solid transparent; color:var(--text-secondary);
+    transition: all var(--duration-fast) var(--ease-signature); background:transparent;
+  }
+  .icon-btn:hover{ color:var(--text-primary); background:var(--bg-elevated); border-color:var(--glass-border); }
+  .lang-switch{ font-size:13px; font-weight:500; color:var(--text-secondary); padding:8px 10px; border-radius:var(--radius-sm); }
+  .lang-switch:hover{ color:var(--text-primary); background:var(--bg-elevated); }
+  .btn-outline{
+    font-size:13px; font-weight:600; padding:9px 18px; border-radius:var(--radius-pill);
+    border:1px solid var(--glass-border-strong); color:var(--text-primary);
+    transition: all var(--duration-fast) var(--ease-signature);
+  }
+  .btn-outline:hover{ background:var(--bg-elevated); border-color:var(--text-primary); }
+  .btn-solid{
+    font-size:13px; font-weight:600; padding:10px 20px; border-radius:var(--radius-pill);
+    background:var(--text-primary); color:var(--bg-void); border:1px solid var(--text-primary);
+    transition: all var(--duration-fast) var(--ease-signature);
+  }
+  .btn-solid:hover{ background:var(--accent-gold); border-color:var(--accent-gold); color:#161207; }
+
+  .nav-toggle{ display:none; }
+
+  /* ===================== HERO ===================== */
+  .hero{ position:relative; min-height:100vh; display:flex; flex-direction:column; padding-top:132px; overflow:hidden; }
+  .hero-bg{ position:absolute; inset:0; z-index:0; }
+  .hero-bg canvas{ position:absolute; inset:0; width:100%; height:100%; opacity:.55; }
+  .hero-bg .skyline{ position:absolute; left:50%; bottom:0; width:130%; transform:translateX(-50%); opacity:.5; animation: driftSkyline 60s linear infinite alternate; }
+  @keyframes driftSkyline{ from{ transform:translateX(-52%);} to{ transform:translateX(-48%);} }
+  .hero-bg .scrim{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(1200px 700px at 78% 18%, rgba(91,141,239,.10), transparent 60%),
+      linear-gradient(180deg, rgba(5,6,10,.35) 0%, rgba(5,6,10,.55) 40%, rgba(5,6,10,.92) 100%);
+  }
+
+  .hero-content{ position:relative; z-index:2; flex:1; display:flex; align-items:center; }
+  .hero-grid{
+    display:grid; grid-template-columns: 1.15fr .85fr; gap:var(--space-8);
+    align-items:start; padding-block:var(--space-7);
+  }
+  .eyebrow{
+    font-size:12px; font-weight:600; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--accent-gold); margin-bottom:var(--space-3);
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:''; width:28px; height:1px; background:var(--accent-gold); }
+
+  .headline{
+    font-family:var(--font-display); font-weight:500; letter-spacing:-.01em;
+    font-size:clamp(2.5rem, 5vw, 5rem); line-height:1.04; margin:0 0 var(--space-4);
+    color:var(--text-primary);
+  }
+  .headline .line{ display:block; overflow:hidden; }
+  .headline .line span{
+    display:block; transform:translateY(110%); animation: revealLine var(--duration-slow) var(--ease-signature) forwards;
+  }
+  .headline .line:nth-child(1) span{ animation-delay:.15s; }
+  .headline .line:nth-child(2) span{ animation-delay:.3s; }
+  @keyframes revealLine{ to{ transform:translateY(0); } }
+
+  .lede{ font-size:1.0625rem; line-height:1.65; color:var(--text-secondary); max-width:46ch; margin:0 0 var(--space-6); }
+
+  /* ---- Search Experience ---- */
+  .search-wrap{ position:relative; max-width:640px; }
+  .search-shell{
+    display:flex; align-items:stretch; gap:0;
+    background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:var(--radius-pill);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    transition: border-color var(--duration-fast) var(--ease-signature), box-shadow var(--duration-fast) var(--ease-signature);
+    padding:6px;
+  }
+  .search-shell.is-focused{ border-color:var(--accent-blue); box-shadow:0 0 0 4px var(--accent-blue-dim); }
+  .search-category{
+    appearance:none; background:transparent; border:none; color:var(--text-secondary); font-size:13px; font-weight:500;
+    padding:0 var(--space-3); border-right:1px solid var(--glass-border); cursor:pointer;
+  }
+  .search-input{
+    flex:1; background:transparent; border:none; color:var(--text-primary); font-size:15px; padding:12px var(--space-3);
+    font-family:var(--font-sans);
+  }
+  .search-input::placeholder{ color:var(--text-tertiary); }
+  .search-input:focus{ outline:none; }
+  .search-submit{
+    display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%;
+    background:var(--text-primary); color:var(--bg-void); flex-shrink:0; transition:background var(--duration-fast);
+  }
+  .search-submit:hover{ background:var(--accent-gold); }
+
+  .search-panel{
+    position:absolute; top:calc(100% + 12px); left:0; right:0; z-index:50;
+    background:var(--glass-bg-strong); border:1px solid var(--glass-border); border-radius:var(--radius-lg);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    box-shadow:var(--shadow-elevated); padding:var(--space-5);
+    opacity:0; transform:translateY(-8px) scale(.98); pointer-events:none;
+    transition: all var(--duration-base) var(--ease-signature);
+  }
+  .search-shell.is-focused ~ .search-panel, .search-panel.is-open{
+    opacity:1; transform:translateY(0) scale(1); pointer-events:auto;
+  }
+  .search-panel-grid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--space-5); }
+  .search-panel h4{
+    font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--text-tertiary);
+    margin:0 0 var(--space-2);
+  }
+  .chip-list{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:var(--space-4); }
+  .chip{
+    font-size:13px; padding:8px 14px; border-radius:var(--radius-pill); border:1px solid var(--glass-border);
+    color:var(--text-secondary); transition: all var(--duration-fast) var(--ease-signature);
+  }
+  .chip:hover{ color:var(--text-primary); border-color:var(--accent-blue); background:var(--accent-blue-dim); }
+  .result-list{ display:flex; flex-direction:column; gap:2px; }
+  .result-item{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:10px 12px; border-radius:var(--radius-sm); font-size:13.5px; color:var(--text-secondary);
+    transition: all var(--duration-fast) var(--ease-signature);
+  }
+  .result-item:hover{ background:var(--bg-elevated); color:var(--text-primary); }
+  .result-item .tag{ font-size:11px; color:var(--text-tertiary); }
+
+  /* ---- Featured Publication Card ---- */
+  .featured-card{
+    background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:var(--radius-xl);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    box-shadow:var(--shadow-elevated); overflow:hidden;
+    animation: floatCard 6s var(--ease-signature) infinite;
+    transition: transform var(--duration-base) var(--ease-signature), border-color var(--duration-base);
+  }
+  .featured-card:hover{ transform:translateY(-6px); border-color:var(--glass-border-strong); animation-play-state:paused; }
+  @keyframes floatCard{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-8px);} }
+  .featured-media{
+    position:relative; aspect-ratio:16/10;
+    background:
+      linear-gradient(135deg, rgba(91,141,239,.22), rgba(203,163,92,.14)),
+      repeating-linear-gradient(115deg, rgba(255,255,255,.05) 0 2px, transparent 2px 14px);
+  }
+  .featured-media .cat-tag{
+    position:absolute; top:16px; left:16px; font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    padding:6px 12px; border-radius:var(--radius-pill); background:var(--glass-bg-strong); border:1px solid var(--glass-border);
+    color:var(--accent-gold);
+  }
+  .featured-body{ padding:var(--space-4); }
+  .featured-date{ font-size:12px; color:var(--text-tertiary); margin-bottom:8px; }
+  .featured-title{ font-family:var(--font-display); font-size:1.25rem; font-weight:500; line-height:1.3; margin:0 0 8px; }
+  .featured-summary{ font-size:13.5px; color:var(--text-secondary); line-height:1.6; margin:0 0 var(--space-4); }
+  .featured-controls{ display:flex; align-items:center; justify-content:space-between; }
+  .featured-nav-btns{ display:flex; gap:8px; }
+  .featured-nav-btns button{
+    width:32px; height:32px; border-radius:50%; border:1px solid var(--glass-border); color:var(--text-secondary);
+    display:flex; align-items:center; justify-content:center; transition: all var(--duration-fast);
+  }
+  .featured-nav-btns button:hover{ border-color:var(--accent-blue); color:var(--text-primary); }
+  .progress-dots{ display:flex; gap:6px; }
+  .progress-dots span{ width:6px; height:6px; border-radius:50%; background:var(--glass-border-strong); transition: all var(--duration-fast); }
+  .progress-dots span.is-active{ background:var(--accent-gold); width:18px; border-radius:4px; }
+
+  /* ===================== QUICK ACCESS ===================== */
+  .quick-access{ position:relative; z-index:2; padding-block:var(--space-6) var(--space-7); }
+  .quick-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:var(--space-3); }
+  .service-card{
+    position:relative; padding:var(--space-4) var(--space-3); border-radius:var(--radius-lg);
+    background:var(--bg-elevated); border:1px solid var(--glass-border); overflow:hidden;
+    opacity:0; transform:translateY(24px);
+    transition: transform var(--duration-slow) var(--ease-signature), border-color var(--duration-base), background var(--duration-base);
+    cursor:pointer;
+  }
+  .service-card.in-view{ opacity:1; transform:translateY(0); }
+  .service-card::before{
+    content:''; position:absolute; inset:0; opacity:0; border-radius:inherit;
+    background:linear-gradient(135deg, var(--accent-blue-dim), var(--accent-gold-dim));
+    transition:opacity var(--duration-base) var(--ease-signature);
+  }
+  .service-card:hover{ border-color:var(--glass-border-strong); }
+  .service-card:hover::before{ opacity:1; }
+  .service-card .icon{
+    width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:var(--bg-surface); border:1px solid var(--glass-border); margin-bottom:var(--space-3); position:relative; z-index:1;
+    color:var(--accent-blue);
+  }
+  .service-card .title{ position:relative; z-index:1; font-size:14.5px; font-weight:600; margin-bottom:4px; }
+  .service-card .sub{ position:relative; z-index:1; font-size:12.5px; color:var(--text-tertiary); }
+
+  /* ===================== LIVE TICKER ===================== */
+  .live-bar{
+    position:relative; z-index:2; border-top:1px solid var(--glass-border); background:var(--glass-bg);
+    backdrop-filter: blur(16px); padding-block:var(--space-3);
+  }
+  .live-bar-inner{ display:flex; align-items:center; gap:var(--space-4); }
+  .live-filters{ display:flex; gap:8px; flex-shrink:0; }
+  .filter-chip{
+    font-size:12px; font-weight:600; padding:7px 14px; border-radius:var(--radius-pill);
+    border:1px solid var(--glass-border); color:var(--text-tertiary); transition: all var(--duration-fast) var(--ease-signature);
+    white-space:nowrap;
+  }
+  .filter-chip.is-active{ background:var(--text-primary); color:var(--bg-void); border-color:var(--text-primary); }
+  .filter-chip:hover:not(.is-active){ color:var(--text-primary); border-color:var(--glass-border-strong); }
+  .ticker-viewport{ position:relative; flex:1; overflow:hidden; mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .ticker-track{ display:flex; gap:var(--space-6); width:max-content; animation: scrollTicker 32s linear infinite; }
+  .ticker-viewport:hover .ticker-track{ animation-play-state:paused; }
+  @keyframes scrollTicker{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+  .ticker-item{ display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-secondary); white-space:nowrap; }
+  .ticker-item .dot{ width:6px; height:6px; border-radius:50%; }
+  .ticker-item .tag{ font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--text-tertiary); }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 1180px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .featured-card{ max-width:460px; }
+    .quick-grid{ grid-template-columns:repeat(3,1fr); }
+    .quick-grid .service-card:nth-child(4), .quick-grid .service-card:nth-child(5){ grid-column:span 1; }
+  }
+
+  @media (max-width: 860px){
+    .nav-primary{ display:none; }
+    .nav-secondary .lang-switch, .nav-secondary .btn-outline{ display:none; }
+    .nav-toggle{ display:flex; }
+    .hero{ padding-top:96px; }
+    .hero-grid{ gap:var(--space-6); padding-block:var(--space-5); }
+    .headline{ font-size:clamp(2.25rem, 8vw, 3rem); }
+    .search-panel-grid{ grid-template-columns:1fr; }
+    .featured-card{ max-width:100%; }
+    .quick-grid{ grid-template-columns:repeat(2,1fr); }
+    .live-bar-inner{ flex-wrap:wrap; }
+    .live-filters{ order:2; width:100%; overflow-x:auto; padding-top:8px; border-top:1px solid var(--glass-border); }
+  }
+
+  @media (max-width: 520px){
+    .container{ padding-inline:var(--space-3); }
+    .quick-grid{ grid-template-columns:repeat(2,1fr); gap:12px; }
+    .featured-controls{ flex-wrap:wrap; gap:10px; }
+    .lede{ font-size:.9375rem; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#hero-main" class="skip-link">Skip to main content</a>
+
+<!-- ===================== SPLASH LOADER ===================== -->
+<div id="splash" role="status" aria-label="Loading DFSA">
+  <svg class="mark" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle cx="50" cy="50" r="46" stroke="#5b8def" stroke-width="1"/>
+    <path d="M30 65 L30 35 L50 35 Q64 35 64 47.5 Q64 60 50 60 L38 60" stroke="#f5f6f8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <line class="grid-line" x1="12" y1="50" x2="88" y2="50" stroke="#cba35c" stroke-width="0.6"/>
+    <line class="grid-line" x1="50" y1="12" x2="50" y2="88" stroke="#cba35c" stroke-width="0.6"/>
+  </svg>
+  <div class="progress-track"><div class="progress-fill" id="splashProgress"></div></div>
+  <span class="label">Dubai Financial Services Authority</span>
+</div>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav" id="siteNav">
+  <div class="container nav-inner">
+    <a href="#" class="logo">
+      <svg class="logo-mark" viewBox="0 0 28 28" fill="none" aria-hidden="true"><circle cx="14" cy="14" r="13" stroke="#5b8def"/><path d="M9 19V9h5.5a4 4 0 010 8H11" stroke="#f5f6f8" stroke-width="1.6" stroke-linecap="round"/></svg>
+      DFSA
+    </a>
+    <nav class="nav-primary" aria-label="Primary">
+      <a href="#">About</a>
+      <a href="#">Legal Framework</a>
+      <a href="#">What We Do</a>
+      <a href="#">Resources</a>
+      <a href="#">News</a>
+    </nav>
+    <div class="nav-secondary">
+      <button class="icon-btn" aria-label="Search" id="navSearchTrigger">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="lang-switch">EN / AR</button>
+      <a href="#" class="btn-outline">Public Register</a>
+      <a href="#" class="btn-solid">Sign In</a>
+      <button class="nav-toggle icon-btn" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<main class="hero" id="hero-main">
+  <div class="hero-bg" aria-hidden="true">
+    <canvas id="particleField"></canvas>
+    <svg class="skyline" viewBox="0 0 1600 400" preserveAspectRatio="xMidYMax slice" fill="none">
+      <g stroke="#5b8def" stroke-opacity=".35" stroke-width="1">
+        <rect x="60" y="180" width="40" height="220"/>
+        <rect x="120" y="120" width="34" height="280"/>
+        <rect x="180" y="220" width="46" height="180"/>
+        <path d="M260 400 L260 140 Q300 100 340 140 L340 400" />
+        <rect x="380" y="160" width="30" height="240"/>
+        <rect x="430" y="90" width="22" height="310" />
+        <rect x="470" y="200" width="50" height="200"/>
+        <rect x="560" y="140" width="34" height="260"/>
+        <rect x="620" y="230" width="60" height="170"/>
+        <rect x="710" y="100" width="26" height="300"/>
+        <rect x="760" y="170" width="40" height="230"/>
+        <rect x="830" y="210" width="55" height="190"/>
+        <rect x="910" y="130" width="28" height="270"/>
+        <rect x="960" y="190" width="42" height="210"/>
+        <rect x="1030" y="150" width="32" height="250"/>
+        <rect x="1090" y="230" width="58" height="170"/>
+        <rect x="1170" y="110" width="24" height="290"/>
+        <rect x="1220" y="180" width="44" height="220"/>
+        <rect x="1290" y="220" width="36" height="180"/>
+        <rect x="1350" y="160" width="30" height="240"/>
+        <rect x="1410" y="200" width="48" height="200"/>
+        <rect x="1480" y="140" width="26" height="260"/>
+      </g>
+    </svg>
+    <div class="scrim"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Dubai Financial Services Authority</p>
+        <h1 class="headline">
+          <span class="line"><span>Shaping the Future</span></span>
+          <span class="line"><span>of Financial Markets</span></span>
+        </h1>
+        <p class="lede">The DFSA is the independent regulator of financial services conducted in and from the Dubai International Financial Centre — fostering a transparent, resilient and globally trusted financial ecosystem.</p>
+
+        <div class="search-wrap">
+          <div class="search-shell" id="searchShell">
+            <select class="search-category" aria-label="Search category">
+              <option>All</option>
+              <option>Rulebook</option>
+              <option>Publications</option>
+              <option>Public Register</option>
+              <option>News</option>
+              <option>Forms</option>
+            </select>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search regulations, publications, entities…" role="combobox" aria-expanded="false" aria-controls="searchPanel" autocomplete="off" />
+            <button class="search-submit" aria-label="Submit search">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+          </div>
+
+          <div class="search-panel" id="searchPanel">
+            <div class="search-panel-grid">
+              <div>
+                <h4>Recent Searches</h4>
+                <div class="chip-list">
+                  <span class="chip">AML Guidelines</span>
+                  <span class="chip">Prudential Returns</span>
+                  <span class="chip">Client Money Rules</span>
+                </div>
+                <h4>Trending Topics</h4>
+                <div class="chip-list">
+                  <span class="chip">Sustainable Finance</span>
+                  <span class="chip">Crypto Token Regime</span>
+                  <span class="chip">Cyber Risk</span>
+                </div>
+              </div>
+              <div>
+                <h4>Popular Regulations</h4>
+                <div class="result-list">
+                  <a class="result-item" href="#"><span>General Module (GEN)</span><span class="tag">Rulebook</span></a>
+                  <a class="result-item" href="#"><span>Conduct of Business (COB)</span><span class="tag">Rulebook</span></a>
+                  <a class="result-item" href="#"><span>Anti-Money Laundering (AML)</span><span class="tag">Rulebook</span></a>
+                </div>
+                <h4 style="margin-top:16px;">Popular Publications</h4>
+                <div class="result-list">
+                  <a class="result-item" href="#"><span>DFSA Business Plan 2026</span><span class="tag">PDF</span></a>
+                  <a class="result-item" href="#"><span>Annual Report 2025</span><span class="tag">PDF</span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="featured-card" aria-label="Featured publication">
+        <div class="featured-media"><span class="cat-tag">Consultation Paper</span></div>
+        <div class="featured-body">
+          <p class="featured-date">14 July 2026</p>
+          <h3 class="featured-title">Enhancing the Regulatory Framework for Digital Assets</h3>
+          <p class="featured-summary">Proposed enhancements to strengthen oversight of tokenised securities and crypto-related activities within the DIFC.</p>
+          <div class="featured-controls">
+            <div class="featured-nav-btns">
+              <button aria-label="Previous publication">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              <button aria-label="Next publication">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+            </div>
+            <div class="progress-dots">
+              <span class="is-active"></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ===================== QUICK ACCESS ===================== -->
+  <div class="quick-access">
+    <div class="container quick-grid" id="quickGrid">
+      <div class="service-card"><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><div class="title">Access Rulebook</div><div class="sub">Modules &amp; guidance</div></div>
+      <div class="service-card"><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div><div class="title">Authorisation</div><div class="sub">Apply &amp; requirements</div></div>
+      <div class="service-card"><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg></div><div class="title">Public Register</div><div class="sub">Search entities</div></div>
+      <div class="service-card"><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div><div class="title">Decision Notices</div><div class="sub">Enforcement actions</div></div>
+      <div class="service-card"><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></div><div class="title">Careers</div><div class="sub">Join the DFSA</div></div>
+    </div>
+  </div>
+
+  <!-- ===================== LIVE TICKER ===================== -->
+  <div class="live-bar">
+    <div class="container live-bar-inner">
+      <div class="live-filters" role="tablist" aria-label="Filter live updates">
+        <button class="filter-chip is-active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="publications">Publications</button>
+        <button class="filter-chip" data-filter="updates">Regulatory Updates</button>
+        <button class="filter-chip" data-filter="alerts">Alerts</button>
+        <button class="filter-chip" data-filter="news">News</button>
+      </div>
+      <div class="ticker-viewport">
+        <div class="ticker-track" id="tickerTrack"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  var reduceMotion = false;
+  try { reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+
+  /* ---------- Splash loader ---------- */
+  var splash = document.getElementById('splash');
+  var progress = document.getElementById('splashProgress');
+  requestAnimationFrame(function(){ progress.style.width = '100%'; });
+  var splashDuration = reduceMotion ? 200 : 1900;
+  setTimeout(function(){ splash.classList.add('is-hidden'); }, splashDuration);
+
+  /* ---------- Nav glass on scroll ---------- */
+  var nav = document.getElementById('siteNav');
+  function onScroll(){
+    if(window.scrollY > 24){ nav.classList.add('is-solid'); } else { nav.classList.remove('is-solid'); }
+  }
+  document.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  /* ---------- Search panel ---------- */
+  var shell = document.getElementById('searchShell');
+  var input = document.getElementById('searchInput');
+  var panel = document.getElementById('searchPanel');
+  var navSearchTrigger = document.getElementById('navSearchTrigger');
+  function openPanel(){ shell.classList.add('is-focused'); panel.classList.add('is-open'); input.setAttribute('aria-expanded','true'); }
+  function closePanel(){ shell.classList.remove('is-focused'); panel.classList.remove('is-open'); input.setAttribute('aria-expanded','false'); }
+  input.addEventListener('focus', openPanel);
+  navSearchTrigger.addEventListener('click', function(){ input.focus(); window.scrollTo({top:0, behavior: reduceMotion ? 'auto' : 'smooth'}); });
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.search-wrap')){ closePanel(); }
+  });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closePanel(); input.blur(); } });
+
+  /* ---------- Featured card progress dots ---------- */
+  var dots = document.querySelectorAll('.progress-dots span');
+  var dotIndex = 0;
+  var prevBtn = document.querySelector('.featured-nav-btns button[aria-label="Previous publication"]');
+  var nextBtn = document.querySelector('.featured-nav-btns button[aria-label="Next publication"]');
+  function setDot(i){
+    dots.forEach(function(d,idx){ d.classList.toggle('is-active', idx===i); });
+    dotIndex = i;
+  }
+  nextBtn.addEventListener('click', function(){ setDot((dotIndex+1) % dots.length); });
+  prevBtn.addEventListener('click', function(){ setDot((dotIndex-1+dots.length) % dots.length); });
+
+  /* ---------- Quick access reveal on scroll ---------- */
+  var cards = document.querySelectorAll('.service-card');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry, i){
+        if(entry.isIntersecting){
+          setTimeout(function(){ entry.target.classList.add('in-view'); }, i*80);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold:.2 });
+    cards.forEach(function(c){ io.observe(c); });
+  } else {
+    cards.forEach(function(c){ c.classList.add('in-view'); });
+  }
+
+  /* ---------- Live ticker ---------- */
+  var tickerData = [
+    {tag:'Publication', text:'DFSA Business Plan 2026 now available', filter:'publications', color:'#cba35c'},
+    {tag:'Update', text:'Amendments to the Conduct of Business Module effective 1 Sept', filter:'updates', color:'#5b8def'},
+    {tag:'Alert', text:'Reminder: Q3 prudential returns due 30 September', filter:'alerts', color:'#e2735a'},
+    {tag:'News', text:'DFSA hosts regional FinTech regulators\' roundtable', filter:'news', color:'#5b8def'},
+    {tag:'Publication', text:'Consultation Paper No. 12 open for feedback', filter:'publications', color:'#cba35c'},
+    {tag:'Update', text:'Updated guidance on client money handling published', filter:'updates', color:'#5b8def'}
+  ];
+  var track = document.getElementById('tickerTrack');
+  function renderTicker(filter){
+    var items = tickerData.filter(function(d){ return filter==='all' || d.filter===filter; });
+    var doubled = items.concat(items);
+    track.innerHTML = doubled.map(function(d){
+      return '<div class="ticker-item"><span class="dot" style="background:'+d.color+'"></span><span class="tag">'+d.tag+'</span><span>'+d.text+'</span></div>';
+    }).join('');
+  }
+  renderTicker('all');
+  document.querySelectorAll('.filter-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      document.querySelectorAll('.filter-chip').forEach(function(c){ c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      renderTicker(chip.dataset.filter);
+    });
+  });
+
+  /* ---------- Particle field (data flow) ---------- */
+  var canvas = document.getElementById('particleField');
+  var ctx = canvas && canvas.getContext ? canvas.getContext('2d') : null;
+  var particles = [];
+  if(ctx){
+  function resize(){ canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+  function initParticles(){
+    particles = [];
+    var count = reduceMotion ? 0 : 46;
+    for(var i=0;i<count;i++){
+      particles.push({
+        x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+        r: Math.random()*1.4+.4, vy: -(Math.random()*.25+.05), a: Math.random()*.5+.15
+      });
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(function(p){
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = 'rgba(91,141,239,'+p.a+')';
+      ctx.fill();
+      p.y += p.vy;
+      if(p.y < -10){ p.y = canvas.height+10; p.x = Math.random()*canvas.width; }
+    });
+    if(!reduceMotion) requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', function(){ resize(); initParticles(); });
+  resize(); initParticles(); draw();
+  }
+})();
+</script>
+</body>
+</html>

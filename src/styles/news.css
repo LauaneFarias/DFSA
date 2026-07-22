@@ -1,0 +1,371 @@
+/**
+ * "Latest News" — the second section, sitting directly under the hero
+ * in normal page scroll (not the hero's single-viewport composition).
+ *
+ * A horizontal image-carousel of same-size cards (see LatestNews.tsx's
+ * doc comment for the full history). Every story is the same
+ * `.news-carousel-card` shape — a landscape photo with a tag pill
+ * overlaid, a plain title/date underneath — in a single row that's
+ * both mouse-drag-to-scroll and button-driven (plain prev/next arrows,
+ * no circular chrome), with no edge-fade: cards clip cleanly right at
+ * the white panel's own boundary, not before it.
+ */
+.news-section {
+  /* Matches the hero's Option 2 background (--hero-scope--light-bg in
+     hero.css) so the two sections merge into one continuous colour
+     instead of a visible seam between a slightly-off shade of each. */
+  --news-page-bg: #eeece9;
+  /* A pure-white panel with dark text, rather than the near-black
+     panel this used to be — every dependent colour below (tags,
+     shadows, the CTA) is the dark-on-white version to match. */
+  --news-panel-bg: #ffffff;
+  --news-ink-rgb: 23, 24, 27;
+  --news-text-primary: rgb(var(--news-ink-rgb));
+  --news-text-muted: rgba(23, 24, 27, 0.56);
+  --news-accent: #a31e2e;
+  --news-gold: #ae9867;
+  --news-slate: #7c8aa0;
+  --news-radius-panel: 40px;
+  --news-radius-xl: 28px;
+  --news-radius-lg: 20px;
+  --news-radius-pill: 999px;
+  --news-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --news-shadow-rest: 0 20px 44px -26px rgba(23, 24, 27, 0.16);
+  --news-shadow-hover: 0 30px 56px -20px rgba(23, 24, 27, 0.22);
+  background: var(--news-page-bg);
+  color: rgb(var(--news-ink-rgb));
+  font-family: var(--site-font-sans);
+  /* Top cut way down (was clamp(64px,9vw,120px)) — the hero already
+     ends cleanly at its own 100dvh edge with nothing extra below it,
+     so that much space was just an oversized gap before this section
+     even started. Bottom stays small too — the About section right
+     below shares this same page background (see --about-page-bg in
+     about.css), so the gap between the two only needs to be small
+     breathing room, not a full section gutter. */
+  padding: clamp(24px, 3vw, 48px) 0 clamp(24px, 3vw, 40px);
+  overflow: hidden;
+}
+/* Full device width, not a boxed/centered container — no max-width
+   cap, just the same fixed 32px (18px on small screens) edge padding
+   the hero itself uses for .hero-main, so both sections line up to
+   the same left/right edge instead of the hero going edge-to-edge
+   while this one sits in a much narrower centered box. */
+.news-container {
+  width: 100%;
+  padding-inline: 32px;
+}
+@media (max-width: 720px) {
+  .news-container {
+    padding-inline: 18px;
+  }
+}
+
+/* ---- White panel — the whole section, header included ---- */
+.news-panel {
+  /* Sized to its own content now — the old 800px min-height was
+     leaving a large slab of empty white space below the (much
+     shorter, fixed-height) carousel cards. */
+  --news-panel-pad-x: clamp(20px, 2.6vw, 32px);
+  display: flex;
+  flex-direction: column;
+  background: var(--news-panel-bg);
+  border-radius: var(--news-radius-panel);
+  padding: clamp(28px, 3.4vw, 44px) var(--news-panel-pad-x) clamp(24px, 3vw, 36px);
+  /* The carousel track below deliberately bleeds back out to this
+     panel's true edge (negative margin cancelling --news-panel-pad-x)
+     so a partially-visible card can extend all the way to the white
+     box's own boundary before it's cut — not before it, at this
+     padding line. This keeps that bleed contained to the panel itself
+     (and its rounded corners) instead of spilling past it. */
+  overflow: hidden;
+}
+
+.news-panel-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  gap: 24px;
+  padding-bottom: clamp(10px, 1.4vw, 16px);
+  flex-shrink: 0;
+}
+.news-heading {
+  font-family: var(--site-font-sans);
+  font-weight: 400;
+  /* Was clamp(2.4rem, 5vw, 3.9rem) — bigger than the hero's own h1
+     (clamp(1.9rem, 3.6vw, 3.1rem)), which breaks the hierarchy since
+     this is an h2. Brought in line with the other h2 section titles
+     (matches .approach-heading) so every secondary section reads at
+     one consistent, clearly-smaller-than-h1 size. */
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0;
+  color: var(--news-text-primary);
+}
+.news-heading-accent {
+  color: inherit;
+}
+/* Solid dark pill + a white circular "next" arrow — reads as the one
+   deliberate dark accent floating on the white panel. */
+.news-cta {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 6px 6px 24px;
+  border-radius: var(--news-radius-pill);
+  border: none;
+  background: rgb(var(--news-ink-rgb));
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  transition: box-shadow 220ms var(--news-ease);
+}
+.news-cta-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: rgb(var(--news-ink-rgb));
+  transition:
+    transform 220ms var(--news-ease),
+    background 220ms var(--news-ease),
+    color 220ms var(--news-ease);
+}
+.news-cta:hover .news-cta-icon {
+  background: var(--news-accent);
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+/* ---- Carousel head: story count (left) + prev/next (right) ---- */
+.news-carousel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Top stays tight against the heading above (per earlier feedback);
+     bottom — the gap to the cards themselves — opened back up since
+     10px read as too cramped against the counter/arrows row. */
+  padding: clamp(6px, 1vw, 12px) 4px clamp(20px, 2.6vw, 28px);
+  flex-shrink: 0;
+}
+.news-carousel-count {
+  margin: 0;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--news-text-muted);
+}
+.news-carousel-nav {
+  display: flex;
+  gap: 20px;
+}
+/* Plain arrows now — no circular button chrome around them. */
+.news-carousel-nav button {
+  width: auto;
+  height: auto;
+  padding: 2px;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: rgb(var(--news-ink-rgb));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 200ms var(--news-ease);
+}
+.news-carousel-nav button:hover:not(:disabled) {
+  color: var(--news-accent);
+}
+.news-carousel-nav button:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+
+/* ---- The carousel track itself ----
+   Real scroll-based carousel again (not an `order` reshuffle) — see
+   LatestNews.tsx's goTo(): next/prev call scrollBy() by one card's
+   width, so the row actually slides. Nothing fades at its edges, cards
+   just clip cleanly — but not too early: see the negative
+   margin-inline below. */
+.news-carousel-track {
+  --news-card-h: clamp(340px, 21vw, 390px);
+  --news-thumb-w: clamp(320px, 23vw, 380px);
+  --news-thumb-img-h: clamp(190px, 12vw, 222px);
+  /* Corner radius standardized at ~8% of the card width across every
+     card (was previously tied to the active/thumbnail split). */
+  --news-card-radius: 18px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* The track's own box now spans the panel's full width (negative
+     margin cancels the panel's side padding), then padding-inline puts
+     the actual card content back at the same visual start as before —
+     so a card straddling the edge can bleed into what used to be dead
+     padding space and only gets clipped once it truly reaches the
+     white panel's own boundary (which also owns the overflow:hidden
+     for the rounded corners), not at this inner padding line.
+     Vertical padding/margin stays as before, purely for hover lift +
+     shadow bleed room. */
+  padding: 16px var(--news-panel-pad-x) 32px;
+  margin: -16px calc(var(--news-panel-pad-x) * -1) -32px;
+}
+.news-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+.news-carousel-track.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+.news-carousel-track.is-dragging .news-carousel-card {
+  pointer-events: none;
+}
+
+/* ---- Each carousel card: photo (tag + arrow overlaid) + title/date ----
+   Every card is now the exact same size — no more "active card is
+   bigger" treatment. The active story still moves to the front via
+   its CSS `order` (see LatestNews.tsx), it just no longer resizes to
+   get there.
+
+   Experimenting with a light card frame per feedback: a very faint
+   (10%-opacity) outer border around the whole item, with a 10px gap
+   between that border and the photo/text inside it — box-sizing is
+   border-box (Tailwind's preflight), so this border+padding lives
+   *inside* the card's existing fixed width/height rather than growing
+   it; --news-card-h above was bumped by 20px to compensate so nothing
+   feels more cramped than before. */
+.news-carousel-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--news-thumb-w);
+  height: var(--news-card-h);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid rgba(var(--news-ink-rgb), 0.1);
+  border-radius: var(--news-card-radius);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 420ms var(--news-ease),
+    border-color 260ms var(--news-ease);
+}
+.news-carousel-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(var(--news-ink-rgb), 0.22);
+}
+.news-carousel-card-image {
+  position: relative;
+  flex-shrink: 0;
+  height: var(--news-thumb-img-h);
+  /* A touch tighter than the outer card radius so the two read as
+     concentric rather than identical. */
+  border-radius: calc(var(--news-card-radius) - 6px);
+  overflow: hidden;
+  box-shadow: var(--news-shadow-rest);
+  transition: box-shadow 420ms var(--news-ease);
+}
+.news-carousel-card:hover .news-carousel-card-image {
+  box-shadow: var(--news-shadow-hover);
+}
+.news-carousel-card-media {
+  object-fit: cover;
+  transition: transform 700ms var(--news-ease);
+}
+.news-carousel-card:hover .news-carousel-card-media {
+  transform: scale(1.06);
+}
+.news-carousel-card-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.68) 100%);
+}
+/* Tag pill — bottom-left over the photo, frosted glass so it reads
+   regardless of what's underneath. */
+.news-carousel-card-image .news-tag {
+  position: absolute;
+  z-index: 1;
+  left: 14px;
+  bottom: 14px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.news-carousel-card-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 0 4px;
+  overflow: hidden;
+}
+.news-carousel-card-title {
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(15px, 1vw, 18px);
+  line-height: 1.35;
+  color: var(--news-text-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news-date {
+  font-size: clamp(13px, 0.78vw, 15px);
+  color: var(--news-text-muted);
+}
+/* One neutral, subtle colour for the in-body tag variant (unused now
+   that every tag sits on the photo, kept in case a future card needs
+   a plain, non-overlaid tag). */
+.news-tag {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  flex: 0 0 auto;
+  width: fit-content;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  background: rgba(23, 24, 27, 0.06);
+  color: var(--news-text-muted);
+}
+.news-tag--news,
+.news-tag--alerts,
+.news-tag--events {
+  background: rgba(23, 24, 27, 0.06);
+  color: var(--news-text-muted);
+}
+
+@media (max-width: 900px) {
+  .news-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .news-carousel-card {
+    width: clamp(200px, 42vw, 260px);
+  }
+}

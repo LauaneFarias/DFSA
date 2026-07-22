@@ -1,22 +1,32 @@
-import { Container } from "@/components/ui";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { FontVersionSwitcher } from "@/components/layout/FontVersionSwitcher";
+import { AboutDfsa } from "@/sections/AboutDfsa";
+import { AdditionalResources } from "@/sections/AdditionalResources";
+import { DifcJourney } from "@/sections/DifcJourney";
+import { Hero } from "@/sections/Hero";
+import { LatestNews } from "@/sections/LatestNews";
+import { OurApproach } from "@/sections/OurApproach";
+import { SplashLoader } from "@/components/layout/SplashLoader";
+import "@/styles/hero.css";
+import "@/styles/news.css";
+import "@/styles/about.css";
+import "@/styles/approach.css";
+import "@/styles/difc.css";
+import "@/styles/resources.css";
+import "@/styles/footer.css";
 
-/**
- * Placeholder home route — confirms the build pipeline, fonts, Tailwind
- * theme, and smooth-scroll provider are wired correctly end to end.
- * No design has been applied yet; this gets replaced once page design
- * begins in the next project phase.
- */
 export default function Home() {
   return (
-    <Container
-      as="main"
-      className="flex min-h-screen flex-col items-center justify-center gap-4 text-center"
-    >
-      <p className="text-sm tracking-[0.2em] text-neutral-400 uppercase">Project foundation</p>
-      <h1 className="font-display text-3xl font-medium text-neutral-900 md:text-5xl">
-        DFSA — architecture ready
-      </h1>
-      <p className="max-w-md text-neutral-500">Design and page-building begin in the next phase.</p>
-    </Container>
+    <>
+      <SplashLoader />
+      <FontVersionSwitcher />
+      <Hero />
+      <LatestNews />
+      <AboutDfsa />
+      <OurApproach />
+      <DifcJourney />
+      <AdditionalResources />
+      <SiteFooter />
+    </>
   );
 }

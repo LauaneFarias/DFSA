@@ -1,0 +1,295 @@
+/**
+ * Site footer — final section. Full-bleed looping footer-1.mp4 video
+ * background (see .footer-bg below) under a dark scrim, in place of
+ * the earlier blurred-blob treatment. Divider and logo-mark glow still
+ * use the same brand red (#a31e2e, matches --hero-accent) and gold
+ * (#ae9867, matches hero/about/difc --*-gold) already established
+ * elsewhere on the site.
+ */
+.footer-section {
+  --footer-surface: #000000;
+  --footer-red: #a31e2e;
+  --footer-red-rgb: 163, 30, 46;
+  --footer-gold: #ae9867;
+  --footer-gold-rgb: 174, 152, 103;
+  --footer-text: #f7f6f3;
+  --footer-text-secondary: rgba(247, 246, 243, 0.62);
+  --footer-border: rgba(247, 246, 243, 0.14);
+  --footer-radius-pill: 999px;
+  --footer-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  background: var(--footer-surface);
+  color: var(--footer-text);
+  font-family: var(--site-font-sans);
+  padding-top: clamp(48px, 6vw, 72px);
+  overflow: hidden;
+}
+.footer-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-inline: 32px;
+}
+@media (max-width: 720px) {
+  .footer-container {
+    padding-inline: 18px;
+  }
+}
+
+/* Video background — user-supplied footer-1.mp4, full-bleed and
+   looping (same object-fit: cover treatment as .hero-bg-video), with a
+   dark scrim over it so every piece of footer content stays legible
+   regardless of what the footage is doing underneath. Replaces the
+   earlier blurred-blob aurora treatment. */
+.footer-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.footer-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.footer-bg-scrim {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.28);
+  background-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.08) 0%,
+    rgba(0, 0, 0, 0.24) 55%,
+    rgba(0, 0, 0, 0.46) 100%
+  );
+  pointer-events: none;
+}
+
+.footer-newsletter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+  padding-bottom: clamp(36px, 5vw, 56px);
+}
+.footer-newsletter-copy {
+  max-width: 480px;
+}
+.footer-newsletter-heading {
+  margin: 0 0 10px;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  letter-spacing: -0.01em;
+}
+.footer-newsletter-sub {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--footer-text-secondary);
+}
+.footer-newsletter-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 560px;
+}
+.footer-newsletter-input {
+  flex: 1;
+  height: 56px;
+  padding: 0 20px;
+  border-radius: var(--footer-radius-pill);
+  border: 1px solid var(--footer-border);
+  background: rgba(247, 246, 243, 0.05);
+  color: var(--footer-text);
+  font-size: 14px;
+  font-family: inherit;
+  transition:
+    border-color 200ms var(--footer-ease),
+    background 200ms var(--footer-ease);
+}
+.footer-newsletter-input::placeholder {
+  color: var(--footer-text-secondary);
+}
+.footer-newsletter-input:focus {
+  outline: none;
+  border-color: rgba(247, 246, 243, 0.4);
+  background: rgba(247, 246, 243, 0.08);
+}
+/* Standard site CTA — same solid-white-pill + dark circular arrow
+   recipe as .about-cta/.news-cta/.difc-cta, so Subscribe reads as the
+   same pattern as every other CTA on the page. */
+.footer-newsletter-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  height: 56px;
+  padding: 0 6px 0 24px;
+  border-radius: var(--footer-radius-pill);
+  border: none;
+  background: #ffffff;
+  color: #17181b;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 220ms var(--footer-ease);
+}
+.footer-newsletter-submit-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #17181b;
+  color: #ffffff;
+  flex-shrink: 0;
+  transition:
+    transform 220ms var(--footer-ease),
+    background 220ms var(--footer-ease);
+}
+.footer-newsletter-submit:hover .footer-newsletter-submit-icon {
+  background: var(--footer-red);
+  transform: translateX(3px);
+}
+
+/* Big logo-mark moment — replaces an oversized wordmark. Sized to
+   overflow its own row slightly (negative margin) so it reads as a
+   deliberate oversized centerpiece the way the reference layout's
+   giant type did, while the blend glow above shows through the gaps
+   in the mark's own negative space. */
+.footer-mark {
+  display: flex;
+  justify-content: center;
+  margin: clamp(-8px, -1vw, -4px) 0 clamp(8px, 2vw, 24px);
+  pointer-events: none;
+}
+.footer-mark-logo {
+  width: clamp(220px, 30vw, 440px);
+  height: auto;
+  filter: drop-shadow(0 0 60px rgba(var(--footer-red-rgb), 0.35))
+    drop-shadow(0 0 90px rgba(var(--footer-gold-rgb), 0.3));
+  opacity: 0.94;
+}
+
+.footer-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--footer-red-rgb), 0.45) 25%,
+    rgba(var(--footer-gold-rgb), 0.6) 50%,
+    rgba(var(--footer-red-rgb), 0.45) 75%,
+    transparent 100%
+  );
+}
+
+.footer-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  padding: clamp(36px, 5vw, 52px) 0;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1 1 220px;
+}
+.footer-nav-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(40px, 6vw, 96px);
+}
+.footer-logo {
+  height: 44px;
+  width: auto;
+  flex-shrink: 0;
+}
+.footer-brand-name {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--footer-text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.footer-brand-name span {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: rgba(247, 246, 243, 0.4);
+}
+
+.footer-links-group {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.footer-links-heading {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(247, 246, 243, 0.4);
+}
+.footer-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-links-list a {
+  font-size: 14px;
+  color: var(--footer-text-secondary);
+  transition: color 180ms var(--footer-ease);
+}
+.footer-links-list a:hover {
+  color: var(--footer-text);
+}
+.footer-social-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.footer-social-list a span {
+  display: inline-block;
+}
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 22px 0;
+  border-top: 1px solid var(--footer-border);
+  font-size: 12px;
+  color: rgba(247, 246, 243, 0.45);
+}
+
+@media (max-width: 720px) {
+  .footer-newsletter-form {
+    min-width: 0;
+    width: 100%;
+  }
+  .footer-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .footer-nav-groups {
+    gap: 32px;
+  }
+}

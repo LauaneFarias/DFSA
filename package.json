@@ -15,6 +15,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",
     "gsap": "^3.15.0",
