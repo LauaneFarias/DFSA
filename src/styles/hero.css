@@ -1506,21 +1506,19 @@
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
-  min-height: 78px;
+  min-height: 96px;
   border-bottom: 1px solid rgba(247, 246, 243, 0.12);
   opacity: 0;
-  transform: translateY(-14px);
-  transition:
-    opacity 520ms var(--hero-ease),
-    transform 520ms var(--hero-ease);
+  transform: none;
+  transition: opacity 360ms var(--hero-ease);
 }
 .hero-menu-overlay.is-open .hero-mega-top {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 .hero-mega-close {
   position: fixed;
-  top: 31px;
+  top: 22px;
   right: 40px;
   z-index: 2;
   display: flex;
@@ -1545,7 +1543,8 @@
   display: flex;
   align-items: center;
   gap: 22px;
-  padding-inline: clamp(24px, 4vw, 58px) 112px;
+  min-height: 96px;
+  padding-inline: clamp(28px, 4vw, 58px) 120px;
   color: rgba(247, 246, 243, 0.88);
 }
 .hero-mega-search input {
@@ -2802,17 +2801,18 @@
     padding: 74px 18px 18px;
   }
   .hero-mega-top {
-    min-height: 68px;
+    min-height: 76px;
   }
   .hero-mega-close {
-    top: 14px;
+    top: 16px;
     right: 18px;
-    width: 52px;
-    height: 52px;
+    width: 44px;
+    height: 44px;
   }
   .hero-mega-search {
     gap: 14px;
-    padding-inline: 18px 84px;
+    min-height: 76px;
+    padding-inline: 20px 78px;
   }
   .hero-mega-body {
     grid-template-columns: 1fr;

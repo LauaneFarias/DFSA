@@ -155,7 +155,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-right: 28px;
+  padding-right: 76px;
 }
 .approach-card h3 {
   margin: 0;
@@ -169,7 +169,7 @@
 .approach-card p {
   display: -webkit-box;
   margin: 0;
-  max-width: 36ch;
+  max-width: min(36ch, calc(100% - 12px));
   min-height: 3.9em;
   overflow: hidden;
   color: rgba(23, 24, 27, 0.58);
@@ -254,7 +254,7 @@
   }
   .approach-card-copy {
     gap: 8px;
-    padding-right: 48px;
+    padding-right: 64px;
   }
   .approach-card h3 {
     font-size: clamp(1.35rem, 6vw, 1.72rem);
@@ -265,6 +265,7 @@
     min-height: 0;
     font-size: 12px;
     line-height: 1.28;
+    max-width: 100%;
     -webkit-line-clamp: 2;
   }
   .approach-card-arrow {
