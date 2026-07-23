@@ -30,7 +30,7 @@
   background: var(--about-page-bg);
   color: rgb(var(--about-ink-rgb));
   font-family: var(--site-font-sans);
-  padding: clamp(24px, 3vw, 40px) 0;
+  padding: clamp(16px, 2vw, 28px) 0;
 }
 .about-container {
   width: 100%;
@@ -54,7 +54,7 @@
   grid-template-columns: minmax(240px, 1fr) minmax(280px, 1.15fr);
   gap: clamp(28px, 4.5vw, 64px);
   align-items: start;
-  padding-bottom: clamp(40px, 5.5vw, 68px);
+  padding-bottom: clamp(24px, 3.6vw, 42px);
 }
 .about-heading {
   font-family: var(--site-font-sans);

@@ -59,6 +59,7 @@ type Props = {
 export function FloatingNav({ themeOption }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [introPlayed, setIntroPlayed] = useState(false);
   const [locale, setLocale] = useState<"en" | "ar">("en");
   const [activeMegaLabel, setActiveMegaLabel] = useState<(typeof MEGA_MENU)[number]["label"]>(
     MEGA_MENU[0].label,
@@ -73,6 +74,11 @@ export function FloatingNav({ themeOption }: Props) {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => setIntroPlayed(true), 5600);
+    return () => window.clearTimeout(id);
   }, []);
 
   useEffect(() => {
@@ -92,7 +98,13 @@ export function FloatingNav({ themeOption }: Props) {
 
   return (
     <>
-      <header className={cn("hero-navbar-outer", scrolled && "is-scrolled")}>
+      <header
+        className={cn(
+          "hero-navbar-outer",
+          scrolled && "is-scrolled",
+          introPlayed && "has-played-intro",
+        )}
+      >
         <div className="hero-navbar-left">
           <Image
             /* Option 1 (dark video bg) keeps the white+gold mark for

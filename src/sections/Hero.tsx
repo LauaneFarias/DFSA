@@ -45,8 +45,9 @@ import { ServiceCardRow } from "./ServiceCardRow";
  * Option 2 was saved; that one-frame correction is an acceptable
  * trade-off for a demo toggle like this.
  *
- * Still a strict single-viewport (no scroll) composition — see
- * .hero-scope's height:100dvh + overflow:hidden in hero.css.
+ * Desktop keeps the strict single-viewport composition; responsive
+ * breakpoints switch to a natural-height stacked layout so the search
+ * panel, quick cards, and ticker can breathe without clipping.
  */
 export function Hero() {
   const [activeScene, setActiveScene] = useState(0);
@@ -65,6 +66,7 @@ export function Hero() {
   // skipped for reduced-motion users.
   useEffect(() => {
     if (reduceMotion) return;
+    if (window.matchMedia("(max-width: 980px)").matches) return;
     const scope = scopeRef.current;
     if (!scope) return;
 
@@ -108,13 +110,12 @@ export function Hero() {
                 Welcome to the Dubai Financial Services Authority
               </p>
               <h1 className="hero-headline">
-                {/* Always a deliberate 2-line break now (used to be
-                    Option 1 only, with Option 2 rendering the whole
-                    thing on one line) — per feedback, both options
-                    should read the same way. */}
-                We Are Shaping The Financial Markets
-                <br />
-                Of The Future
+                <span className="hero-headline-mobile-line">We Are Shaping The</span>
+                <span className="hero-headline-desktop-line">
+                  We Are Shaping The Financial Markets
+                </span>
+                <span className="hero-headline-mobile-line">Financial Markets Of The Future</span>
+                <span className="hero-headline-desktop-line">Of The Future</span>
               </h1>
               <HeroSearch ref={searchInputRef} />
             </div>

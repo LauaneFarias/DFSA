@@ -31,7 +31,7 @@ const NEWS_SLIDES: NewsSlide[] = [
     tag: "Alerts",
     title: "Supervision Annual Outreach Session announced for Q2 2026",
     date: "12 March, 2026",
-    image: "/images/news/news1.png",
+    image: "/images/news/news4.jpg",
   },
 ];
 
@@ -75,7 +75,7 @@ export function HeroNewsCard() {
             src={slide.image}
             alt=""
             fill
-            sizes="160px"
+            sizes="(max-width: 620px) 40vw, (max-width: 980px) 38vw, 160px"
             className="hero-news-card-img"
             priority
           />

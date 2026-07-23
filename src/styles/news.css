@@ -42,7 +42,7 @@
      below shares this same page background (see --about-page-bg in
      about.css), so the gap between the two only needs to be small
      breathing room, not a full section gutter. */
-  padding: clamp(24px, 3vw, 48px) 0 clamp(24px, 3vw, 40px);
+  padding: clamp(14px, 2vw, 28px) 0 clamp(16px, 2vw, 28px);
   overflow: hidden;
 }
 /* Full device width, not a boxed/centered container — no max-width
@@ -70,7 +70,7 @@
   flex-direction: column;
   background: var(--news-panel-bg);
   border-radius: var(--news-radius-panel);
-  padding: clamp(28px, 3.4vw, 44px) var(--news-panel-pad-x) clamp(24px, 3vw, 36px);
+  padding: clamp(22px, 2.8vw, 34px) var(--news-panel-pad-x) clamp(20px, 2.4vw, 28px);
   /* The carousel track below deliberately bleeds back out to this
      panel's true edge (negative margin cancelling --news-panel-pad-x)
      so a partially-visible card can extend all the way to the white
