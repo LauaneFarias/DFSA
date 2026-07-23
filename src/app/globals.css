@@ -7,8 +7,13 @@
 }
 
 html[data-font-version="graphik"] {
+  --site-font-sans: var(--font-graphik), var(--font-niveau), ui-sans-serif, system-ui, sans-serif;
+  --site-font-display: var(--site-font-sans);
+}
+
+html[data-font-version="adelle"] {
   --site-font-sans:
-    "Graphik", "Graphik Web", "Graphik LC", var(--font-niveau), ui-sans-serif, system-ui, sans-serif;
+    var(--font-adelle-sans), var(--font-niveau), ui-sans-serif, system-ui, sans-serif;
   --site-font-display: var(--site-font-sans);
 }
 
@@ -34,6 +39,7 @@ body {
 
 .font-version-switcher button {
   min-width: 70px;
+  padding-inline: 12px;
   height: 32px;
   border-radius: 999px;
   border: none;
@@ -56,9 +62,11 @@ body {
   .font-version-switcher {
     left: 18px;
     bottom: 16px;
+    max-width: calc(100vw - 36px);
   }
 
   .font-version-switcher button {
-    min-width: 62px;
+    min-width: 0;
+    padding-inline: 10px;
   }
 }

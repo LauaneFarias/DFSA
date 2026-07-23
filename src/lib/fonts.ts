@@ -7,6 +7,12 @@ import localFont from "next/font/local";
  *
  * Niveau Grotesk (HVD Fonts, local) -> primary sitewide sans/display
  *   typeface (--font-niveau), used for both body copy and headings.
+ * Graphik (local) -> optional preview typeface in the bottom-left
+ *   switcher (--font-graphik), bundled so the comparison is consistent
+ *   across machines.
+ * Adelle Sans (local) -> optional preview typeface in the same
+ *   switcher (--font-adelle-sans), also bundled for consistent
+ *   machine-independent comparison.
  * Fraunces -> kept available (--font-fraunces) but not used by the
  *   current light hero direction; was the editorial serif in the
  *   earlier dark cinematic direction.
@@ -81,6 +87,80 @@ export const niveau = localFont({
   ],
 });
 
+export const graphik = localFont({
+  variable: "--font-graphik",
+  display: "swap",
+  src: [
+    {
+      path: "../../public/fonts/Graphik/Graphik-Light.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Graphik/Graphik-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Graphik/Graphik-Medium.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Graphik/Graphik-Semibold.otf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Graphik/Graphik-Bold.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Graphik/Graphik-Black.otf",
+      weight: "900",
+      style: "normal",
+    },
+  ],
+});
+
+export const adelleSans = localFont({
+  variable: "--font-adelle-sans",
+  display: "swap",
+  src: [
+    {
+      path: "../../public/fonts/AdelleSans/AdelleSans-Light.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/AdelleSans/AdelleSans-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/AdelleSans/AdelleSans-Semibold.otf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/AdelleSans/AdelleSans-Bold.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/AdelleSans/AdelleSans-Extrabold.otf",
+      weight: "800",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/AdelleSans/AdelleSans-Heavy.otf",
+      weight: "900",
+      style: "normal",
+    },
+  ],
+});
+
 export const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
@@ -95,4 +175,4 @@ export const dotGothic = DotGothic16({
   display: "swap",
 });
 
-export const fontVariables = `${niveau.variable} ${fraunces.variable} ${dotGothic.variable}`;
+export const fontVariables = `${niveau.variable} ${graphik.variable} ${adelleSans.variable} ${fraunces.variable} ${dotGothic.variable}`;
