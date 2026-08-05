@@ -45,6 +45,11 @@
   padding: clamp(14px, 2vw, 28px) 0 clamp(16px, 2vw, 28px);
   overflow: hidden;
 }
+
+html[data-site-version="feedback-images"] .news-section {
+  padding-top: clamp(48px, 6vw, 88px);
+}
+
 /* Full device width, not a boxed/centered container — no max-width
    cap, just the same fixed 32px (18px on small screens) edge padding
    the hero itself uses for .hero-main, so both sections line up to
@@ -288,6 +293,17 @@
   object-fit: cover;
   transition: transform 700ms var(--news-ease);
 }
+.news-carousel-card-media--feedback-images {
+  opacity: 0;
+}
+html[data-site-version="feedback-images"]
+  .news-carousel-card-image:has(.news-carousel-card-media--feedback-images)
+  .news-carousel-card-media--default {
+  opacity: 0;
+}
+html[data-site-version="feedback-images"] .news-carousel-card-media--feedback-images {
+  opacity: 1;
+}
 .news-carousel-card:hover .news-carousel-card-media {
   transform: scale(1.06);
 }
@@ -332,6 +348,10 @@
   overflow: hidden;
 }
 
+.feedback-news-title-lines {
+  display: none;
+}
+
 .news-date {
   font-size: clamp(13px, 0.78vw, 15px);
   color: var(--news-text-muted);
@@ -359,6 +379,151 @@
   color: var(--news-text-muted);
 }
 
+/* In Feedback the photograph becomes the card itself. The story copy
+   sits in a compact white panel over the image, while the category
+   remains an independent pill in the upper-left corner. */
+html[data-font-version="feedback"] .news-carousel-card {
+  gap: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  box-shadow: var(--news-shadow-rest);
+}
+
+html[data-font-version="feedback"] .news-carousel-card:hover {
+  border-color: transparent;
+  box-shadow: var(--news-shadow-hover);
+}
+
+html[data-font-version="feedback"] .news-carousel-card-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  box-shadow: none;
+}
+
+html[data-font-version="feedback"] .news-carousel-card:hover .news-carousel-card-image {
+  box-shadow: none;
+}
+
+html[data-font-version="feedback"] .news-carousel-card-image::after {
+  display: none;
+}
+
+html[data-font-version="feedback"] .news-carousel-card-image .news-tag {
+  top: 16px;
+  right: auto;
+  bottom: auto;
+  left: 16px;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(23, 24, 27, 0.46);
+  color: #ffffff;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+html[data-font-version="feedback"] .news-carousel-card-body {
+  position: absolute;
+  z-index: 2;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  flex: none;
+  height: 104px;
+  min-height: 104px;
+  justify-content: flex-end;
+  gap: 7px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(23, 24, 27, 0.46);
+  box-shadow: 0 8px 28px rgba(var(--news-ink-rgb), 0.16);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+html[data-font-version="feedback"] .news-carousel-card-title {
+  color: #ffffff;
+}
+
+html[data-font-version="feedback"] .news-date {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+@media (min-width: 981px) {
+  /* Feedback uses the reference's bento composition while retaining
+     the site's existing card surfaces, imagery and interaction style. */
+  html[data-font-version="feedback"] .news-carousel-head {
+    display: none;
+  }
+
+  html[data-font-version="feedback"] .news-panel-header {
+    padding-bottom: 32px;
+  }
+
+  html[data-font-version="feedback"] .news-carousel-track {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: clamp(340px, 26vw, 390px);
+    display: grid;
+    gap: 20px;
+    overflow: visible;
+    cursor: default;
+    padding: 16px 0 32px;
+    margin: -16px 0 -32px;
+  }
+
+  html[data-font-version="feedback"] .news-carousel-card {
+    width: auto;
+    height: 100%;
+    min-width: 0;
+  }
+
+  html[data-font-version="feedback"] .news-carousel-card:nth-child(1),
+  html[data-font-version="feedback"] .news-carousel-card:nth-child(4),
+  html[data-font-version="feedback"] .news-carousel-card:nth-child(5) {
+    grid-column: span 2;
+  }
+
+  html[data-font-version="feedback"] .news-carousel-card:nth-child(n + 6) {
+    display: none;
+  }
+
+  html[data-font-version="feedback"] .news-carousel-card-title,
+  html[data-font-version="feedback"] .news-date {
+    font-size: 16px;
+  }
+
+  html[data-font-version="feedback"] .news-carousel-card-title {
+    font-weight: 600;
+  }
+
+  html[data-font-version="feedback"]
+    .news-carousel-card-title:has(.feedback-news-title-lines)
+    .news-title-default {
+    display: none;
+  }
+
+  html[data-font-version="feedback"] .feedback-news-title-lines {
+    display: flex;
+    flex-direction: column;
+  }
+
+  html[data-font-version="feedback"] .feedback-news-title-lines > span {
+    white-space: nowrap;
+  }
+
+  html[data-font-version="feedback"] .news-date {
+    font-weight: 300;
+  }
+
+  html[data-font-version="feedback"] .news-tag {
+    font-size: 14px;
+  }
+}
+
 @media (max-width: 900px) {
   .news-panel-header {
     flex-direction: column;
@@ -367,5 +532,255 @@
   }
   .news-carousel-card {
     width: clamp(200px, 42vw, 260px);
+  }
+}
+
+/* ============================================================
+   Feedbacks 04/08 — two-part news layout
+   ------------------------------------------------------------
+   Only this dated iteration (html[data-site-iteration="feedback-0408"])
+   swaps the carousel for a feature + 2×2 text grid. Because 04/08 also
+   carries data-site-version="feedback-images" and data-font-version=
+   "feedback", the carousel rules above still resolve for it — so here we
+   hide the carousel outright and reveal the .news-0408 block instead.
+
+   Design: the brief calls for DFSA brand patterns (from the Primary
+   Colours PNGs) as the background treatment in place of stock photos —
+   a bold red pattern behind the tall left feature, a subtle cream
+   pattern behind the text-led grid, both kept legible.
+   ============================================================ */
+.news-0408 {
+  display: none;
+}
+
+/* In the 04/08 iteration: drop the carousel head + track, show the
+   two-part block. These sit after the carousel rules in source, so at
+   equal specificity they win over the feedback grid/flex track rules. */
+html[data-site-iteration="feedback-0408"] .news-carousel-head,
+html[data-site-iteration="feedback-0408"] .news-carousel-track {
+  display: none;
+}
+html[data-site-iteration="feedback-0408"] .news-0408 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(16px, 1.6vw, 24px);
+  margin-top: clamp(8px, 1.2vw, 16px);
+}
+
+/* ---- Shared date label ---- */
+.news-0408-date {
+  font-size: clamp(12px, 0.8vw, 14px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--news-text-muted);
+}
+
+/* ---- Left: one tall feature on the DFSA red brand pattern ---- */
+.news-0408-feature {
+  position: relative;
+  display: flex;
+  /* Text sits on the lower portion of the pattern — no panel/box. */
+  align-items: flex-end;
+  min-height: clamp(420px, 34vw, 560px);
+  border-radius: var(--news-radius-xl);
+  overflow: hidden;
+  isolation: isolate;
+  text-decoration: none;
+  color: #ffffff;
+  /* A photograph now, not the brand pattern — a real editorial image
+     from the Photo set (Museum of the Future). */
+  background: #26221f url("/images/news-0408-feature.jpg") center / cover no-repeat;
+  box-shadow: var(--news-shadow-rest);
+  transition:
+    transform 480ms var(--news-ease),
+    box-shadow 480ms var(--news-ease);
+}
+/* Bottom gradient built in so the copy stays legible over the lower
+   portion of the photo without adding a visible box behind the text.
+   Neutral (near-black) rather than red-tinted, to suit any photo. */
+.news-0408-feature::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, rgba(10, 12, 16, 0) 36%, rgba(6, 8, 12, 0.74) 100%);
+}
+.news-0408-feature:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--news-shadow-hover);
+}
+.news-0408-feature-text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: clamp(24px, 2.4vw, 40px);
+}
+/* The site's standard glass pill — the same dark, blurred chip used on
+   the news cards, approach cards and DIFC cards elsewhere
+   (rgba(23,24,27,0.46) + blur(14px) + white text). Applied to both the
+   feature and grid tags so this section matches the rest of the site. */
+.news-0408 .news-tag {
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--news-radius-pill);
+  background: rgba(23, 24, 27, 0.36);
+  color: #ffffff;
+  -webkit-backdrop-filter: blur(22px) saturate(1.3);
+  backdrop-filter: blur(22px) saturate(1.3);
+}
+
+.news-0408-feature .news-0408-date {
+  color: rgba(255, 255, 255, 0.86);
+}
+.news-0408-feature-title {
+  margin: 0;
+  max-width: 20ch;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 2.2vw, 2.35rem);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  text-shadow: 0 1px 26px rgba(38, 4, 8, 0.38);
+}
+
+/* ---- Right: four text-led stories in a 2×2 grid ---- */
+.news-0408-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: clamp(12px, 1.2vw, 18px);
+}
+.news-0408-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: clamp(18px, 1.5vw, 26px);
+  border-radius: var(--news-radius-lg);
+  overflow: hidden;
+  isolation: isolate;
+  text-decoration: none;
+  color: var(--news-text-primary);
+  /* The DFSA brand pattern shows at full strength as the card surface,
+     with a top-down white veil layered over it — strongest where the
+     date/tag/headline sit, fading out lower so the pattern stays clearly
+     visible while the headline remains legible. */
+  background:
+    var(--cell-veil, linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2))),
+    var(--cell-pattern, url("/patterns/dfsa-pattern-cream.png")) center / cover no-repeat;
+  border: 1px solid rgba(var(--news-ink-rgb), 0.08);
+  transition:
+    transform 420ms var(--news-ease),
+    box-shadow 420ms var(--news-ease),
+    border-color 260ms var(--news-ease);
+}
+/* The four specified DFSA brand patterns (#3 gold, #4 cream, #7 slate,
+   #12 warm grey), one per cell. The veil strength is tuned per pattern:
+   the darker colour patterns (gold, slate) get a stronger white wash in
+   the text zone; the lighter ones (cream, warm grey) a gentler one. */
+.news-0408-cell:nth-child(1) {
+  --cell-pattern: url("/patterns/dfsa-pattern-gold.png");
+  --cell-veil: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.74) 0%,
+    rgba(255, 255, 255, 0.44) 52%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+}
+.news-0408-cell:nth-child(2) {
+  --cell-pattern: url("/patterns/dfsa-pattern-cream.png");
+  --cell-veil: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.2) 55%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+.news-0408-cell:nth-child(3) {
+  --cell-pattern: url("/patterns/dfsa-pattern-slate.png");
+  --cell-veil: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.82) 0%,
+    rgba(255, 255, 255, 0.56) 52%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+}
+.news-0408-cell:nth-child(4) {
+  --cell-pattern: url("/patterns/dfsa-pattern-warmgrey.png");
+  --cell-veil: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.58) 0%,
+    rgba(255, 255, 255, 0.26) 55%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+}
+.news-0408-cell:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--news-ink-rgb), 0.16);
+  box-shadow: var(--news-shadow-rest);
+}
+.news-0408-cell-title {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(15px, 1vw, 18px);
+  line-height: 1.3;
+  color: var(--news-text-primary);
+}
+
+/* ---- Entrance (pure CSS, replays each time the tab is activated) ----
+   fill-mode: backwards holds the hidden start-state through the stagger
+   delay, then reverts to base styles when done — so the hover lift keeps
+   working afterwards (a `forwards`/`both` fill would outrank :hover). */
+@keyframes news0408In {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+html[data-site-iteration="feedback-0408"] .news-0408-feature,
+html[data-site-iteration="feedback-0408"] .news-0408-cell {
+  animation: news0408In 620ms var(--news-ease) backwards;
+}
+html[data-site-iteration="feedback-0408"] .news-0408-cell:nth-child(1) {
+  animation-delay: 0.08s;
+}
+html[data-site-iteration="feedback-0408"] .news-0408-cell:nth-child(2) {
+  animation-delay: 0.14s;
+}
+html[data-site-iteration="feedback-0408"] .news-0408-cell:nth-child(3) {
+  animation-delay: 0.2s;
+}
+html[data-site-iteration="feedback-0408"] .news-0408-cell:nth-child(4) {
+  animation-delay: 0.26s;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 980px) {
+  html[data-site-iteration="feedback-0408"] .news-0408 {
+    grid-template-columns: 1fr;
+  }
+  .news-0408-feature {
+    min-height: clamp(320px, 58vw, 440px);
+  }
+}
+@media (max-width: 560px) {
+  .news-0408-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-site-iteration="feedback-0408"] .news-0408-feature,
+  html[data-site-iteration="feedback-0408"] .news-0408-cell {
+    animation: none;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 
 type FeedId = "publications" | "alerts" | "news";
@@ -43,8 +43,22 @@ const FEEDS: Record<FeedId, { text: string; time: string }[]> = {
  */
 export function HeroNewsTicker() {
   const [active, setActive] = useState<FeedId>("publications");
+  const [isFeedbackVersion, setIsFeedbackVersion] = useState(false);
   const items = FEEDS[active];
   const loopItems = [...items, ...items];
+
+  useEffect(() => {
+    const syncVersion = () => {
+      setIsFeedbackVersion(document.documentElement.dataset.fontVersion === "feedback");
+    };
+    syncVersion();
+    const observer = new MutationObserver(syncVersion);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-font-version"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="hero-news-ticker">
@@ -67,7 +81,18 @@ export function HeroNewsTicker() {
         <div className="hero-ticker-track" key={active}>
           {loopItems.map((item, i) => (
             <span className="hero-ticker-item" key={`${active}-${i}`}>
-              <span className="hero-ticker-text">{item.text}</span>
+              {isFeedbackVersion ? (
+                <a
+                  className="hero-ticker-text hero-ticker-link"
+                  href="#"
+                  aria-hidden={i >= items.length}
+                  tabIndex={i >= items.length ? -1 : undefined}
+                >
+                  {item.text}
+                </a>
+              ) : (
+                <span className="hero-ticker-text">{item.text}</span>
+              )}
               <span className="hero-ticker-time">{item.time}</span>
             </span>
           ))}

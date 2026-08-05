@@ -197,6 +197,22 @@
   line-height: 1.7;
   max-width: 38ch;
 }
+
+@media (min-width: 981px) {
+  html[data-font-version="feedback"] .about-subheading,
+  html[data-font-version="feedback"] .about-intro-text,
+  html[data-font-version="feedback"] .about-panel-card-description {
+    font-size: 16px;
+  }
+
+  html[data-font-version="feedback"] .about-panel-card-title {
+    font-weight: 600;
+  }
+
+  html[data-font-version="feedback"] .about-panel-card-description {
+    font-weight: 400;
+  }
+}
 /* Hidden until the card itself is hovered/focused — the panel is the
    hover trigger, the "Learn more" pill is the payoff, replacing the
    old arrow-only hint. Kept in normal flow (opacity/transform only,
@@ -317,6 +333,59 @@
 }
 .about-panel-card--accent .about-panel-card-description {
   color: rgba(255, 255, 255, 0.72);
+}
+
+/* Only Feedback + Images swaps the policy card's original footage for the
+   supplied video. The existing ::before layer stays above it, preserving the
+   darker top-left gradient and established red treatment. */
+.about-panel-card-video--feedback-images {
+  display: none;
+}
+
+html[data-site-version="feedback-images"]
+  .about-panel-card--accent
+  .about-panel-card-video--default {
+  display: none;
+}
+
+html[data-site-version="feedback-images"]
+  .about-panel-card--video
+  .about-panel-card-video--default {
+  display: none;
+}
+
+html[data-site-version="feedback-images"]
+  .about-panel-card--accent
+  .about-panel-card-video--feedback-images {
+  display: block;
+  filter: none;
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+
+html[data-site-version="feedback-images"]
+  .about-panel-card--video
+  .about-panel-card-video--feedback-images {
+  display: block;
+  filter: none;
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+
+html[data-site-version="feedback-images"] .about-panel-card--accent::before {
+  background:
+    radial-gradient(
+      76% 88% at 4% 2%,
+      rgba(8, 7, 10, 0.78) 0%,
+      rgba(15, 8, 12, 0.46) 42%,
+      rgba(15, 8, 12, 0) 78%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(24, 10, 16, 0.42) 0%,
+      rgba(91, 24, 37, 0.24) 56%,
+      rgba(163, 30, 46, 0.18) 100%
+    );
 }
 
 @media (max-width: 860px) {

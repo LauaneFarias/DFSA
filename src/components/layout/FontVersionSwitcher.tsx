@@ -3,12 +3,16 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 
-type FontVersion = "niveau" | "graphik" | "adelle";
+type FontVersion =
+  "niveau" | "graphik" | "adelle" | "feedback" | "feedback-images" | "feedback-0408";
 
 const FONT_OPTIONS = [
   { value: "niveau", label: "Niveau" },
   { value: "graphik", label: "Graphik" },
   { value: "adelle", label: "Adelle Sans" },
+  { value: "feedback", label: "Feedback" },
+  { value: "feedback-images", label: "Feedback + Images" },
+  { value: "feedback-0408", label: "Feedbacks 04/08" },
 ] as const;
 
 const STORAGE_KEY = "dfsa-font-version";
@@ -18,7 +22,22 @@ function isFontVersion(value: string | null): value is FontVersion {
 }
 
 function applyFontVersion(next: FontVersion) {
-  document.documentElement.dataset.fontVersion = next;
+  // Feedback + Images starts as an exact visual/behavioural copy of
+  // Feedback. `siteVersion` keeps the tabs independently targetable
+  // for future image changes, while `fontVersion` continues to activate
+  // every existing Feedback style and interaction without duplicating a
+  // large set of selectors.
+  //
+  // Feedbacks 04/08 in turn starts as an exact copy of Feedback + Images:
+  // it reuses the whole `feedback-images` style set via `siteVersion`, but
+  // gets its own `siteIteration` hook so future 04/08-specific tweaks can
+  // target it in isolation (`html[data-site-iteration="feedback-0408"]`)
+  // without duplicating the feedback-images selectors.
+  const root = document.documentElement;
+  root.dataset.siteVersion = next === "feedback-0408" ? "feedback-images" : next;
+  root.dataset.siteIteration = next;
+  root.dataset.fontVersion =
+    next === "feedback-images" || next === "feedback-0408" ? "feedback" : next;
   try {
     window.localStorage.setItem(STORAGE_KEY, next);
   } catch {

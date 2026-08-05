@@ -11,7 +11,8 @@ html[data-font-version="graphik"] {
   --site-font-display: var(--site-font-sans);
 }
 
-html[data-font-version="adelle"] {
+html[data-font-version="adelle"],
+html[data-font-version="feedback"] {
   --site-font-sans:
     var(--font-adelle-sans), var(--font-niveau), ui-sans-serif, system-ui, sans-serif;
   --site-font-display: var(--site-font-sans);
@@ -68,5 +69,13 @@ body {
   .font-version-switcher button {
     min-width: 0;
     padding-inline: 10px;
+  }
+}
+
+/* Feedback desktop type scale: ordinary text starts at 14px.
+   Uppercase UI labels keep their original compact sizing. */
+@media (min-width: 981px) {
+  html[data-font-version="feedback"] .font-version-switcher button {
+    font-size: 14px;
   }
 }

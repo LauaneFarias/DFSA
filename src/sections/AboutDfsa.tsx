@@ -13,6 +13,7 @@ type PanelCard = {
   description: string;
   icon: React.ReactNode;
   videoSrc?: string;
+  feedbackImagesVideoSrc?: string;
 };
 
 const CARDS: PanelCard[] = [
@@ -24,6 +25,7 @@ const CARDS: PanelCard[] = [
       "The DFSA is an integrated principles-based regulator that follows a risk-based approach in the supervision of regulated firms, including Financial Institutions, Registered Auditors, and Credit Rating Agencies.",
     icon: <GrowthIcon size={24} />,
     videoSrc: "/videos/hero4.mp4",
+    feedbackImagesVideoSrc: "/videos/feedback-images-growth-light.mp4",
   },
   {
     key: "policy",
@@ -33,6 +35,7 @@ const CARDS: PanelCard[] = [
       "We work closely with international regulators and industry bodies to keep the DIFC's regulatory framework at the forefront of global standards.",
     icon: <CollaborationIcon size={24} />,
     videoSrc: "/videos/hero4.mp4",
+    feedbackImagesVideoSrc: "/videos/feedback-images-policy.mp4",
   },
 ];
 
@@ -75,6 +78,9 @@ export function AboutDfsa() {
       videos.forEach((video) => video.pause());
     } else {
       videos.forEach((video) => {
+        video.playbackRate = video.classList.contains("about-panel-card-video--feedback-images")
+          ? 0.5
+          : 1;
         video.play().catch(() => {
           /* autoplay can be blocked before user interaction — safe to ignore */
         });
@@ -139,8 +145,23 @@ export function AboutDfsa() {
             >
               {card.videoSrc ? (
                 <video
-                  className="about-panel-card-video"
+                  className="about-panel-card-video about-panel-card-video--default"
                   src={card.videoSrc}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  aria-hidden="true"
+                />
+              ) : null}
+              {card.feedbackImagesVideoSrc ? (
+                <video
+                  className="about-panel-card-video about-panel-card-video--feedback-images"
+                  src={card.feedbackImagesVideoSrc}
+                  onLoadedMetadata={(event) => {
+                    event.currentTarget.playbackRate = 0.5;
+                  }}
                   autoPlay
                   muted
                   loop

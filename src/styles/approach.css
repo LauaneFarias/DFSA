@@ -19,9 +19,16 @@
   padding: clamp(32px, 3.6vw, 54px) 0 clamp(22px, 2.4vw, 34px);
   overflow: hidden;
 }
+
+html[data-font-version="feedback"] .approach-section {
+  padding-bottom: clamp(32px, 4.1vw, 59px);
+}
 .approach-container {
   width: 100%;
   padding-inline: clamp(24px, 4vw, 72px);
+}
+.approach-panel {
+  width: 100%;
 }
 @media (max-width: 720px) {
   .approach-container {
@@ -117,6 +124,9 @@
   max-width: 660px;
   justify-self: end;
 }
+.approach-card-slot {
+  min-width: 0;
+}
 .approach-card {
   position: relative;
   min-height: clamp(160px, 12vw, 194px);
@@ -133,6 +143,9 @@
     transform 260ms var(--approach-ease),
     box-shadow 260ms var(--approach-ease),
     background 260ms var(--approach-ease);
+}
+.approach-card-slot > .approach-card {
+  height: 100%;
 }
 .approach-card:hover {
   transform: translateY(-6px);
@@ -187,6 +200,153 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+html[data-font-version="feedback"] .approach-card p {
+  opacity: 1;
+  transform: none;
+}
+
+@media (min-width: 981px) {
+  html[data-font-version="feedback"] .approach-container {
+    padding-inline: 32px;
+  }
+
+  html[data-font-version="feedback"] .approach-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  html[data-font-version="feedback"] .approach-left {
+    width: 100%;
+  }
+
+  html[data-font-version="feedback"] .approach-card-stack {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: minmax(224px, auto);
+    width: 100%;
+    max-width: none;
+    justify-self: stretch;
+  }
+
+  html[data-font-version="feedback"] .approach-card-slot {
+    grid-column: span 2;
+    min-height: 224px;
+  }
+
+  html[data-font-version="feedback"] .approach-card {
+    min-height: 100%;
+  }
+
+  html[data-font-version="feedback"] .approach-card-slot.approach-card--4,
+  html[data-font-version="feedback"] .approach-card-slot.approach-card--5 {
+    grid-column: span 3;
+  }
+
+  html[data-font-version="feedback"] .approach-intro-text {
+    font-size: 16px;
+  }
+
+  html[data-font-version="feedback"] .approach-card p {
+    font-size: 14px;
+    font-weight: 400;
+    max-width: 40ch;
+    min-height: 0;
+    -webkit-line-clamp: 4;
+  }
+
+  html[data-font-version="feedback"] .approach-card h3 {
+    font-weight: 600;
+  }
+
+  html[data-font-version="feedback"] .approach-card-arrow {
+    background: rgba(23, 24, 27, 0.08);
+  }
+}
+
+/* Feedback + Images presents the restored layout inside the same kind
+   of inset, rounded photographic panel used by Start your DIFC journey. */
+html[data-site-version="feedback-images"] .approach-container {
+  padding-inline: 32px;
+}
+
+html[data-site-version="feedback-images"] .approach-panel {
+  position: relative;
+  isolation: isolate;
+  min-height: clamp(560px, 68vh, 820px);
+  padding: clamp(34px, 4.5vw, 64px) clamp(24px, 3.4vw, 56px);
+  border-radius: 40px;
+  overflow: hidden;
+  background: url("/images/feedback-images-approach-bg.png") center / cover no-repeat;
+}
+
+html[data-site-version="feedback-images"] .approach-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  background-image: linear-gradient(
+    155deg,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.06) 55%,
+    rgba(0, 0, 0, 0.18) 100%
+  );
+  pointer-events: none;
+}
+
+html[data-site-version="feedback-images"] .approach-panel > .approach-grid {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-site-version="feedback-images"] .approach-heading {
+  color: #ffffff;
+}
+
+html[data-site-version="feedback-images"] .approach-card {
+  color: #ffffff;
+  background: rgba(23, 24, 27, 0.46);
+  border-color: transparent;
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.42);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  transition:
+    transform 260ms var(--approach-ease),
+    box-shadow 260ms var(--approach-ease),
+    background 260ms var(--approach-ease);
+}
+
+html[data-site-version="feedback-images"] .approach-card:hover {
+  transform: translate3d(0, -6px, 0);
+  background: rgba(23, 24, 27, 0.54);
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.4);
+}
+
+html[data-site-version="feedback-images"] .approach-card h3 {
+  color: #ffffff;
+}
+
+html[data-site-version="feedback-images"] .approach-card p {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+html[data-site-version="feedback-images"] .approach-card-domain-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+html[data-site-version="feedback-images"] .approach-card-arrow {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+html[data-site-version="feedback-images"] .approach-card:hover .approach-card-arrow {
+  background: var(--approach-accent);
+  color: #ffffff;
+}
 .approach-card-arrow {
   position: absolute;
   right: clamp(18px, 1.6vw, 24px);
@@ -224,6 +384,17 @@
   }
   .approach-card {
     min-height: 0;
+  }
+
+  html[data-site-version="feedback-images"] .approach-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  html[data-site-version="feedback-images"] .approach-card-stack {
+    width: 100%;
+    max-width: none;
+    justify-self: stretch;
   }
 }
 
@@ -274,4 +445,64 @@
     width: 38px;
     height: 38px;
   }
+
+  html[data-site-version="feedback-images"] .approach-container {
+    padding-inline: 18px;
+  }
+
+  html[data-site-version="feedback-images"] .approach-panel {
+    min-height: 0;
+    padding: 28px 18px;
+    border-radius: 28px;
+  }
+
+  html[data-site-version="feedback-images"] .approach-card-stack {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-site-version="feedback-images"] .approach-card-slot,
+  html[data-site-version="feedback-images"] .approach-card-slot.approach-card--5 {
+    grid-column: auto;
+    min-height: 180px;
+  }
+
+  html[data-site-version="feedback-images"] .approach-card {
+    min-height: 100%;
+  }
+}
+
+/* ── Feedbacks 04/08: glassier, more transparent approach cards ───────
+   A more see-through frosted glass than the feedback-images default —
+   lower fill opacity, stronger blur + saturation, and a faint light
+   edge. Scoped to the 04/08 iteration only. */
+/* 04/08 uses a different approach-panel photo (the golden dusk building)
+   in place of the feedback-images approach background. */
+html[data-site-iteration="feedback-0408"] .approach-panel {
+  background: url("/images/approach-0408-bg.jpg") center / cover no-repeat;
+}
+
+html[data-site-iteration="feedback-0408"] .approach-card {
+  background: rgba(23, 24, 27, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 20px 46px -26px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(32px) saturate(1.25);
+  backdrop-filter: blur(32px) saturate(1.25);
+}
+html[data-site-iteration="feedback-0408"] .approach-card:hover {
+  background: rgba(23, 24, 27, 0.24);
+}
+/* Uncrowd the resting cards: the feedback rule above forces every
+   description open, which reads as busy. Restore the base design's
+   behaviour for 04/08 — icon + title at rest, description revealed on
+   hover / keyboard focus. (The card keeps its height, so nothing jumps.) */
+html[data-site-iteration="feedback-0408"] .approach-card p {
+  opacity: 0;
+  transform: translateY(6px);
+}
+html[data-site-iteration="feedback-0408"] .approach-card:hover p,
+html[data-site-iteration="feedback-0408"] .approach-card:focus-within p {
+  opacity: 1;
+  transform: none;
 }

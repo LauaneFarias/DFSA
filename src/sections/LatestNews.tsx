@@ -14,6 +14,8 @@ type NewsItem = {
   date: string;
   tag: NewsTag;
   title: string;
+  feedbackTitleLines?: readonly [string, string];
+  feedbackImagesImage?: string;
   /** Every story gets its own photo. Only one real press photo exists
    * in public/images/news right now, so every item below
    * placeholder-reuses it — swap each `image` path once a story has
@@ -54,31 +56,42 @@ const NEWS_ITEMS: NewsItem[] = [
     date: "18 March, 2026",
     tag: "News",
     title: "DFSA outlines 2026 regulatory priorities for Dubai's financial centre",
+    feedbackTitleLines: [
+      "DFSA outlines 2026 regulatory priorities",
+      "for Dubai's financial centre",
+    ],
     image: NEWS_IMAGES[0],
+    feedbackImagesImage: "/images/feedback-images-news-1.png",
   },
   {
     date: "15 March, 2026",
     tag: "Alerts",
     title: "Supervision Annual Outreach Session",
     image: NEWS_IMAGES[1],
+    feedbackImagesImage: "/images/feedback-images-news-2.png",
   },
   {
     date: "15 March, 2026",
     tag: "News",
     title: "Nasdaq Dubai reopens for trading effective Wednesday, 4 March",
     image: NEWS_IMAGES[2],
+    feedbackImagesImage: "/images/feedback-images-news-3.png",
   },
   {
     date: "15 March, 2026",
     tag: "News",
     title: "Notice of Amendments to Legislation March 2026",
+    feedbackTitleLines: ["Notice of Amendments to Legislation", "March 2026"],
     image: NEWS_IMAGES[3],
+    feedbackImagesImage: "/images/feedback-images-news-4.png",
   },
   {
     date: "15 March, 2026",
     tag: "Events",
     title: "Amana Financial Services (Dubai) Limited impersonated",
+    feedbackTitleLines: ["Amana Financial Services (Dubai) Limited", "impersonated"],
     image: NEWS_IMAGES[4],
+    feedbackImagesImage: "/images/feedback-images-news-5.png",
   },
   {
     date: "12 March, 2026",
@@ -166,6 +179,11 @@ export function LatestNews() {
   const reduceMotion = usePrefersReducedMotion();
   const total = NEWS_ITEMS.length;
 
+  // Feedbacks 04/08 two-part layout: the first story becomes the tall
+  // left feature, the next four fill the right-hand 2×2 text grid.
+  const featureStory = NEWS_ITEMS[0];
+  const gridStories = NEWS_ITEMS.slice(1, 5);
+
   // Keeps the "01 / 10" counter and the prev/next disabled state
   // matched to wherever the row actually is — called after every
   // scroll (button-triggered, dragged, or swiped).
@@ -200,6 +218,12 @@ export function LatestNews() {
   // just the track, so a fast drag that leaves the track's bounds
   // mid-gesture doesn't get dropped.
   function onTrackMouseDown(e: React.MouseEvent) {
+    if (
+      document.documentElement.dataset.fontVersion === "feedback" &&
+      window.matchMedia("(min-width: 981px)").matches
+    ) {
+      return;
+    }
     const track = trackRef.current;
     if (!track) return;
     dragRef.current = { startX: e.pageX, startScroll: track.scrollLeft, moved: false };
@@ -334,17 +358,63 @@ export function LatestNews() {
                       alt=""
                       fill
                       unoptimized
-                      className="news-carousel-card-media"
+                      className="news-carousel-card-media news-carousel-card-media--default"
                     />
+                    {item.feedbackImagesImage ? (
+                      <Image
+                        src={item.feedbackImagesImage}
+                        alt=""
+                        fill
+                        unoptimized
+                        className="news-carousel-card-media news-carousel-card-media--feedback-images"
+                      />
+                    ) : null}
                     <span className={tagClass(item.tag)}>{item.tag}</span>
                   </div>
                   <div className="news-carousel-card-body">
-                    <h3 className="news-carousel-card-title">{item.title}</h3>
+                    <h3 className="news-carousel-card-title">
+                      <span className="news-title-default">{item.title}</span>
+                      {item.feedbackTitleLines && (
+                        <span className="feedback-news-title-lines">
+                          <span>{item.feedbackTitleLines[0]}</span>
+                          <span>{item.feedbackTitleLines[1]}</span>
+                        </span>
+                      )}
+                    </h3>
                     <span className="news-date">{item.date}</span>
                   </div>
                 </a>
               );
             })}
+          </div>
+
+          {/* ── Feedbacks 04/08 news layout ──────────────────────────
+              A two-part composition shown only in the 04/08 iteration
+              (CSS-gated on html[data-site-iteration="feedback-0408"],
+              which also hides the carousel above). Left: one tall
+              feature story with its date/tag/headline set directly on a
+              DFSA brand pattern. Right: four text-led stories in a 2×2
+              grid on a subtle brand pattern — no photography. The
+              entrance animation is pure CSS (see news.css) so it plays
+              cleanly each time the tab is activated, rather than relying
+              on the JS reveal that only runs once on mount. */}
+          <div className="news-0408">
+            <a href="#" className="news-0408-feature" aria-label={featureStory.title}>
+              <div className="news-0408-feature-text">
+                <span className="news-0408-date">{featureStory.date}</span>
+                <span className={tagClass(featureStory.tag)}>{featureStory.tag}</span>
+                <h3 className="news-0408-feature-title">{featureStory.title}</h3>
+              </div>
+            </a>
+            <div className="news-0408-grid">
+              {gridStories.map((item) => (
+                <a href="#" key={item.title} className="news-0408-cell" aria-label={item.title}>
+                  <span className="news-0408-date">{item.date}</span>
+                  <span className={tagClass(item.tag)}>{item.tag}</span>
+                  <h3 className="news-0408-cell-title">{item.title}</h3>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>

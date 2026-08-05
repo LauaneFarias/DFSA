@@ -37,3 +37,10 @@ next-env.d.ts
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# Raw source material (large originals kept locally; optimized copies live in public/)
+/DFSA.zip
+/DFSA Primary Colours PNGs/
+/Photo/
+/Video/
+/Driving sustainable scalable and high-quality growth background.mp4

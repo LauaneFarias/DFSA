@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { ArrowRightIcon, CloseIcon, SearchIcon, TwoLinesIcon } from "@/components/ui/icons";
 import { getHeroLogoSrc } from "@/hooks/useHeroThemeOption";
 import { cn } from "@/lib/cn";
+import { NavSearchOverlay } from "./NavSearchOverlay";
 
 /** Visible in the center of the floating bar, always open (not hidden behind the hamburger). */
 const NAVBAR_LINKS = ["About", "Legal Framework", "What We Do", "Resources", "News", "More"];
@@ -58,6 +59,7 @@ type Props = {
  */
 export function FloatingNav({ themeOption }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [introPlayed, setIntroPlayed] = useState(false);
   const [locale, setLocale] = useState<"en" | "ar">("en");
@@ -82,15 +84,18 @@ export function FloatingNav({ themeOption }: Props) {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    document.body.style.overflow = menuOpen || searchOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [menuOpen]);
+  }, [menuOpen, searchOpen]);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setMenuOpen(false);
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        setSearchOpen(false);
+      }
     }
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
@@ -116,8 +121,16 @@ export function FloatingNav({ themeOption }: Props) {
             alt="DFSA"
             width={58}
             height={38}
-            className="hero-logo"
+            className="hero-logo hero-logo--full"
             priority
+            unoptimized
+          />
+          <Image
+            src="/images/logo-mark-white.svg"
+            alt="DFSA"
+            width={58}
+            height={38}
+            className="hero-logo hero-logo--mark"
             unoptimized
           />
         </div>
@@ -128,10 +141,27 @@ export function FloatingNav({ themeOption }: Props) {
               {label}
             </a>
           ))}
+          {MEGA_MENU.map((item) => (
+            <a key={item.label} href="#" className="hero-navbar-feedback-link">
+              {item.label}
+            </a>
+          ))}
+          <a href="#" className="hero-navbar-feedback-link">
+            E-portal
+          </a>
         </nav>
 
         <div className="hero-navbar-right">
-          <button className="hero-navbar-search-btn" aria-label="Search">
+          <button
+            className="hero-navbar-search-btn"
+            aria-label="Search"
+            aria-expanded={searchOpen}
+            onClick={() => {
+              if (document.documentElement.dataset.fontVersion !== "feedback") return;
+              setMenuOpen(false);
+              setSearchOpen(true);
+            }}
+          >
             <SearchIcon size={18} />
           </button>
 
@@ -156,6 +186,10 @@ export function FloatingNav({ themeOption }: Props) {
             />
           </div>
 
+          <a href="#" className="hero-navbar-sign-in">
+            Sign in
+          </a>
+
           <button
             className="hero-navbar-menu-btn"
             aria-label="Menu"
@@ -166,6 +200,8 @@ export function FloatingNav({ themeOption }: Props) {
           </button>
         </div>
       </header>
+
+      <NavSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       <div className={cn("hero-menu-overlay", menuOpen && "is-open")}>
         <div className="hero-mega">

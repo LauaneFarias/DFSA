@@ -19,6 +19,11 @@
   font-family: var(--site-font-sans);
   padding: clamp(24px, 3vw, 36px) 0 clamp(48px, 5vw, 68px);
 }
+
+html[data-font-version="feedback"] .resources-section {
+  padding-top: clamp(32px, 4.1vw, 59px);
+  padding-bottom: clamp(64px, 8.2vw, 118px);
+}
 .resources-container {
   width: 100%;
   padding-inline: 32px;
@@ -98,6 +103,9 @@
   object-fit: cover;
   filter: brightness(1.2) saturate(0.85);
 }
+.resources-card-video--feedback {
+  display: none;
+}
 .resources-card:hover .resources-card-media {
   opacity: 1;
 }
@@ -128,6 +136,21 @@
     opacity 220ms var(--resources-ease),
     transform 220ms var(--resources-ease);
 }
+
+@media (min-width: 981px) {
+  html[data-font-version="feedback"] .resources-eyebrow,
+  html[data-font-version="feedback"] .resources-card-index {
+    font-size: 14px;
+  }
+
+  html[data-font-version="feedback"] .resources-card-title {
+    font-weight: 600;
+  }
+
+  html[data-font-version="feedback"] .resources-card-index {
+    font-weight: 300;
+  }
+}
 .resources-card:hover .resources-card-arrow {
   opacity: 1;
   transform: translate(0, 0);
@@ -155,6 +178,72 @@
   max-width: 20ch;
 }
 
+/* Feedback + Images: taller portrait tiles with the red and exported
+   gray-white moving backgrounds. The existing flex layout keeps the
+   number and icon at their original top offsets and the title pinned
+   to the original bottom offset; only the space between them grows. */
+html[data-site-version="feedback-images"] .resources-card {
+  min-height: 300px;
+  aspect-ratio: 0.9;
+  background: #d9dadd;
+}
+
+html[data-site-version="feedback-images"] .resources-card--feedback-red {
+  background: #711827;
+  color: #ffffff;
+}
+
+html[data-site-version="feedback-images"] .resources-card-media {
+  opacity: 1;
+}
+
+html[data-site-version="feedback-images"] .resources-card-media .resources-card-video--default {
+  display: none;
+}
+
+html[data-site-version="feedback-images"] .resources-card-media .resources-card-video--feedback {
+  display: block;
+  filter: none;
+}
+
+html[data-site-version="feedback-images"] .resources-card-media::after {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.16));
+}
+
+html[data-site-version="feedback-images"]
+  .resources-card--feedback-red
+  .resources-card-media::after {
+  background:
+    radial-gradient(
+      76% 82% at 4% 2%,
+      rgba(8, 7, 10, 0.66) 0%,
+      rgba(15, 8, 12, 0.28) 48%,
+      rgba(15, 8, 12, 0) 80%
+    ),
+    linear-gradient(135deg, rgba(91, 24, 37, 0.18), rgba(163, 30, 46, 0.12));
+}
+
+html[data-site-version="feedback-images"] .resources-card--feedback-red .resources-card-index {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+html[data-site-version="feedback-images"] .resources-card--feedback-red .resources-card-icon {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+html[data-site-version="feedback-images"] .resources-card--feedback-gray .resources-card-icon {
+  background: rgba(23, 24, 27, 0.08);
+  color: rgb(var(--resources-ink-rgb));
+}
+
+html[data-site-version="feedback-images"] .resources-card-title {
+  font-size: clamp(1.35rem, 1.7vw, 1.9rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+}
+
 @media (max-width: 980px) {
   .resources-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -164,4 +253,78 @@
   .resources-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ── Feedbacks 04/08: red animated pattern revealed on hover ──────────
+   All four cards sit calm at rest (red cards as solid brand-red tiles,
+   gray cards on their white/light moving background) and reveal the DFSA
+   red animated pattern on hover / keyboard focus. Scoped to the 04/08
+   iteration so the Feedback + Images tab keeps its always-on videos. */
+
+/* Video layers must overlap, not stack, now that a card can show two. */
+.resources-card-media video {
+  position: absolute;
+  inset: 0;
+}
+
+/* The dedicated red hover layer is inert on every other tab. */
+.resources-card-video--hover-red {
+  display: none;
+}
+html[data-site-iteration="feedback-0408"] .resources-card-video--hover-red {
+  display: block;
+  opacity: 0;
+  transition: opacity 460ms var(--resources-ease);
+}
+html[data-site-iteration="feedback-0408"] .resources-card:hover .resources-card-video--hover-red,
+html[data-site-iteration="feedback-0408"]
+  .resources-card:focus-visible
+  .resources-card-video--hover-red {
+  opacity: 1;
+}
+
+/* Red cards stay solid at rest — their own red video is kept hidden; the
+   hover layer above provides the animated pattern. */
+html[data-site-iteration="feedback-0408"]
+  .resources-card--feedback-red
+  .resources-card-video--feedback {
+  opacity: 0;
+}
+
+/* Gray cards keep their white pattern at rest, then flip to white text
+   and the red overlay treatment on hover so the copy stays legible. */
+html[data-site-iteration="feedback-0408"] .resources-card--feedback-gray,
+html[data-site-iteration="feedback-0408"] .resources-card--feedback-gray .resources-card-icon,
+html[data-site-iteration="feedback-0408"] .resources-card--feedback-gray .resources-card-index {
+  transition:
+    color 320ms var(--resources-ease),
+    background 320ms var(--resources-ease);
+}
+html[data-site-iteration="feedback-0408"] .resources-card--feedback-gray:hover {
+  color: #ffffff;
+}
+html[data-site-iteration="feedback-0408"]
+  .resources-card--feedback-gray:hover
+  .resources-card-index {
+  color: rgba(255, 255, 255, 0.72);
+}
+html[data-site-iteration="feedback-0408"]
+  .resources-card--feedback-gray:hover
+  .resources-card-icon {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+/* Match the red cards' darker top-left gradient on hover for legible
+   white text over the animated pattern. */
+html[data-site-iteration="feedback-0408"]
+  .resources-card--feedback-gray:hover
+  .resources-card-media::after {
+  background:
+    radial-gradient(
+      76% 82% at 4% 2%,
+      rgba(8, 7, 10, 0.66) 0%,
+      rgba(15, 8, 12, 0.28) 48%,
+      rgba(15, 8, 12, 0) 80%
+    ),
+    linear-gradient(135deg, rgba(91, 24, 37, 0.18), rgba(163, 30, 46, 0.12));
 }

@@ -15,6 +15,12 @@ const IMAGE_SRC = "/images/hero%20bg%202.png"; // testing — the file on disk i
 // logo watermark, sitting behind a light scrim so the dark-on-light
 // hero text stays legible.
 const HEADER_VIDEO_SRC = "/videos/iStock-1432335897.mp4";
+// Feedbacks 04/08 only: hero2.mp4 frames the Museum of the Future with
+// the calm sky in the upper area, so the headline sits over a quiet
+// region instead of the busy façade. Rendered as an extra layer and
+// shown only in the 04/08 iteration (see hero.css); every other tab
+// keeps HEADER_VIDEO_SRC above.
+const HEADER_VIDEO_SRC_0408 = "/videos/hero2.mp4";
 
 type Props = {
   activeScene: number;
@@ -43,20 +49,10 @@ export function HeroBackground({ activeScene, bgMode }: Props) {
   const bgRef = useRef<HTMLDivElement>(null);
   const reduceMotion = usePrefersReducedMotion();
 
-  // Play/pause whichever background video is mounted — both "video"
-  // mode (Option 2) and "decorative" mode (Option 1, header footage)
-  // render one now, so key off the ref's presence rather than bgMode.
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (reduceMotion) {
-      video.pause();
-    } else {
-      video.play().catch(() => {
-        /* autoplay can be blocked before user interaction — safe to ignore */
-      });
-    }
-  }, [bgMode, reduceMotion]);
+  // Background-video playback (play the visible layer, pause hidden /
+  // off-screen ones so the browser's concurrent-decode cap isn't hit) is
+  // handled centrally by <VideoAutoplayManager>. The `autoPlay` attribute
+  // on each layer below is what it keys off; nothing to do here.
 
   // Layer 4 (part 2): tiny mouse-parallax applied directly as a
   // transform on the wrapper holding the watermark + gradient blooms
@@ -118,13 +114,25 @@ export function HeroBackground({ activeScene, bgMode }: Props) {
           dark-on-light hero text legible. */}
       <video
         ref={videoRef}
-        className="hero-bg-video"
+        className="hero-bg-video hero-bg-video--header"
         src={HEADER_VIDEO_SRC}
         autoPlay
         muted
         loop
         playsInline
         preload="auto"
+      />
+      {/* Feedbacks 04/08 only: shown/hidden via CSS on data-site-iteration
+          (the --header layer above is hidden in that iteration). */}
+      <video
+        className="hero-bg-video hero-bg-video--0408"
+        src={HEADER_VIDEO_SRC_0408}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
       />
       <div className="hero-bg-video-scrim hero-bg-video-scrim--light" />
 

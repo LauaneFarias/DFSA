@@ -33,16 +33,20 @@ export function SiteFooter() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const feedbackImagesVideoRef = useRef<HTMLVideoElement>(null);
   const reduceMotion = usePrefersReducedMotion();
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    const videos = [videoRef.current, feedbackImagesVideoRef.current].filter(
+      (video): video is HTMLVideoElement => video !== null,
+    );
     if (reduceMotion) {
-      video.pause();
+      videos.forEach((video) => video.pause());
     } else {
-      video.play().catch(() => {
-        /* autoplay can be blocked before user interaction — safe to ignore */
+      videos.forEach((video) => {
+        video.play().catch(() => {
+          /* autoplay can be blocked before user interaction — safe to ignore */
+        });
       });
     }
   }, [reduceMotion]);
@@ -54,11 +58,11 @@ export function SiteFooter() {
   }
 
   return (
-    <footer className="footer-section">
+    <footer className="footer-section" id="site-footer">
       <div className="footer-bg" aria-hidden="true">
         <video
           ref={videoRef}
-          className="footer-bg-video"
+          className="footer-bg-video footer-bg-video--default"
           src={FOOTER_VIDEO_SRC}
           autoPlay
           muted
@@ -66,10 +70,34 @@ export function SiteFooter() {
           playsInline
           preload="auto"
         />
+        <video
+          ref={feedbackImagesVideoRef}
+          className="footer-bg-video footer-bg-video--feedback-images"
+          src="/videos/feedback-images-policy.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          onLoadedMetadata={(event) => {
+            event.currentTarget.playbackRate = 0.5;
+          }}
+        />
         <div className="footer-bg-scrim" />
       </div>
 
       <div className="footer-container">
+        <div className="footer-mark footer-mark--feedback" aria-hidden="true">
+          <Image
+            src="/images/logo-mark-white.svg"
+            alt=""
+            width={1626}
+            height={1035}
+            className="footer-mark-logo"
+            unoptimized
+          />
+        </div>
+
         <div className="footer-newsletter">
           <div className="footer-newsletter-copy">
             <h2 className="footer-newsletter-heading">Stay Updated With DFSA News</h2>
@@ -77,7 +105,10 @@ export function SiteFooter() {
               Sign up to receive the latest news, alerts, updates and publications
             </p>
           </div>
-          <form className="footer-newsletter-form" onSubmit={handleSubmit}>
+          <form
+            className="footer-newsletter-form footer-newsletter-form--default"
+            onSubmit={handleSubmit}
+          >
             <input
               type="email"
               className="footer-newsletter-input"
@@ -97,9 +128,18 @@ export function SiteFooter() {
               </span>
             </button>
           </form>
+          <a
+            href="https://services.dfsa.ae/make-an-enquiry/manage-subscription/"
+            className="footer-newsletter-submit footer-newsletter-submit--feedback"
+          >
+            <span>Subscribe</span>
+            <span className="footer-newsletter-submit-icon">
+              <NextArrowIcon size={14} />
+            </span>
+          </a>
         </div>
 
-        <div className="footer-mark" aria-hidden="true">
+        <div className="footer-mark footer-mark--default" aria-hidden="true">
           <Image
             src="/images/logo-mark-white.svg"
             alt=""

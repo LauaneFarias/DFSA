@@ -96,31 +96,35 @@ export function OurApproach() {
   return (
     <section className="approach-section" ref={sectionRef}>
       <div className="approach-container">
-        <div className="approach-grid">
-          <div className="approach-left approach-reveal">
-            <div className="approach-left-copy">
-              <h2 className="approach-heading">Our approach to...</h2>
+        <div className="approach-panel">
+          <div className="approach-grid">
+            <div className="approach-left approach-reveal">
+              <div className="approach-left-copy">
+                <h2 className="approach-heading">Our approach to...</h2>
+              </div>
             </div>
-          </div>
 
-          <div className="approach-card-stack">
-            {ITEMS.map((item, index) => (
-              <article
-                key={item.label}
-                className={`approach-card approach-card--${index + 1} approach-reveal`}
-              >
-                <span className="approach-card-domain-icon" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <div className="approach-card-copy">
-                  <h3>{item.label}</h3>
-                  <p>{item.description}</p>
+            <div className="approach-card-stack">
+              {ITEMS.map((item, index) => (
+                <div
+                  key={item.label}
+                  className={`approach-card-slot approach-card--${index + 1} approach-reveal`}
+                >
+                  <article className="approach-card">
+                    <span className="approach-card-domain-icon" aria-hidden="true">
+                      {item.icon}
+                    </span>
+                    <div className="approach-card-copy">
+                      <h3>{item.label}</h3>
+                      <p>{item.description}</p>
+                    </div>
+                    <span className="approach-card-arrow" aria-hidden="true">
+                      <NextArrowIcon size={18} />
+                    </span>
+                  </article>
                 </div>
-                <span className="approach-card-arrow" aria-hidden="true">
-                  <NextArrowIcon size={18} />
-                </span>
-              </article>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

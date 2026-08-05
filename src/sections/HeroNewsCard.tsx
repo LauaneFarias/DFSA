@@ -1,14 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { cn } from "@/lib/cn";
 
 type NewsSlide = {
   tag: string;
   title: string;
+  proposition: string;
   date: string;
+  shortDate: string;
   image: string;
 };
 
@@ -18,19 +20,25 @@ const NEWS_SLIDES: NewsSlide[] = [
   {
     tag: "News",
     title: "DFSA outlines 2026 regulatory priorities for Dubai's financial centre",
+    proposition: "A clear view of the priorities shaping regulation across the DIFC.",
     date: "18 March, 2026",
+    shortDate: "18.03.2026",
     image: "/images/news/news3.jpg",
   },
   {
     tag: "News",
     title: "Nasdaq Dubai reopens for trading effective Wednesday, 4 March",
+    proposition: "Stay informed on key market developments and operational updates.",
     date: "15 March, 2026",
+    shortDate: "15.03.2026",
     image: "/images/news/news6.jpg",
   },
   {
     tag: "Alerts",
     title: "Supervision Annual Outreach Session announced for Q2 2026",
+    proposition: "Connect with the DFSA's supervisory priorities for firms and stakeholders.",
     date: "12 March, 2026",
+    shortDate: "12.03.2026",
     image: "/images/news/news4.jpg",
   },
 ];
@@ -50,6 +58,7 @@ const ADVANCE_MS = 5000;
 export function HeroNewsCard() {
   const [index, setIndex] = useState(0);
   const reduceMotion = usePrefersReducedMotion();
+  const feedbackVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -57,6 +66,31 @@ export function HeroNewsCard() {
       setIndex((i) => (i + 1) % NEWS_SLIDES.length);
     }, ADVANCE_MS);
     return () => clearInterval(id);
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    const video = feedbackVideoRef.current;
+    if (!video) return;
+
+    const syncPlayback = () => {
+      const isFeedback = document.documentElement.dataset.fontVersion === "feedback";
+      if (isFeedback && !reduceMotion) {
+        video.play().catch(() => {
+          // The animated texture is decorative; the gradient remains
+          // complete if autoplay is unavailable.
+        });
+      } else {
+        video.pause();
+      }
+    };
+
+    syncPlayback();
+    const observer = new MutationObserver(syncPlayback);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-font-version"],
+    });
+    return () => observer.disconnect();
   }, [reduceMotion]);
 
   const slide = NEWS_SLIDES[index];
@@ -69,6 +103,17 @@ export function HeroNewsCard() {
 
   return (
     <div className="hero-news-card">
+      <video
+        ref={feedbackVideoRef}
+        className="hero-news-card-feedback-video"
+        src="/videos/hero4.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      />
       <a href="#news" className="hero-news-card-link">
         <span className="hero-news-card-thumb" key={`thumb-${index}`}>
           <Image
@@ -79,11 +124,16 @@ export function HeroNewsCard() {
             className="hero-news-card-img"
             priority
           />
+          <span className="hero-news-card-image-meta">
+            <span className="hero-news-card-tag hero-news-card-tag--image">{slide.tag}</span>
+            <span className="hero-news-card-date-tag">{slide.shortDate}</span>
+          </span>
         </span>
         <span className="hero-news-card-body" key={`body-${index}`}>
-          <span className="hero-news-card-tag">{slide.tag}</span>
+          <span className="hero-news-card-tag hero-news-card-tag--body">{slide.tag}</span>
           <span className="hero-news-card-title">{slide.title}</span>
-          <span className="hero-news-card-date">{slide.date}</span>
+          <span className="hero-news-card-proposition">{slide.proposition}</span>
+          <span className="hero-news-card-date hero-news-card-date--body">{slide.date}</span>
         </span>
       </a>
 

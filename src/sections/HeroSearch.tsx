@@ -10,6 +10,57 @@ const PUBLICATIONS = [
   { label: "Annual Report 2025", tag: "PDF" },
 ];
 const CATEGORIES = ["All", "Rulebook", "Publications", "Public Register", "News"];
+const SEARCH_RESULTS = [
+  {
+    title: "DFSA Business Plan 2026",
+    category: "Publications",
+    kind: "Publication",
+    description: "The DFSA's strategic priorities and planned regulatory activity for 2026.",
+  },
+  {
+    title: "Annual Report 2025",
+    category: "Publications",
+    kind: "Publication",
+    description: "A review of the DFSA's performance, supervision and key outcomes in 2025.",
+  },
+  {
+    title: "Crypto Token Regulatory Framework",
+    category: "Rulebook",
+    kind: "Rulebook",
+    description:
+      "Rules and guidance for firms providing financial services involving Crypto Tokens.",
+  },
+  {
+    title: "Sustainable Finance in the DIFC",
+    category: "News",
+    kind: "News",
+    description: "Latest DFSA initiatives supporting sustainable and transition finance.",
+  },
+  {
+    title: "FinTech Regulation and Innovation Testing Licence",
+    category: "Rulebook",
+    kind: "Rulebook",
+    description: "Information for innovative firms testing new financial products and services.",
+  },
+  {
+    title: "Search the Public Register",
+    category: "Public Register",
+    kind: "Register",
+    description: "Find DFSA authorised firms, individuals, auditors and registered entities.",
+  },
+  {
+    title: "Authorisation and Registration",
+    category: "Publications",
+    kind: "Guide",
+    description: "Guidance on applying to conduct financial services in or from the DIFC.",
+  },
+  {
+    title: "Latest DFSA Regulatory News",
+    category: "News",
+    kind: "News",
+    description: "Recent announcements, consultations and regulatory updates from the DFSA.",
+  },
+] as const;
 
 type ActiveSearchResult = {
   eyebrow: string;
@@ -45,6 +96,7 @@ export const HeroSearch = forwardRef<HTMLInputElement>(function HeroSearch(_prop
   const [category, setCategory] = useState<string>(CATEGORIES[0] ?? "All");
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [activeResult, setActiveResult] = useState<ActiveSearchResult | null>(null);
+  const [isFeedbackVersion, setIsFeedbackVersion] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const categoryWrapRef = useRef<HTMLDivElement>(null);
   const innerInputRef = useRef<HTMLInputElement>(null);
@@ -112,6 +164,28 @@ export const HeroSearch = forwardRef<HTMLInputElement>(function HeroSearch(_prop
     setCategoryOpen(false);
   }
 
+  function handleQueryChange(nextQuery: string) {
+    setQuery(nextQuery);
+    if (isFeedbackVersion) {
+      setMicMode(nextQuery.trim().length === 0);
+      setActiveResult(null);
+    }
+  }
+
+  function selectLiveResult(result: (typeof SEARCH_RESULTS)[number]) {
+    setQuery(result.title);
+    setMicMode(false);
+    setFocused(true);
+    setCategoryOpen(false);
+    setActiveResult({
+      eyebrow: result.kind,
+      title: result.title,
+      description: result.description,
+      action: "View result",
+    });
+    innerInputRef.current?.focus();
+  }
+
   // Real bug fix: the two dropdowns (search history/publications panel,
   // and this category listbox) used to toggle their own open state with
   // no awareness of each other. Opening the category dropdown while the
@@ -153,6 +227,30 @@ export const HeroSearch = forwardRef<HTMLInputElement>(function HeroSearch(_prop
       document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
+
+  useEffect(() => {
+    const syncVersion = () => {
+      setIsFeedbackVersion(document.documentElement.dataset.fontVersion === "feedback");
+    };
+    syncVersion();
+    const observer = new MutationObserver(syncVersion);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-font-version"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  const normalizedQuery = query.trim().toLowerCase();
+  const showLiveResults = isFeedbackVersion && normalizedQuery.length > 0;
+  const liveResults = showLiveResults
+    ? SEARCH_RESULTS.filter((result) => {
+        const matchesCategory = category === "All" || result.category === category;
+        const searchableText =
+          `${result.title} ${result.category} ${result.description}`.toLowerCase();
+        return matchesCategory && searchableText.includes(normalizedQuery);
+      }).slice(0, 5)
+    : [];
 
   return (
     <div className="hero-search-wrap" ref={wrapRef}>
@@ -198,7 +296,7 @@ export const HeroSearch = forwardRef<HTMLInputElement>(function HeroSearch(_prop
           aria-controls="hero-search-panel"
           autoComplete="off"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => handleQueryChange(e.target.value)}
           onFocus={handleInputFocus}
           onKeyDown={(e) => {
             if (e.key === "Enter") submitSearch();
@@ -215,50 +313,85 @@ export const HeroSearch = forwardRef<HTMLInputElement>(function HeroSearch(_prop
       </div>
 
       <div className={cn("hero-search-panel", focused && "is-open")} id="hero-search-panel">
-        <div className="hero-search-panel-grid">
-          <div>
-            <h4>Recent Searches</h4>
-            <div className="hero-result-list">
-              {RECENT_SEARCHES.map((term) => (
-                <a
-                  key={term}
-                  className={cn("hero-result-item", activeResult?.title === term && "is-active")}
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    selectRecentSearch(term);
-                  }}
-                >
-                  <span className="hero-result-item-label">
-                    <HistoryIcon size={14} />
-                    {term}
-                  </span>
-                </a>
-              ))}
+        <div className={cn("hero-search-panel-grid", showLiveResults && "is-live-results")}>
+          {showLiveResults ? (
+            <div className="hero-live-results" aria-live="polite">
+              <h4>Search results</h4>
+              <p className="hero-live-results-summary">
+                {liveResults.length === 0
+                  ? `No matches for “${query.trim()}”`
+                  : `${liveResults.length} result${liveResults.length === 1 ? "" : "s"} for “${query.trim()}”`}
+              </p>
+              <div className="hero-result-list">
+                {liveResults.map((result) => (
+                  <a
+                    key={result.title}
+                    className="hero-result-item hero-live-result-item"
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      selectLiveResult(result);
+                    }}
+                  >
+                    <span className="hero-result-item-label">
+                      <SearchIcon size={14} />
+                      {result.title}
+                    </span>
+                    <span className="hero-live-result-kind">{result.kind}</span>
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
-          <div>
-            <h4>Popular publications</h4>
-            <div className="hero-result-list">
-              {PUBLICATIONS.map((pub) => (
-                <a
-                  key={pub.label}
-                  className={cn(
-                    "hero-result-item",
-                    activeResult?.title === pub.label && "is-active",
-                  )}
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    selectPublication(pub);
-                  }}
-                >
-                  <span>{pub.label}</span>
-                  <span className="hero-tag">{pub.tag}</span>
-                </a>
-              ))}
-            </div>
-          </div>
+          ) : (
+            <>
+              <div>
+                <h4>Recent Searches</h4>
+                <div className="hero-result-list">
+                  {RECENT_SEARCHES.map((term) => (
+                    <a
+                      key={term}
+                      className={cn(
+                        "hero-result-item",
+                        activeResult?.title === term && "is-active",
+                      )}
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        selectRecentSearch(term);
+                      }}
+                    >
+                      <span className="hero-result-item-label">
+                        <HistoryIcon size={14} />
+                        {term}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4>Popular publications</h4>
+                <div className="hero-result-list">
+                  {PUBLICATIONS.map((pub) => (
+                    <a
+                      key={pub.label}
+                      className={cn(
+                        "hero-result-item",
+                        activeResult?.title === pub.label && "is-active",
+                      )}
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        selectPublication(pub);
+                      }}
+                    >
+                      <span>{pub.label}</span>
+                      <span className="hero-tag">{pub.tag}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {activeResult ? (

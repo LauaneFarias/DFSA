@@ -1,0 +1,142 @@
+.achievements-section {
+  display: none;
+}
+
+/* The wrapper is layout-neutral in every existing version. Feedback +
+   Images turns it into a column solely so the one existing ticker can
+   move between Our Approach and Start your DIFC journey without being
+   duplicated in the document. */
+.home-flow {
+  display: contents;
+}
+
+html[data-site-version="feedback-images"] .home-flow {
+  display: flex;
+  flex-direction: column;
+}
+
+html[data-site-version="feedback-images"] .news-section {
+  order: 1;
+}
+
+html[data-site-version="feedback-images"] .about-section {
+  order: 2;
+}
+
+html[data-site-version="feedback-images"] .approach-section {
+  order: 3;
+}
+
+html[data-site-version="feedback-images"] .achievements-section {
+  order: 4;
+}
+
+html[data-site-version="feedback-images"] .difc-section {
+  order: 5;
+}
+
+html[data-site-version="feedback-images"] .resources-section {
+  order: 6;
+}
+
+html[data-font-version="feedback"] .achievements-section {
+  display: block;
+  overflow: hidden;
+  padding: clamp(34px, 4.6vw, 68px) 0;
+  background: #eeece9;
+  color: #17181b;
+  font-family: var(--site-font-sans);
+}
+
+.achievements-container {
+  width: 100%;
+}
+
+.achievements-panel {
+  width: 100%;
+  padding-block: clamp(12px, 1.8vw, 26px);
+}
+
+.achievements-grid {
+  display: flex;
+  align-items: flex-start;
+  width: max-content;
+  animation: achievements-ticker 72s linear infinite;
+  will-change: transform;
+}
+
+.achievements-group {
+  display: flex;
+  align-items: flex-start;
+  flex: 0 0 auto;
+}
+
+.achievement-item {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  align-items: start;
+  flex: 0 0 auto;
+  gap: 16px;
+  margin: 0;
+  padding: 0 24px;
+  border-left: 1px solid rgba(23, 24, 27, 0.24);
+}
+
+.achievement-value {
+  display: block;
+  white-space: nowrap;
+  font-size: clamp(4.8rem, 7.1vw, 6.5rem);
+  font-weight: 200;
+  line-height: 0.84;
+  letter-spacing: -0.06em;
+  color: #17181b;
+}
+
+.achievement-label {
+  display: flex;
+  flex-direction: column;
+  margin: 6px 0 0;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.35;
+  color: rgba(23, 24, 27, 0.58);
+}
+
+.achievement-label span {
+  white-space: nowrap;
+}
+
+@keyframes achievements-ticker {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (max-width: 720px) {
+  html[data-font-version="feedback"] .achievements-section {
+    padding-block: 32px;
+  }
+
+  .achievement-item {
+    grid-template-columns: max-content max-content;
+    gap: 14px;
+    padding-inline: 20px;
+  }
+
+  .achievement-value {
+    font-size: clamp(4rem, 18vw, 5.5rem);
+  }
+
+  .achievement-label {
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .achievements-grid {
+    animation-play-state: paused;
+  }
+}

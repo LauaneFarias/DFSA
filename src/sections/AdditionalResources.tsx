@@ -18,6 +18,8 @@ type Resource = {
   title: string;
   icon: React.ReactNode;
   featured?: boolean;
+  feedbackTone: "red" | "gray";
+  feedbackVideoSrc: string;
 };
 
 // Hover-only background clip for the resource cards — muted/looped,
@@ -28,10 +30,35 @@ const CARD_HOVER_VIDEO_SRC = "/videos/hero4.mp4";
 /** Renumbered 01–04 in order — the Figma reference had a duplicated
  * "04" label on two cards, evidently a typo in the source file. */
 const RESOURCES: Resource[] = [
-  { index: "01", title: "Enforcement and Market Integrity", icon: <EnforcementIcon size={26} /> },
-  { index: "02", title: "Islamic Finance", icon: <IslamicFinanceIcon size={26} />, featured: true },
-  { index: "03", title: "Innovation at the DFSA", icon: <InnovationIcon size={26} /> },
-  { index: "04", title: "Our Career Opportunities", icon: <CareerIcon size={26} /> },
+  {
+    index: "01",
+    title: "Enforcement and Market Integrity",
+    icon: <EnforcementIcon size={26} />,
+    feedbackTone: "red",
+    feedbackVideoSrc: "/videos/feedback-images-policy.mp4",
+  },
+  {
+    index: "02",
+    title: "Islamic Finance",
+    icon: <IslamicFinanceIcon size={26} />,
+    featured: true,
+    feedbackTone: "gray",
+    feedbackVideoSrc: "/videos/feedback-images-growth-light.mp4",
+  },
+  {
+    index: "03",
+    title: "Innovation at the DFSA",
+    icon: <InnovationIcon size={26} />,
+    feedbackTone: "red",
+    feedbackVideoSrc: "/videos/feedback-images-policy.mp4",
+  },
+  {
+    index: "04",
+    title: "Our Career Opportunities",
+    icon: <CareerIcon size={26} />,
+    feedbackTone: "gray",
+    feedbackVideoSrc: "/videos/feedback-images-growth-light.mp4",
+  },
 ];
 
 /**
@@ -84,20 +111,71 @@ export function AdditionalResources() {
             <a
               href="#"
               key={item.index}
-              className={cn("resources-card resources-reveal", item.featured && "is-featured")}
+              className={cn(
+                "resources-card resources-reveal",
+                `resources-card--feedback-${item.feedbackTone}`,
+                item.featured && "is-featured",
+              )}
               onMouseEnter={(e) => {
-                const video = e.currentTarget.querySelector("video");
-                video?.play().catch(() => {
-                  /* autoplay-on-hover can be blocked before any user gesture — safe to ignore */
-                });
+                const card = e.currentTarget;
+                // Default design: the hero4 clip is the hover reveal.
+                card
+                  .querySelector<HTMLVideoElement>(".resources-card-video--default")
+                  ?.play()
+                  .catch(() => {
+                    /* autoplay-on-hover can be blocked before any user gesture — safe to ignore */
+                  });
+                // Feedbacks 04/08: reveal the red animated pattern on hover.
+                if (document.documentElement.dataset.siteIteration === "feedback-0408") {
+                  card
+                    .querySelector<HTMLVideoElement>(".resources-card-video--hover-red")
+                    ?.play()
+                    .catch(() => {});
+                }
               }}
               onMouseLeave={(e) => {
-                const video = e.currentTarget.querySelector("video");
-                video?.pause();
+                const card = e.currentTarget;
+                card.querySelector<HTMLVideoElement>(".resources-card-video--default")?.pause();
+                card.querySelector<HTMLVideoElement>(".resources-card-video--hover-red")?.pause();
               }}
             >
               <div className="resources-card-media" aria-hidden="true">
-                <video src={CARD_HOVER_VIDEO_SRC} muted loop playsInline preload="metadata" />
+                <video
+                  className="resources-card-video resources-card-video--default"
+                  src={CARD_HOVER_VIDEO_SRC}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+                <video
+                  className="resources-card-video resources-card-video--feedback"
+                  src={item.feedbackVideoSrc}
+                  autoPlay={!reduceMotion}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  onLoadedMetadata={(event) => {
+                    event.currentTarget.playbackRate = 0.5;
+                  }}
+                />
+                {/* Feedbacks 04/08 only: the DFSA red animated pattern,
+                    revealed on hover for every card (see resources.css).
+                    preload="none" + play-on-hover keeps it from loading
+                    on the other version tabs. */}
+                <video
+                  className="resources-card-video resources-card-video--hover-red"
+                  src="/videos/feedback-images-policy.mp4"
+                  muted
+                  loop
+                  playsInline
+                  preload="none"
+                  aria-hidden="true"
+                  onLoadedMetadata={(event) => {
+                    event.currentTarget.playbackRate = 0.5;
+                  }}
+                />
               </div>
               <div className="resources-card-head">
                 <span className="resources-card-index">{item.index}</span>

@@ -125,7 +125,7 @@ export function DifcJourney() {
   }, [reduceMotion]);
 
   return (
-    <section className="difc-section" ref={sectionRef}>
+    <section className="difc-section" id="difc-journey" ref={sectionRef}>
       {/* Left/right margin + rounded corner per feedback: the outer
           section now uses the same light background as Latest News's
           main container, with the maroon panel inset inside it (like
@@ -153,14 +153,14 @@ export function DifcJourney() {
 
           <div className="difc-header difc-reveal">
             <p className="difc-eyebrow">
-              Start your
-              <br />
+              Start your <br />
               DIFC journey
             </p>
             <div className="difc-header-action">
               <p className="difc-header-desc">
-                Explore the authorisation pathways available in the DIFC and choose the route that
-                matches your business.
+                Explore the authorisation pathways available in the DIFC and choose{" "}
+                <br className="feedback-difc-desc-break" />
+                the route that matches your business.
               </p>
               <a href="#" className="difc-cta">
                 <span>Learn more</span>

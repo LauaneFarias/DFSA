@@ -36,6 +36,19 @@
   }
 }
 
+@media (min-width: 981px) {
+  html[data-font-version="feedback"] .footer-newsletter-sub,
+  html[data-font-version="feedback"] .footer-brand-name span,
+  html[data-font-version="feedback"] .footer-bottom {
+    font-size: 14px;
+  }
+}
+
+html[data-font-version="feedback"] .footer-section {
+  --footer-feedback-stack-gap: clamp(48px, 5.6vw, 80px);
+  padding-top: var(--footer-feedback-stack-gap);
+}
+
 /* Video background — user-supplied footer-1.mp4, full-bleed and
    looping (same object-fit: cover treatment as .hero-bg-video), with a
    dark scrim over it so every piece of footer content stays legible
@@ -52,6 +65,17 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.footer-bg-video--feedback-images {
+  display: none;
+}
+
+html[data-site-version="feedback-images"] .footer-bg-video--default {
+  display: none;
+}
+
+html[data-site-version="feedback-images"] .footer-bg-video--feedback-images {
+  display: block;
 }
 .footer-bg-scrim {
   position: absolute;
@@ -158,6 +182,25 @@
   transform: translateX(3px);
 }
 
+.footer-newsletter-submit--feedback {
+  display: none;
+}
+
+html[data-font-version="feedback"] .footer-newsletter-form--default {
+  display: none;
+}
+
+html[data-font-version="feedback"] .footer-newsletter-submit--feedback {
+  display: inline-flex;
+  justify-content: space-between;
+  width: 200px;
+  text-decoration: none;
+}
+
+html[data-font-version="feedback"] .footer-newsletter {
+  padding-bottom: var(--footer-feedback-stack-gap);
+}
+
 /* Big logo-mark moment — replaces an oversized wordmark. Sized to
    overflow its own row slightly (negative margin) so it reads as a
    deliberate oversized centerpiece the way the reference layout's
@@ -175,6 +218,33 @@
   filter: drop-shadow(0 0 60px rgba(var(--footer-red-rgb), 0.35))
     drop-shadow(0 0 90px rgba(var(--footer-gold-rgb), 0.3));
   opacity: 0.94;
+}
+
+.footer-mark--feedback {
+  display: none;
+}
+
+html[data-font-version="feedback"] .footer-mark--default {
+  display: none;
+}
+
+html[data-font-version="feedback"] .footer-mark--feedback {
+  display: flex;
+  margin: 0 0 var(--footer-feedback-stack-gap);
+}
+
+html[data-font-version="feedback"] .footer-mark--feedback .footer-mark-logo {
+  width: clamp(80px, 10vw, 145px);
+  filter: drop-shadow(0 0 28px rgba(var(--footer-red-rgb), 0.28))
+    drop-shadow(0 0 42px rgba(var(--footer-gold-rgb), 0.22));
+}
+
+html[data-site-version="feedback-images"] .footer-section {
+  --footer-feedback-stack-gap: clamp(32px, 4vw, 52px);
+}
+
+html[data-site-version="feedback-images"] .footer-mark--feedback {
+  display: none;
 }
 
 .footer-divider {
