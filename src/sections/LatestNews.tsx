@@ -181,7 +181,7 @@ export function LatestNews() {
 
   // Feedbacks 04/08 two-part layout: the first story becomes the tall
   // left feature, the next four fill the right-hand 2×2 text grid.
-  const featureStory = NEWS_ITEMS[0];
+  const featureStory = NEWS_ITEMS[0]!;
   const gridStories = NEWS_ITEMS.slice(1, 5);
 
   // Keeps the "01 / 10" counter and the prev/next disabled state
