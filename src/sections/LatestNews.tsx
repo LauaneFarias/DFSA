@@ -408,7 +408,13 @@ export function LatestNews() {
             </a>
             <div className="news-0408-grid">
               {gridStories.map((item) => (
-                <a href="#" key={item.title} className="news-0408-cell" aria-label={item.title}>
+                <a
+                  href="#"
+                  key={item.title}
+                  className="news-0408-cell"
+                  aria-label={item.title}
+                  style={{ ["--cell-photo" as string]: `url("${item.image}")` }}
+                >
                   <span className="news-0408-date">{item.date}</span>
                   <span className={tagClass(item.tag)}>{item.tag}</span>
                   <h3 className="news-0408-cell-title">{item.title}</h3>

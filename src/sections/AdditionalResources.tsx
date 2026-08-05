@@ -34,8 +34,8 @@ const RESOURCES: Resource[] = [
     index: "01",
     title: "Enforcement and Market Integrity",
     icon: <EnforcementIcon size={26} />,
-    feedbackTone: "red",
-    feedbackVideoSrc: "/videos/feedback-images-policy.mp4",
+    feedbackTone: "gray",
+    feedbackVideoSrc: "/videos/feedback-images-growth-light.mp4",
   },
   {
     index: "02",
@@ -49,8 +49,8 @@ const RESOURCES: Resource[] = [
     index: "03",
     title: "Innovation at the DFSA",
     icon: <InnovationIcon size={26} />,
-    feedbackTone: "red",
-    feedbackVideoSrc: "/videos/feedback-images-policy.mp4",
+    feedbackTone: "gray",
+    feedbackVideoSrc: "/videos/feedback-images-growth-light.mp4",
   },
   {
     index: "04",

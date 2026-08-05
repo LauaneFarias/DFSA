@@ -547,3 +547,29 @@ html[data-site-iteration="feedback-0408"] .difc-card--white {
   -webkit-backdrop-filter: blur(32px) saturate(1.25);
   backdrop-filter: blur(32px) saturate(1.25);
 }
+
+/* 04/08: swap the journey background to the glass-facade photo. The
+   panel video carries an inline opacity:1 from the component, so it's
+   hidden here with !important to reveal the image beneath. */
+html[data-site-iteration="feedback-0408"] .difc-panel-bg {
+  background: url("/images/difc-0408-bg.jpg") center / cover no-repeat;
+}
+html[data-site-iteration="feedback-0408"] .difc-panel-video {
+  opacity: 0 !important;
+}
+
+/* 04/08: match "Our approach to…" card interaction — hide each card's
+   description at rest, reveal it on hover / keyboard focus. The card
+   keeps its height, so the grid doesn't shift. */
+html[data-site-iteration="feedback-0408"] .difc-card-desc {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+html[data-site-iteration="feedback-0408"] .difc-card:hover .difc-card-desc,
+html[data-site-iteration="feedback-0408"] .difc-card:focus-within .difc-card-desc {
+  opacity: 1;
+  transform: none;
+}

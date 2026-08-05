@@ -587,9 +587,10 @@ html[data-site-iteration="feedback-0408"] .news-0408 {
   isolation: isolate;
   text-decoration: none;
   color: #ffffff;
-  /* A photograph now, not the brand pattern — a real editorial image
-     from the Photo set (Museum of the Future). */
-  background: #26221f url("/images/news-0408-feature.jpg") center / cover no-repeat;
+  /* The feature story's own news photo (DIFC gate-district plaza),
+     from public/images/news — matches the "shaping Dubai's financial
+     centre" headline. */
+  background: #26221f url("/images/news/news3.jpg") center / cover no-repeat;
   box-shadow: var(--news-shadow-rest);
   transition:
     transform 480ms var(--news-ease),
@@ -658,77 +659,53 @@ html[data-site-iteration="feedback-0408"] .news-0408 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
-  padding: clamp(18px, 1.5vw, 26px);
+  justify-content: flex-end;
+  gap: 8px;
+  min-height: clamp(150px, 12vw, 200px);
+  padding: clamp(16px, 1.4vw, 22px);
   border-radius: var(--news-radius-lg);
   overflow: hidden;
   isolation: isolate;
   text-decoration: none;
-  color: var(--news-text-primary);
-  /* The DFSA brand pattern shows at full strength as the card surface,
-     with a top-down white veil layered over it — strongest where the
-     date/tag/headline sit, fading out lower so the pattern stays clearly
-     visible while the headline remains legible. */
+  color: #ffffff;
+  /* Each grid story now shows its own news photo (set per cell via the
+     --cell-photo custom property in the markup), with a bottom gradient
+     for legible white copy — a compact echo of the feature card. */
   background:
-    var(--cell-veil, linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2))),
-    var(--cell-pattern, url("/patterns/dfsa-pattern-cream.png")) center / cover no-repeat;
-  border: 1px solid rgba(var(--news-ink-rgb), 0.08);
+    var(--cell-photo) center / cover no-repeat,
+    #26221f;
+  box-shadow: var(--news-shadow-rest);
   transition:
     transform 420ms var(--news-ease),
-    box-shadow 420ms var(--news-ease),
-    border-color 260ms var(--news-ease);
+    box-shadow 420ms var(--news-ease);
 }
-/* The four specified DFSA brand patterns (#3 gold, #4 cream, #7 slate,
-   #12 warm grey), one per cell. The veil strength is tuned per pattern:
-   the darker colour patterns (gold, slate) get a stronger white wash in
-   the text zone; the lighter ones (cream, warm grey) a gentler one. */
-.news-0408-cell:nth-child(1) {
-  --cell-pattern: url("/patterns/dfsa-pattern-gold.png");
-  --cell-veil: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.74) 0%,
-    rgba(255, 255, 255, 0.44) 52%,
-    rgba(255, 255, 255, 0.1) 100%
-  );
+/* Bottom-weighted scrim so the date/tag/headline stay legible over any
+   photo, while the top of the image stays clear. */
+.news-0408-cell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, rgba(10, 12, 16, 0) 30%, rgba(6, 8, 12, 0.76) 100%);
 }
-.news-0408-cell:nth-child(2) {
-  --cell-pattern: url("/patterns/dfsa-pattern-cream.png");
-  --cell-veil: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0.2) 55%,
-    rgba(255, 255, 255, 0) 100%
-  );
-}
-.news-0408-cell:nth-child(3) {
-  --cell-pattern: url("/patterns/dfsa-pattern-slate.png");
-  --cell-veil: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.82) 0%,
-    rgba(255, 255, 255, 0.56) 52%,
-    rgba(255, 255, 255, 0.2) 100%
-  );
-}
-.news-0408-cell:nth-child(4) {
-  --cell-pattern: url("/patterns/dfsa-pattern-warmgrey.png");
-  --cell-veil: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.58) 0%,
-    rgba(255, 255, 255, 0.26) 55%,
-    rgba(255, 255, 255, 0.02) 100%
-  );
+.news-0408-cell > * {
+  position: relative;
+  z-index: 1;
 }
 .news-0408-cell:hover {
   transform: translateY(-4px);
-  border-color: rgba(var(--news-ink-rgb), 0.16);
-  box-shadow: var(--news-shadow-rest);
+  box-shadow: var(--news-shadow-hover);
+}
+.news-0408-cell .news-0408-date {
+  color: rgba(255, 255, 255, 0.86);
 }
 .news-0408-cell-title {
   margin: 0;
   font-weight: 500;
   font-size: clamp(15px, 1vw, 18px);
   line-height: 1.3;
-  color: var(--news-text-primary);
+  color: #ffffff;
+  text-shadow: 0 1px 18px rgba(6, 8, 12, 0.42);
 }
 
 /* ---- Entrance (pure CSS, replays each time the tab is activated) ----
