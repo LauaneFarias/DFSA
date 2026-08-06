@@ -4322,16 +4322,35 @@ html[data-font-version="feedback"] .hero-headline-slider::first-letter {
   text-transform: uppercase;
 }
 
-/* Hero Slider (Option 1): a two-column hero band — the 04/08 feature
-   news card on the LEFT, the greeting/headline/search block on the RIGHT
-   — with the five glassy service quick-cards spanning the full width
-   below. The news card keeps the exact 04/08 look (tall vertical card,
-   burgundy frosted-glass texture) for free, because this tab already
-   rides the feedback-0408 siteIteration; we just un-hide it (it was
-   dropped before) and place it via grid. The service cards revert from
-   the inherited bento grid back to a flex row of five equal glassy cards.
-   Desktop only — below 981px the shared responsive rules keep the natural
-   stacked flow (news card, headline, search, cards). */
+/* Option 1 feature news card: neutral frosted glass instead of the red
+   feedback gradient, so it matches the glassy service quick-cards below
+   rather than standing out in burgundy. Uses the exact same translucent
+   dark-glass material as those cards (see the feedback-images
+   .hero-service-card rule), with the red gradient overlay and burgundy
+   texture video hidden. Applies at all widths; outranks the feedback red
+   on specificity (data-site-tab attr + two classes). */
+html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-news-card {
+  background: rgba(23, 24, 27, 0.46);
+  border: none;
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-news-card::before {
+  display: none;
+}
+html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-news-card-feedback-video {
+  display: none;
+}
+
+/* Hero Slider (Option 1): a two-column hero band — the feature news card
+   on the RIGHT, the greeting/headline/search block on the LEFT — with the
+   five glassy service quick-cards spanning the full width below. The news
+   card is un-hidden (it was dropped before) and placed via grid; its
+   burgundy feedback fill is overridden to neutral glass above. The
+   service cards revert from the inherited bento grid back to a flex row
+   of five equal glassy cards. Desktop only — below 981px the shared
+   responsive rules keep the natural stacked flow. */
 @media (min-width: 981px) {
   /* Content grid → two columns (headline+search | news) over a
      full-width cards row, centered vertically as a group. .hero-top-row
