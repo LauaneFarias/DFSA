@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 
 type FontVersion =
-  "niveau" | "graphik" | "adelle" | "feedback" | "feedback-images" | "feedback-0408";
+  | "niveau"
+  | "graphik"
+  | "adelle"
+  | "feedback"
+  | "feedback-images"
+  | "feedback-0408"
+  | "hero-slider";
 
 const FONT_OPTIONS = [
   { value: "niveau", label: "Niveau" },
@@ -13,6 +19,7 @@ const FONT_OPTIONS = [
   { value: "feedback", label: "Feedback" },
   { value: "feedback-images", label: "Feedback + Images" },
   { value: "feedback-0408", label: "Feedbacks 04/08" },
+  { value: "hero-slider", label: "Hero Slider" },
 ] as const;
 
 const STORAGE_KEY = "dfsa-font-version";
@@ -34,10 +41,18 @@ function applyFontVersion(next: FontVersion) {
   // target it in isolation (`html[data-site-iteration="feedback-0408"]`)
   // without duplicating the feedback-images selectors.
   const root = document.documentElement;
-  root.dataset.siteVersion = next === "feedback-0408" ? "feedback-images" : next;
-  root.dataset.siteIteration = next;
-  root.dataset.fontVersion =
-    next === "feedback-images" || next === "feedback-0408" ? "feedback" : next;
+  // Hero Slider reuses the whole Feedbacks 04/08 iteration (bento cards,
+  // ticker, background scrim, etc.) and differs only in two ways — an
+  // image slideshow background instead of the video, and no news card —
+  // so it rides the same siteVersion + siteIteration hooks as 04/08 and
+  // carries its exact identity on siteTab, which those two slider-only
+  // tweaks target in isolation.
+  const reusesFeedbackImages =
+    next === "feedback-images" || next === "feedback-0408" || next === "hero-slider";
+  root.dataset.siteVersion = reusesFeedbackImages ? "feedback-images" : next;
+  root.dataset.siteIteration = next === "hero-slider" ? "feedback-0408" : next;
+  root.dataset.siteTab = next;
+  root.dataset.fontVersion = reusesFeedbackImages ? "feedback" : next;
   try {
     window.localStorage.setItem(STORAGE_KEY, next);
   } catch {

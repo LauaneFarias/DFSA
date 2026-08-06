@@ -59,6 +59,12 @@ export function HeroNewsCard() {
   const [index, setIndex] = useState(0);
   const reduceMotion = usePrefersReducedMotion();
   const feedbackVideoRef = useRef<HTMLVideoElement>(null);
+  // The decorative burgundy-texture video is ~8 MB; mounting it eagerly
+  // made the featured card feel slow to load. It only sits on top of the
+  // card's own gradient, so we hold it back until the browser is idle —
+  // the card's photo and text paint immediately, then the texture mounts
+  // and fades in behind them.
+  const [showFeedbackVideo, setShowFeedbackVideo] = useState(false);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -67,6 +73,20 @@ export function HeroNewsCard() {
     }, ADVANCE_MS);
     return () => clearInterval(id);
   }, [reduceMotion]);
+
+  useEffect(() => {
+    const w = window as Window &
+      typeof globalThis & {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+        cancelIdleCallback?: (id: number) => void;
+      };
+    if (typeof w.requestIdleCallback === "function") {
+      const idleId = w.requestIdleCallback(() => setShowFeedbackVideo(true), { timeout: 2500 });
+      return () => w.cancelIdleCallback?.(idleId);
+    }
+    const timeoutId = window.setTimeout(() => setShowFeedbackVideo(true), 1200);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   useEffect(() => {
     const video = feedbackVideoRef.current;
@@ -91,7 +111,7 @@ export function HeroNewsCard() {
       attributeFilter: ["data-font-version"],
     });
     return () => observer.disconnect();
-  }, [reduceMotion]);
+  }, [reduceMotion, showFeedbackVideo]);
 
   const slide = NEWS_SLIDES[index];
   // Pre-existing type-strictness issue, unrelated to this round's
@@ -103,17 +123,19 @@ export function HeroNewsCard() {
 
   return (
     <div className="hero-news-card">
-      <video
-        ref={feedbackVideoRef}
-        className="hero-news-card-feedback-video"
-        src="/videos/hero4.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-      />
+      {showFeedbackVideo ? (
+        <video
+          ref={feedbackVideoRef}
+          className="hero-news-card-feedback-video"
+          src="/videos/hero4.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+        />
+      ) : null}
       <a href="#news" className="hero-news-card-link">
         <span className="hero-news-card-thumb" key={`thumb-${index}`}>
           <Image

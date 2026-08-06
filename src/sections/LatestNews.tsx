@@ -14,6 +14,8 @@ type NewsItem = {
   date: string;
   tag: NewsTag;
   title: string;
+  /** One-line story proposition shown under the headline (04/08 layout). */
+  proposition?: string;
   feedbackTitleLines?: readonly [string, string];
   feedbackImagesImage?: string;
   /** Every story gets its own photo. Only one real press photo exists
@@ -30,13 +32,13 @@ type NewsItem = {
 const NEWS_IMAGES = [
   "/images/news/news3.jpg",
   "/images/news/news6.jpg",
-  "/images/news/news1.png",
+  "/images/news/news1.jpg",
   "/images/news/news5.jpg",
-  "/images/news/news2.png",
+  "/images/news/news2.jpg",
   "/images/news/news7.jpg",
   "/images/news/news4.jpg",
   "/images/news/news6.jpg",
-  "/images/news/news1.png",
+  "/images/news/news1.jpg",
   "/images/news/news3.jpg",
 ] as const satisfies readonly [
   string,
@@ -56,6 +58,7 @@ const NEWS_ITEMS: NewsItem[] = [
     date: "18 March, 2026",
     tag: "News",
     title: "DFSA outlines 2026 regulatory priorities for Dubai's financial centre",
+    proposition: "A clear view of the priorities shaping regulation across the DIFC.",
     feedbackTitleLines: [
       "DFSA outlines 2026 regulatory priorities",
       "for Dubai's financial centre",
@@ -67,6 +70,7 @@ const NEWS_ITEMS: NewsItem[] = [
     date: "15 March, 2026",
     tag: "Alerts",
     title: "Supervision Annual Outreach Session",
+    proposition: "Connect with the DFSA's supervisory priorities for firms and stakeholders.",
     image: NEWS_IMAGES[1],
     feedbackImagesImage: "/images/feedback-images-news-2.png",
   },
@@ -74,6 +78,7 @@ const NEWS_ITEMS: NewsItem[] = [
     date: "15 March, 2026",
     tag: "News",
     title: "Nasdaq Dubai reopens for trading effective Wednesday, 4 March",
+    proposition: "Stay informed on key market developments and operational updates.",
     image: NEWS_IMAGES[2],
     feedbackImagesImage: "/images/feedback-images-news-3.png",
   },
@@ -81,6 +86,7 @@ const NEWS_ITEMS: NewsItem[] = [
     date: "15 March, 2026",
     tag: "News",
     title: "Notice of Amendments to Legislation March 2026",
+    proposition: "The latest changes to the DFSA rulebook and legislation.",
     feedbackTitleLines: ["Notice of Amendments to Legislation", "March 2026"],
     image: NEWS_IMAGES[3],
     feedbackImagesImage: "/images/feedback-images-news-4.png",
@@ -89,6 +95,7 @@ const NEWS_ITEMS: NewsItem[] = [
     date: "15 March, 2026",
     tag: "Events",
     title: "Amana Financial Services (Dubai) Limited impersonated",
+    proposition: "An alert on entities falsely claiming DFSA authorisation.",
     feedbackTitleLines: ["Amana Financial Services (Dubai) Limited", "impersonated"],
     image: NEWS_IMAGES[4],
     feedbackImagesImage: "/images/feedback-images-news-5.png",

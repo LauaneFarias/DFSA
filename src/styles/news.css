@@ -573,38 +573,54 @@ html[data-site-iteration="feedback-0408"] .news-0408 {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--news-text-muted);
+  /* Pin the date to the TOP of the card: this auto margin absorbs all
+     free vertical space below it, pushing the pill + title down to the
+     bottom edge (both the feature-text column and each cell are
+     full-height flex columns). */
+  margin-bottom: auto;
+  /* Legible over the brighter top of the photo (the scrim is
+     bottom-weighted, so the date relies on its own shadow up here). */
+  text-shadow: 0 1px 14px rgba(6, 8, 12, 0.66);
 }
 
 /* ---- Left: one tall feature on the DFSA red brand pattern ---- */
 .news-0408-feature {
   position: relative;
   display: flex;
-  /* Text sits on the lower portion of the pattern — no panel/box. */
-  align-items: flex-end;
+  /* Full-height text column so the date can pin to the top while the
+     pill + title stay anchored at the bottom (see .news-0408-date). */
+  align-items: stretch;
   min-height: clamp(420px, 34vw, 560px);
   border-radius: var(--news-radius-xl);
   overflow: hidden;
   isolation: isolate;
   text-decoration: none;
   color: #ffffff;
-  /* The feature story's own news photo (DIFC gate-district plaza),
-     from public/images/news — matches the "shaping Dubai's financial
-     centre" headline. */
-  background: #26221f url("/images/news/news3.jpg") center / cover no-repeat;
+  /* High-res DIFC glass-tower shot — on-theme for the "Dubai's financial
+     centre" headline, and far sharper on this large card than the old
+     720×448 news3.jpg it replaced (see public/images/news/news-feature.jpg,
+     a 1600px optimisation of difc-0408-bg.jpg). */
+  background: #26221f url("/images/news/news-feature.jpg") center / cover no-repeat;
   box-shadow: var(--news-shadow-rest);
   transition:
     transform 480ms var(--news-ease),
     box-shadow 480ms var(--news-ease);
 }
-/* Bottom gradient built in so the copy stays legible over the lower
-   portion of the photo without adding a visible box behind the text.
-   Neutral (near-black) rather than red-tinted, to suit any photo. */
+/* Dual scrim — a light top darkening for the date now pinned up there,
+   and the stronger bottom gradient for the pill + title, with the middle
+   of the photo left clear. */
 .news-0408-feature::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: linear-gradient(180deg, rgba(10, 12, 16, 0) 36%, rgba(6, 8, 12, 0.74) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(6, 8, 12, 0.5) 0%,
+    rgba(10, 12, 16, 0) 24%,
+    rgba(10, 12, 16, 0) 54%,
+    rgba(6, 8, 12, 0.76) 100%
+  );
 }
 .news-0408-feature:hover {
   transform: translateY(-4px);
@@ -647,6 +663,22 @@ html[data-site-iteration="feedback-0408"] .news-0408 {
   text-shadow: 0 1px 26px rgba(38, 4, 8, 0.38);
 }
 
+/* Story proposition — one line of supporting copy under the headline. */
+.news-0408-prop {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 0 1px 18px rgba(24, 4, 8, 0.42);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.news-0408-feature-prop {
+  max-width: 34ch;
+  font-size: clamp(13px, 0.95vw, 15px);
+  line-height: 1.4;
+  -webkit-line-clamp: 2;
+}
+
 /* ---- Right: four text-led stories in a 2×2 grid ---- */
 .news-0408-grid {
   display: grid;
@@ -679,14 +711,20 @@ html[data-site-iteration="feedback-0408"] .news-0408 {
     transform 420ms var(--news-ease),
     box-shadow 420ms var(--news-ease);
 }
-/* Bottom-weighted scrim so the date/tag/headline stay legible over any
-   photo, while the top of the image stays clear. */
+/* Neutral bottom-weighted scrim so the copy stays legible over any
+   photo, while the top of the image stays clear (no colour tint). */
 .news-0408-cell::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: linear-gradient(180deg, rgba(10, 12, 16, 0) 30%, rgba(6, 8, 12, 0.76) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(6, 8, 12, 0.5) 0%,
+    rgba(10, 12, 16, 0) 32%,
+    rgba(10, 12, 16, 0) 48%,
+    rgba(6, 8, 12, 0.8) 100%
+  );
 }
 .news-0408-cell > * {
   position: relative;
@@ -706,6 +744,11 @@ html[data-site-iteration="feedback-0408"] .news-0408 {
   line-height: 1.3;
   color: #ffffff;
   text-shadow: 0 1px 18px rgba(6, 8, 12, 0.42);
+}
+.news-0408-cell-prop {
+  font-size: clamp(12px, 0.8vw, 13px);
+  line-height: 1.35;
+  -webkit-line-clamp: 2;
 }
 
 /* ---- Entrance (pure CSS, replays each time the tab is activated) ----

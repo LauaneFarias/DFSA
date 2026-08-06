@@ -2,14 +2,13 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { InstagramIcon, LinkedInIcon, NextArrowIcon, XSocialIcon } from "@/components/ui/icons";
+import { InstagramIcon, LinkedInIcon, NextArrowIcon } from "@/components/ui/icons";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const FOOTER_LINKS = ["About", "Data Protection", "Legal Disclaimer", "Our Office"];
 const LEGAL_LINKS = ["Terms of Use", "Cookie Policy", "Privacy Policy"];
 const SOCIAL_LINKS = [
   { label: "LinkedIn", href: "#", Icon: LinkedInIcon },
-  { label: "X", href: "#", Icon: XSocialIcon },
   { label: "Instagram", href: "#", Icon: InstagramIcon },
 ];
 const FOOTER_VIDEO_SRC = "/videos/footer-1.mp4"; // user-supplied "footer 1.mp4", renamed (no space) for a clean URL
@@ -100,7 +99,7 @@ export function SiteFooter() {
 
         <div className="footer-newsletter">
           <div className="footer-newsletter-copy">
-            <h2 className="footer-newsletter-heading">Stay Updated With DFSA News</h2>
+            <h2 className="footer-newsletter-heading">Stay Updated With DFSA News &amp; Alerts</h2>
             <p className="footer-newsletter-sub">
               Sign up to receive the latest news, alerts, updates and publications
             </p>
@@ -208,7 +207,9 @@ export function SiteFooter() {
         </div>
 
         <div className="footer-bottom">
-          <p suppressHydrationWarning>© {new Date().getFullYear()} DFSA. All Rights Reserved.</p>
+          <p suppressHydrationWarning>
+            © {new Date().getFullYear()} Dubai Financial Services Authority. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

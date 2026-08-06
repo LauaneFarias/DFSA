@@ -4154,15 +4154,242 @@ html[data-site-iteration="feedback-0408"] .hero-scope.hero-scope--light-bg .hero
   display: block;
 }
 html[data-site-iteration="feedback-0408"] .hero-bg-video {
-  filter: brightness(0.66) saturate(0.9) contrast(1.03);
+  filter: brightness(0.5) saturate(0.85) contrast(1.05);
 }
 html[data-site-iteration="feedback-0408"] .hero-bg-video-scrim {
   background:
-    radial-gradient(120% 78% at 50% 26%, rgba(6, 10, 14, 0.52) 0%, rgba(6, 10, 14, 0) 62%),
+    radial-gradient(120% 80% at 50% 24%, rgba(4, 7, 11, 0.66) 0%, rgba(4, 7, 11, 0.12) 64%),
     linear-gradient(
       180deg,
-      rgba(6, 10, 14, 0.5) 0%,
-      rgba(6, 10, 14, 0.32) 44%,
-      rgba(6, 10, 14, 0.52) 100%
+      rgba(4, 7, 11, 0.66) 0%,
+      rgba(4, 7, 11, 0.5) 44%,
+      rgba(4, 7, 11, 0.68) 100%
     );
+}
+
+/* ── Feedbacks 04/08: ticker tab dividers ────────────────────────────
+   Thin vertical rules between the three feed tabs (Legislation | Alerts
+   | News) so they read as a segmented picker — one to choose. The line
+   sits centred in the 6px gap and uses currentColor (white on the dark
+   hero) at low opacity. */
+html[data-site-iteration="feedback-0408"] .hero-ticker-tab {
+  position: relative;
+}
+html[data-site-iteration="feedback-0408"] .hero-ticker-tab:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 13px;
+  background: currentColor;
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+/* ── Feedbacks 04/08: bento hero card block ──────────────────────────
+   Reworks the flat single strip (featured news card + five equal-width
+   service cards in a scroller) into a bento to match the reference:
+   the news card tall on the far left, the four middle service cards in
+   a 2×2 grid, and the fifth service card tall on the right. Cards grow
+   taller so the block reads as a highlighted feature rather than a thin
+   row, and the headline is reduced a touch and kept centered. Scoped to
+   this iteration AND to the wide single-viewport layout only — below
+   981px the shared responsive rules keep the natural stacked flow, so
+   the scroller markup still works there untouched. Selectors carry the
+   .hero-scope--light-bg class so they beat the Option-1 base card
+   sizing on specificity. */
+@media (min-width: 981px) {
+  /* Slimmer top padding + a touch of gap so the taller bento has room
+     in its grid track. */
+  html[data-site-iteration="feedback-0408"] .hero-bottom-row {
+    padding-top: 24px;
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  /* News card → tall left column, stretched to the full bento height and
+     re-laid-out vertically (image on top, copy below) so it doesn't look
+     stretched the way the horizontal thumb+text layout would when tall. */
+  html[data-site-iteration="feedback-0408"] .hero-scope--light-bg .hero-news-card {
+    height: auto;
+    align-self: stretch;
+    flex: 0 0 24%;
+  }
+  html[data-site-iteration="feedback-0408"] .hero-news-card-link {
+    flex-direction: column;
+    gap: 12px;
+  }
+  html[data-site-iteration="feedback-0408"] .hero-news-card-thumb {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+  }
+  html[data-site-iteration="feedback-0408"] .hero-news-card-body {
+    flex: 0 0 auto;
+  }
+  html[data-site-iteration="feedback-0408"] .hero-news-card-title {
+    -webkit-line-clamp: 2;
+  }
+
+  /* Service-card row → 3-column × 2-row grid. Drops the horizontal
+     scroller (all five cards are always visible in this layout), its
+     edge-fade mask, and the shadow-bleed padding trick. */
+  html[data-site-iteration="feedback-0408"] .hero-scope--light-bg .hero-card-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 14px;
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+    mask-image: none;
+    -webkit-mask-image: none;
+    cursor: default;
+  }
+  /* Cards fill their grid cells — drop the fixed 148px height and the
+     fraction-of-row width the scroller layout pinned on them. */
+  html[data-site-iteration="feedback-0408"] .hero-scope--light-bg .hero-service-card {
+    width: auto;
+    height: auto;
+    min-height: 0;
+  }
+  /* Bento placement: 2×2 in the middle, one tall card on the right. */
+  html[data-site-iteration="feedback-0408"] .hero-card-row .hero-service-card:nth-child(1) {
+    grid-area: 1 / 1;
+  }
+  html[data-site-iteration="feedback-0408"] .hero-card-row .hero-service-card:nth-child(2) {
+    grid-area: 1 / 2;
+  }
+  html[data-site-iteration="feedback-0408"] .hero-card-row .hero-service-card:nth-child(3) {
+    grid-area: 2 / 1;
+  }
+  html[data-site-iteration="feedback-0408"] .hero-card-row .hero-service-card:nth-child(4) {
+    grid-area: 2 / 2;
+  }
+  html[data-site-iteration="feedback-0408"] .hero-card-row .hero-service-card:nth-child(5) {
+    grid-area: 1 / 3 / 3 / 4;
+  }
+  /* The tall right card has room to breathe — a slightly larger icon so
+     it doesn't look empty next to its full-height neighbour. */
+  html[data-site-iteration="feedback-0408"]
+    .hero-card-row
+    .hero-service-card:nth-child(5)
+    .hero-service-card-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  /* Headline: reduced a touch, kept centered as a tight block. */
+  html[data-site-iteration="feedback-0408"] .hero-headline {
+    font-size: clamp(1.7rem, 2.9vw, 2.5rem);
+  }
+}
+
+/* ── Hero Slider tab ─────────────────────────────────────────────────
+   This tab pins its siteIteration to feedback-0408, so it inherits the
+   entire 04/08 look (bento cards, ticker, scrim, headline) for free. It
+   differs in exactly two ways, both keyed on data-site-tab:
+     1. the moving 04/08 video background is swapped for an
+        auto-crossfading image slideshow (.hero-bg-slider), and
+     2. the featured news card is dropped so the service-card bento fills
+        the full bottom-row width. */
+
+/* Slideshow layer — present in the DOM for every decorative-background
+   tab, but only revealed here. */
+.hero-bg-slider {
+  display: none;
+}
+.hero-bg-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+html[data-site-tab="hero-slider"] .hero-bg-slider {
+  display: block;
+  position: absolute;
+  inset: 0;
+  /* Match the darkened grade the 04/08 video gets so the headline stays
+     legible over the photography. */
+  filter: brightness(0.58) saturate(0.9) contrast(1.03);
+}
+/* Hide the 04/08 video layers this tab would otherwise inherit. Scoped
+   through .hero-scope--light-bg to outrank the 04/08 display:block rule. */
+html[data-site-tab="hero-slider"] .hero-scope.hero-scope--light-bg .hero-bg-video {
+  display: none;
+}
+/* Auto crossfade: three slides on a 15s loop (5s each, delays set inline
+   as i×5s) with a slow Ken Burns zoom. */
+html[data-site-tab="hero-slider"] .hero-bg-slide {
+  animation: hero-bg-slider-cycle 15s linear infinite;
+}
+@keyframes hero-bg-slider-cycle {
+  0% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  3% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 1;
+  }
+  36% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.09);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-site-tab="hero-slider"] .hero-bg-slide {
+    animation: none;
+  }
+  html[data-site-tab="hero-slider"] .hero-bg-slide:first-child {
+    opacity: 1;
+  }
+}
+
+/* Hero Slider uses the plain "Feedback + Images" hero card row (the
+   glassy service cards) rather than the 04/08 bento, and drops only the
+   featured news card. So: hide the news card, and revert the card row
+   from the inherited bento grid back to a flex row of five equal glassy
+   cards filling the width. Desktop only — below 981px the hero flows
+   naturally with the shared responsive rules. */
+html[data-site-tab="hero-slider"] .hero-news-card {
+  display: none;
+}
+@media (min-width: 981px) {
+  html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-card-row {
+    display: flex;
+    gap: 10px;
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+  }
+  html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-service-card {
+    /* Five equal cards sharing the full row width (4 × 10px gaps). */
+    width: calc((100% - 4 * 10px) / 5);
+    height: 148px;
+    min-height: 0;
+  }
+  /* Cluster the whole block (greeting/headline/search + the card row) in
+     the vertical middle of the hero, instead of headline-high with the
+     cards pushed to the bottom edge. Auto rows sized to content, centered
+     as a group with a comfortable gap between the search and the cards. */
+  html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-content-grid {
+    grid-template-rows: auto auto;
+    align-content: center;
+    /* Wider breathing room between the search and the card row. */
+    row-gap: clamp(64px, 9vw, 132px);
+  }
+  html[data-site-tab="hero-slider"] .hero-bottom-row {
+    height: auto;
+    padding-top: 0;
+  }
 }

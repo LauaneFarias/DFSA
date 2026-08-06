@@ -42,7 +42,9 @@ html[data-site-version="feedback-images"] .resources-section {
 html[data-font-version="feedback"] .achievements-section {
   display: block;
   overflow: hidden;
-  padding: clamp(34px, 4.6vw, 68px) 0;
+  /* Taller section per feedback — more vertical breathing room above
+     and below the heading + marquee. */
+  padding: clamp(56px, 7vw, 112px) 0;
   background: #eeece9;
   color: #17181b;
   font-family: var(--site-font-sans);
@@ -50,6 +52,41 @@ html[data-font-version="feedback"] .achievements-section {
 
 .achievements-container {
   width: 100%;
+}
+
+/* Context header so the scrolling figures read as sourced data rather
+   than free-floating numbers. Padded in from the full-bleed marquee. */
+.achievements-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-inline: clamp(20px, 4vw, 56px);
+  /* Wider separation between the title/description and the numbers strip. */
+  margin-bottom: clamp(80px, 11vw, 176px);
+}
+/* Section title — matches the "Latest News" heading typography
+   (see .news-heading) so this reads as a proper section title rather
+   than a small kicker. */
+.achievements-eyebrow {
+  margin: 0;
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-transform: none;
+  color: #17181b;
+}
+.achievements-source {
+  margin: 6px 0 0;
+  font-size: clamp(14px, 1.4vw, 17px);
+  font-weight: 300;
+  color: rgba(23, 24, 27, 0.6);
+}
+
+@media (max-width: 720px) {
+  .achievements-head {
+    margin-bottom: 22px;
+  }
 }
 
 .achievements-panel {

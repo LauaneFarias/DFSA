@@ -34,6 +34,10 @@ export function KeyAchievements() {
       aria-label="Key achievements and milestones"
     >
       <div className="achievements-container">
+        <header className="achievements-head">
+          <p className="achievements-eyebrow">Audit Monitoring in Numbers</p>
+          <p className="achievements-source">2025 Annual Report — data as at 31 December 2025</p>
+        </header>
         <div className="achievements-panel">
           <div className="achievements-grid">
             <AchievementGroup />

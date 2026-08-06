@@ -99,18 +99,33 @@ html[data-site-version="feedback-images"] .footer-bg-video--feedback-images {
   padding-bottom: clamp(36px, 5vw, 56px);
 }
 .footer-newsletter-copy {
-  max-width: 480px;
+  /* No width cap on the block itself — the heading needs room to stay on
+     one line; the sub-copy keeps its own narrower measure below. */
+  max-width: none;
 }
 .footer-newsletter-heading {
   margin: 0 0 10px;
   font-weight: 400;
   font-size: clamp(1.5rem, 2.8vw, 2rem);
   letter-spacing: -0.01em;
+  /* Keep the headline on a single line. */
+  white-space: nowrap;
 }
 .footer-newsletter-sub {
   margin: 0;
+  /* Retains the original ~480px measure for comfortable wrapping,
+     centered under the (wider) one-line headline. */
+  max-width: 480px;
+  margin-inline: auto;
   font-size: 13.5px;
   color: var(--footer-text-secondary);
+}
+
+/* Narrow screens: let the headline wrap again so it never overflows. */
+@media (max-width: 640px) {
+  .footer-newsletter-heading {
+    white-space: normal;
+  }
 }
 .footer-newsletter-form {
   display: flex;
@@ -272,6 +287,9 @@ html[data-site-version="feedback-images"] .footer-mark--feedback {
   align-items: center;
   gap: 16px;
   flex: 1 1 220px;
+  /* Anchor the mark to the base of the footer row (bottom-left) so it
+     reads as grounded rather than floating mid-column. */
+  align-self: flex-end;
 }
 .footer-nav-groups {
   display: flex;
@@ -279,9 +297,18 @@ html[data-site-version="feedback-images"] .footer-mark--feedback {
   gap: clamp(40px, 6vw, 96px);
 }
 .footer-logo {
-  height: 44px;
+  /* Enlarged from 44px so the mark carries weight as the footer's brand
+     anchor instead of reading as an apologetic afterthought. */
+  height: clamp(58px, 5vw, 76px);
   width: auto;
   flex-shrink: 0;
+}
+/* Standardise the dark-background wordmark to pure white (matches the
+   header wordmark, which is whitened by the same filter). Strips the
+   gold accent from logo.svg so both read as one clean white variant —
+   no mixing. Scoped to the feedback-images-based tabs (incl. 04/08). */
+html[data-site-version="feedback-images"] .footer-logo {
+  filter: brightness(0) invert(1);
 }
 .footer-brand-name {
   margin: 0;
@@ -358,6 +385,10 @@ html[data-site-version="feedback-images"] .footer-mark--feedback {
   .footer-main {
     flex-direction: column;
     align-items: flex-start;
+  }
+  .footer-brand {
+    /* Column layout: keep the mark left-aligned, not pushed to the edge. */
+    align-self: flex-start;
   }
   .footer-nav-groups {
     gap: 32px;

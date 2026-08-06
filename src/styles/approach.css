@@ -471,38 +471,66 @@ html[data-site-version="feedback-images"] .approach-card:hover .approach-card-ar
   }
 }
 
-/* ── Feedbacks 04/08: glassier, more transparent approach cards ───────
-   A more see-through frosted glass than the feedback-images default —
-   lower fill opacity, stronger blur + saturation, and a faint light
-   edge. Scoped to the 04/08 iteration only. */
-/* 04/08 uses a different approach-panel photo (the golden dusk building)
-   in place of the feedback-images approach background. */
+/* ── Feedbacks 04/08: Our Approach uses the plain Feedback-tab look ────
+   White boxes on the grid — no photo panel, no frosted glass. This
+   resets the feedback-images treatment that 04/08 would otherwise
+   inherit; the grid layout itself still comes from the
+   data-font-version="feedback" rules above. Descriptions stay visible by
+   default (no hover-reveal) and are clamped to 2 lines. */
 html[data-site-iteration="feedback-0408"] .approach-panel {
-  background: url("/images/approach-0408-bg.jpg") center / cover no-repeat;
+  background: none;
+  min-height: 0;
+  padding: 0;
+  border-radius: 0;
+  overflow: visible;
 }
-
+html[data-site-iteration="feedback-0408"] .approach-panel::before {
+  display: none;
+}
+html[data-site-iteration="feedback-0408"] .approach-heading {
+  color: rgb(var(--approach-ink-rgb));
+}
 html[data-site-iteration="feedback-0408"] .approach-card {
-  background: rgba(23, 24, 27, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow:
-    0 20px 46px -26px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  -webkit-backdrop-filter: blur(32px) saturate(1.25);
-  backdrop-filter: blur(32px) saturate(1.25);
+  color: rgb(var(--approach-ink-rgb));
+  background: #ffffff;
+  border: 1px solid rgba(23, 24, 27, 0.1);
+  box-shadow: 0 18px 40px -28px rgba(23, 24, 27, 0.24);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 html[data-site-iteration="feedback-0408"] .approach-card:hover {
-  background: rgba(23, 24, 27, 0.24);
+  transform: translateY(-6px);
+  background: #ffffff;
+  box-shadow: 0 30px 64px -34px rgba(23, 24, 27, 0.32);
 }
-/* Uncrowd the resting cards: the feedback rule above forces every
-   description open, which reads as busy. Restore the base design's
-   behaviour for 04/08 — icon + title at rest, description revealed on
-   hover / keyboard focus. (The card keeps its height, so nothing jumps.) */
+html[data-site-iteration="feedback-0408"] .approach-card h3 {
+  color: rgb(var(--approach-ink-rgb));
+}
+/* Description always visible, capped at 2 lines. display:-webkit-box is
+   required for -webkit-line-clamp to take effect (a later rule sets it to
+   flow-root, which silently disables the clamp → 3 lines leaked through). */
 html[data-site-iteration="feedback-0408"] .approach-card p {
-  opacity: 0;
-  transform: translateY(6px);
-}
-html[data-site-iteration="feedback-0408"] .approach-card:hover p,
-html[data-site-iteration="feedback-0408"] .approach-card:focus-within p {
+  color: rgba(23, 24, 27, 0.58);
   opacity: 1;
   transform: none;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  min-height: 0;
+  overflow: hidden;
+}
+html[data-site-iteration="feedback-0408"] .approach-card-domain-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 0;
+  background: none;
+  color: var(--approach-accent);
+}
+html[data-site-iteration="feedback-0408"] .approach-card-arrow {
+  background: rgba(23, 24, 27, 0.08);
+  color: rgb(var(--approach-ink-rgb));
+}
+html[data-site-iteration="feedback-0408"] .approach-card:hover .approach-card-arrow {
+  background: rgb(var(--approach-ink-rgb));
+  color: #ffffff;
 }
