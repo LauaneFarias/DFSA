@@ -18,9 +18,18 @@ const FONT_OPTIONS = [
   { value: "adelle", label: "Adelle Sans" },
   { value: "feedback", label: "Feedback" },
   { value: "feedback-images", label: "Feedback + Images" },
-  { value: "feedback-0408", label: "Feedbacks 04/08" },
-  { value: "hero-slider", label: "Hero Slider" },
+  // Option 1 (hero-slider) is listed before Option 2 (feedback-0408) so
+  // the visible tab bar reads left-to-right "Option 1, Option 2".
+  { value: "hero-slider", label: "Option 1" },
+  { value: "feedback-0408", label: "Option 2" },
 ] as const;
+
+// Versions kept fully wired (styles, logic, and localStorage restore all
+// intact) but HIDDEN from the visible tab bar per request. Nothing is
+// deleted — to bring a tab back, just remove its value from this list.
+const HIDDEN_VERSIONS: readonly FontVersion[] = ["niveau", "graphik", "feedback"];
+
+const VISIBLE_OPTIONS = FONT_OPTIONS.filter((option) => !HIDDEN_VERSIONS.includes(option.value));
 
 const STORAGE_KEY = "dfsa-font-version";
 
@@ -61,7 +70,9 @@ function applyFontVersion(next: FontVersion) {
 }
 
 export function FontVersionSwitcher() {
-  const [fontVersion, setFontVersion] = useState<FontVersion>("niveau");
+  // Default to Option 1 (the hero-slider tab) for first-time visitors;
+  // a saved choice in localStorage still wins on mount.
+  const [fontVersion, setFontVersion] = useState<FontVersion>("hero-slider");
 
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -86,7 +97,7 @@ export function FontVersionSwitcher() {
 
   return (
     <div className="font-version-switcher" aria-label="Typeface version">
-      {FONT_OPTIONS.map((option) => (
+      {VISIBLE_OPTIONS.map((option) => (
         <button
           key={option.value}
           type="button"

@@ -4201,10 +4201,17 @@ html[data-site-iteration="feedback-0408"] .hero-ticker-tab:not(:last-child)::aft
    .hero-scope--light-bg class so they beat the Option-1 base card
    sizing on specificity. */
 @media (min-width: 981px) {
+  /* Give the bento more of the grid's height (the top block only needs a
+     fraction of its track) and reserve clear space below it, so the tall
+     cards never crowd or overlap the animated ticker on shorter viewports. */
+  html[data-site-iteration="feedback-0408"] .hero-scope--light-bg .hero-content-grid {
+    grid-template-rows: 50% 1fr;
+    margin-bottom: clamp(72px, 9vh, 116px);
+  }
   /* Slimmer top padding + a touch of gap so the taller bento has room
      in its grid track. */
   html[data-site-iteration="feedback-0408"] .hero-bottom-row {
-    padding-top: 24px;
+    padding-top: 16px;
     gap: 14px;
     align-items: stretch;
   }
@@ -4322,10 +4329,10 @@ html[data-site-tab="hero-slider"] .hero-bg-slider {
 html[data-site-tab="hero-slider"] .hero-scope.hero-scope--light-bg .hero-bg-video {
   display: none;
 }
-/* Auto crossfade: three slides on a 15s loop (5s each, delays set inline
-   as i×5s) with a slow Ken Burns zoom. */
+/* Auto crossfade: three slides on a 12s loop (4s each, delays set inline
+   as i×4s) with a slow Ken Burns zoom. */
 html[data-site-tab="hero-slider"] .hero-bg-slide {
-  animation: hero-bg-slider-cycle 15s linear infinite;
+  animation: hero-bg-slider-cycle 12s linear infinite;
 }
 @keyframes hero-bg-slider-cycle {
   0% {
@@ -4372,16 +4379,107 @@ html[data-font-version="feedback"] .hero-headline-slider::first-letter {
   text-transform: uppercase;
 }
 
-/* Hero Slider uses the plain "Feedback + Images" hero card row (the
-   glassy service cards) rather than the 04/08 bento, and drops only the
-   featured news card. So: hide the news card, and revert the card row
-   from the inherited bento grid back to a flex row of five equal glassy
-   cards filling the width. Desktop only — below 981px the hero flows
-   naturally with the shared responsive rules. */
-html[data-site-tab="hero-slider"] .hero-news-card {
-  display: none;
-}
+/* Hero Slider (Option 1): a two-column hero band — the 04/08 feature
+   news card on the LEFT, the greeting/headline/search block on the RIGHT
+   — with the five glassy service quick-cards spanning the full width
+   below. The news card keeps the exact 04/08 look (tall vertical card,
+   burgundy frosted-glass texture) for free, because this tab already
+   rides the feedback-0408 siteIteration; we just un-hide it (it was
+   dropped before) and place it via grid. The service cards revert from
+   the inherited bento grid back to a flex row of five equal glassy cards.
+   Desktop only — below 981px the shared responsive rules keep the natural
+   stacked flow (news card, headline, search, cards). */
 @media (min-width: 981px) {
+  /* Content grid → two columns (headline+search | news) over a
+     full-width cards row, centered vertically as a group. .hero-top-row
+     and .hero-bottom-row collapse to display:contents so their children
+     (top block, news card, service-card row) promote to direct grid
+     items these named areas can place. */
+  html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-content-grid {
+    grid-template-columns: 1fr clamp(320px, 30%, 420px);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "headline news"
+      "cards cards";
+    align-content: center;
+    column-gap: clamp(32px, 4vw, 72px);
+    row-gap: clamp(40px, 6vw, 88px);
+  }
+  html[data-site-tab="hero-slider"] .hero-top-row,
+  html[data-site-tab="hero-slider"] .hero-bottom-row {
+    display: contents;
+  }
+  html[data-site-tab="hero-slider"] .hero-top-block {
+    grid-area: headline;
+    /* Keep the search dropdown panel above the service cards below.
+       .hero-top-row's original z-index:20 was lost when it collapsed to
+       display:contents, so re-assert the stacking on the grid item. */
+    position: relative;
+    z-index: 20;
+  }
+  /* Left-align the greeting, headline and search to the grid's left
+     margin — flush with the logo above and the service cards below —
+     overriding the light-bg theme's centered treatment (which centers
+     the whole block and auto-margins the search). */
+  html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-top-block {
+    text-align: left;
+  }
+  html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-search-wrap {
+    margin-inline: 0;
+  }
+  /* Search dropdown panel: align its left edge with the search bar
+     instead of centering it on the bar. The default left:50% +
+     translateX(-50%) centering makes the wider panel overhang to the
+     left; here we pin it to the bar's left edge and drop the translateX
+     so only the vertical open/close motion remains. !important guards
+     against the base panel rules re-centering it. */
+  html[data-site-tab="hero-slider"] .hero-search-panel {
+    left: 0 !important;
+    right: auto !important;
+    transform: translateY(-6px) scale(0.98) !important;
+  }
+  html[data-site-tab="hero-slider"] .hero-search-panel.is-open {
+    transform: translateY(0) scale(1) !important;
+  }
+  /* Feature news card → right column, un-hidden and sized as a bigger,
+     roughly square feature card (not stretched to the headline's full
+     height). Keeps the inherited 04/08 vertical card layout + burgundy
+     frosted-glass texture; vertically centered against the headline
+     block. */
+  html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-news-card {
+    grid-area: news;
+    /* Content-height (not stretched) and vertically centered in the row,
+       so its midline matches the greeting/headline/search block on the
+       left. Selector carries .hero-scope--light-bg to outrank the
+       inherited 04/08 `align-self: stretch`. */
+    align-self: center;
+    height: auto;
+    padding: 14px;
+  }
+  /* Landscape photo on top at a fixed ratio (not height-filling), so the
+     card reads square rather than tall once title + 2-line description
+     sit below it. Overrides the 04/08 flex:1 fill. */
+  html[data-site-tab="hero-slider"] .hero-news-card-thumb {
+    flex: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    min-height: 0;
+  }
+  /* Description (proposition): shown, clamped to two lines. */
+  html[data-site-tab="hero-slider"] .hero-news-card-proposition {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+  /* Service quick-cards → full-width bottom band: a flex row of five
+     equal glassy cards. Kept below the top block so the search dropdown
+     panel overlays them (see .hero-top-block z-index above). */
+  html[data-site-tab="hero-slider"] .hero-card-row-wrap {
+    grid-area: cards;
+    position: relative;
+    z-index: 1;
+  }
   html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-card-row {
     display: flex;
     gap: 10px;
@@ -4394,19 +4492,5 @@ html[data-site-tab="hero-slider"] .hero-news-card {
     width: calc((100% - 4 * 10px) / 5);
     height: 148px;
     min-height: 0;
-  }
-  /* Cluster the whole block (greeting/headline/search + the card row) in
-     the vertical middle of the hero, instead of headline-high with the
-     cards pushed to the bottom edge. Auto rows sized to content, centered
-     as a group with a comfortable gap between the search and the cards. */
-  html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-content-grid {
-    grid-template-rows: auto auto;
-    align-content: center;
-    /* Wider breathing room between the search and the card row. */
-    row-gap: clamp(64px, 9vw, 132px);
-  }
-  html[data-site-tab="hero-slider"] .hero-bottom-row {
-    height: auto;
-    padding-top: 0;
   }
 }
