@@ -21,18 +21,6 @@ const HEADER_VIDEO_SRC = "/videos/iStock-1432335897.mp4";
 // shown only in the 04/08 iteration (see hero.css); every other tab
 // keeps HEADER_VIDEO_SRC above.
 const HEADER_VIDEO_SRC_0408 = "/videos/hero2.mp4";
-// Hero Slider tab only: an auto-crossfading image slideshow that stands
-// in for the 04/08 moving video. Rendered here in the decorative branch
-// (which the slider tab uses) but shown only when data-site-tab is
-// "hero-slider" — see .hero-bg-slider in hero.css. A trio of cinematic
-// Dubai/DIFC architecture shots (Museum of the Future, a DIFC glass
-// tower, a facade at dusk), on-brand with the 04/08 video they replace.
-const HERO_SLIDER_IMAGES = [
-  "/images/news-0408-feature.jpg",
-  "/images/difc-0408-bg.jpg",
-  "/images/approach-0408-bg.jpg",
-];
-const HERO_SLIDER_SECONDS_PER_SLIDE = 5;
 
 type Props = {
   activeScene: number;
@@ -146,24 +134,6 @@ export function HeroBackground({ activeScene, bgMode }: Props) {
         preload="auto"
         aria-hidden="true"
       />
-      {/* Hero Slider tab only: auto-crossfading image slideshow, shown
-          via CSS in place of the videos above. Sits below the scrim so
-          the headline stays legible over the photography. */}
-      <div className="hero-bg-slider" aria-hidden="true">
-        {HERO_SLIDER_IMAGES.map((src, i) => (
-          <div
-            key={src}
-            className="hero-bg-slide"
-            style={
-              {
-                backgroundImage: `url("${src}")`,
-                animationDelay: `${i * HERO_SLIDER_SECONDS_PER_SLIDE}s`,
-              } as React.CSSProperties
-            }
-          />
-        ))}
-      </div>
-
       <div className="hero-bg-video-scrim hero-bg-video-scrim--light" />
 
       <div className="hero-bg-parallax" ref={bgRef}>

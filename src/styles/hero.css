@@ -4294,73 +4294,16 @@ html[data-site-iteration="feedback-0408"] .hero-ticker-tab:not(:last-child)::aft
   }
 }
 
-/* ── Hero Slider tab ─────────────────────────────────────────────────
+/* ── Hero Slider tab (Option 1) ──────────────────────────────────────
    This tab pins its siteIteration to feedback-0408, so it inherits the
-   entire 04/08 look (bento cards, ticker, scrim, headline) for free. It
-   differs in exactly two ways, both keyed on data-site-tab:
-     1. the moving 04/08 video background is swapped for an
-        auto-crossfading image slideshow (.hero-bg-slider), and
-     2. the featured news card is dropped so the service-card bento fills
-        the full bottom-row width. */
-
-/* Slideshow layer — present in the DOM for every decorative-background
-   tab, but only revealed here. */
-.hero-bg-slider {
-  display: none;
-}
-.hero-bg-slide {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  will-change: opacity, transform;
-}
-html[data-site-tab="hero-slider"] .hero-bg-slider {
-  display: block;
-  position: absolute;
-  inset: 0;
-  /* Match the darkened grade the 04/08 video gets so the headline stays
-     legible over the photography. */
-  filter: brightness(0.58) saturate(0.9) contrast(1.03);
-}
-/* Hide the 04/08 video layers this tab would otherwise inherit. Scoped
-   through .hero-scope--light-bg to outrank the 04/08 display:block rule. */
-html[data-site-tab="hero-slider"] .hero-scope.hero-scope--light-bg .hero-bg-video {
-  display: none;
-}
-/* Auto crossfade: three slides on a 12s loop (4s each, delays set inline
-   as i×4s) with a slow Ken Burns zoom. */
-html[data-site-tab="hero-slider"] .hero-bg-slide {
-  animation: hero-bg-slider-cycle 12s linear infinite;
-}
-@keyframes hero-bg-slider-cycle {
-  0% {
-    opacity: 0;
-    transform: scale(1.04);
-  }
-  3% {
-    opacity: 1;
-  }
-  30% {
-    opacity: 1;
-  }
-  36% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.09);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  html[data-site-tab="hero-slider"] .hero-bg-slide {
-    animation: none;
-  }
-  html[data-site-tab="hero-slider"] .hero-bg-slide:first-child {
-    opacity: 1;
-  }
-}
+   entire 04/08 look — including the moving 04/08 video background
+   (.hero-bg-video--0408) — for free. Its differences from Option 2 are
+   purely the two-column hero layout (feature news card beside the
+   headline/search block, glassy quick-cards below) defined further down,
+   plus its own headline line (below). The earlier auto-crossfading image
+   slideshow that stood in for the video was removed per feedback, so the
+   tab now shows the exact same video as Option 2 — no background
+   overrides needed here anymore. */
 
 /* Hero Slider headline — a more general line, swapped in for the default
    "We are shaping the financial markets of the future" via data-site-tab.
@@ -4449,12 +4392,24 @@ html[data-font-version="feedback"] .hero-headline-slider::first-letter {
   html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-news-card {
     grid-area: news;
     /* Content-height (not stretched) and vertically centered in the row,
-       so its midline matches the greeting/headline/search block on the
-       left. Selector carries .hero-scope--light-bg to outrank the
-       inherited 04/08 `align-self: stretch`. */
+       then nudged down a touch so it sits slightly below the
+       greeting/headline/search block's midline per feedback. Selector
+       carries .hero-scope--light-bg to outrank the inherited 04/08
+       `align-self: stretch`. */
     align-self: center;
     height: auto;
     padding: 14px;
+    /* !important is required, not cosmetic: the card carries the
+       `hero-content-rise-in` entrance animation on `transform`, and CSS
+       animations outrank normal author declarations — so a plain
+       transform here loses to the animation's filled value. */
+    transform: translateY(40px) !important;
+  }
+  /* Preserve the card's hover lift relative to its nudged-down resting
+     position (base :hover uses translateY(-6px), which would otherwise
+     cancel the nudge). */
+  html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-news-card:hover {
+    transform: translateY(34px) !important;
   }
   /* Landscape photo on top at a fixed ratio (not height-filling), so the
      card reads square rather than tall once title + 2-line description
