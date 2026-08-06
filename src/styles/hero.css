@@ -4355,6 +4355,23 @@ html[data-site-tab="hero-slider"] .hero-bg-slide {
   }
 }
 
+/* Hero Slider headline — a more general line, swapped in for the default
+   "We are shaping the financial markets of the future" via data-site-tab.
+   The first letter is re-capitalised because the feedback layout lowercases
+   the whole headline. */
+.hero-headline .hero-headline-slider {
+  display: none;
+}
+html[data-site-tab="hero-slider"] .hero-headline-default {
+  display: none;
+}
+html[data-site-tab="hero-slider"] .hero-headline-slider {
+  display: block;
+}
+html[data-font-version="feedback"] .hero-headline-slider::first-letter {
+  text-transform: uppercase;
+}
+
 /* Hero Slider uses the plain "Feedback + Images" hero card row (the
    glassy service cards) rather than the 04/08 bento, and drops only the
    featured news card. So: hide the news card, and revert the card row

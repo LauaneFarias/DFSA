@@ -110,12 +110,17 @@ export function Hero() {
                 Welcome to the Dubai Financial Services Authority
               </p>
               <h1 className="hero-headline">
-                <span className="hero-headline-mobile-line">We Are Shaping The</span>
-                <span className="hero-headline-desktop-line">
-                  We Are Shaping The Financial Markets
+                <span className="hero-headline-default">
+                  <span className="hero-headline-mobile-line">We Are Shaping The</span>
+                  <span className="hero-headline-desktop-line">
+                    We Are Shaping The Financial Markets
+                  </span>
+                  <span className="hero-headline-mobile-line">Financial Markets Of The Future</span>
+                  <span className="hero-headline-desktop-line">Of The Future</span>
                 </span>
-                <span className="hero-headline-mobile-line">Financial Markets Of The Future</span>
-                <span className="hero-headline-desktop-line">Of The Future</span>
+                {/* Hero Slider tab only — a more general headline, toggled
+                    via CSS on data-site-tab (see hero.css). */}
+                <span className="hero-headline-slider">Shaping the Future of Finance</span>
               </h1>
               <HeroSearch ref={searchInputRef} />
             </div>
