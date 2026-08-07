@@ -411,6 +411,11 @@ export function LatestNews() {
                 <span className="news-0408-date">{featureStory.date}</span>
                 <span className={tagClass(featureStory.tag)}>{featureStory.tag}</span>
                 <h3 className="news-0408-feature-title">{featureStory.title}</h3>
+                {featureStory.proposition && (
+                  <p className="news-0408-prop news-0408-feature-prop">
+                    {featureStory.proposition}
+                  </p>
+                )}
               </div>
             </a>
             <div className="news-0408-grid">
@@ -425,6 +430,9 @@ export function LatestNews() {
                   <span className="news-0408-date">{item.date}</span>
                   <span className={tagClass(item.tag)}>{item.tag}</span>
                   <h3 className="news-0408-cell-title">{item.title}</h3>
+                  {item.proposition && (
+                    <p className="news-0408-prop news-0408-cell-prop">{item.proposition}</p>
+                  )}
                 </a>
               ))}
             </div>
