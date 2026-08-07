@@ -3620,6 +3620,24 @@ html[data-font-version="feedback"] .hero-ticker-link:focus-visible {
     display: none;
   }
 }
+/* Feedback nav (Option 1 / Option 2) carries ~10 links plus Sign in, which
+   overlap the logo and the right-side controls once the viewport drops
+   below the width they need. Collapse the horizontal menu to a hamburger
+   there (the full-screen overlay already holds every link), restoring a
+   visible white circular button and hiding the center links + Sign in so
+   nothing overlaps. Above this width the full centered nav fits. */
+@media (max-width: 1279px) {
+  html[data-font-version="feedback"] .hero-navbar-center,
+  html[data-font-version="feedback"] .hero-navbar-sign-in {
+    display: none;
+  }
+  html[data-font-version="feedback"] .hero-navbar-menu-btn {
+    display: flex;
+    background: #ffffff;
+    color: rgb(var(--hero-ink-rgb));
+    box-shadow: -1.07px 31.45px 49.36px 0px rgba(0, 0, 0, 0.09);
+  }
+}
 @media (max-width: 720px) {
   .hero-navbar-outer {
     top: 14px;
@@ -3658,7 +3676,9 @@ html[data-font-version="feedback"] .hero-ticker-link:focus-visible {
     height: 48px;
   }
   .hero-main {
-    padding: 74px 18px 18px;
+    /* More top clearance so the greeting/headline never sit under (or
+       graze) the fixed nav on phones. */
+    padding: 104px 18px 18px;
   }
   .hero-mega-top {
     min-height: 76px;
@@ -3856,7 +3876,9 @@ html[data-font-version="feedback"] .hero-ticker-link:focus-visible {
 
 @media (max-width: 620px) {
   .hero-main {
-    padding: 92px 16px 16px;
+    /* Extra top clearance so the greeting/headline sit clear of the fixed
+       nav on phones. */
+    padding: 120px 16px 16px;
   }
   .hero-content-grid,
   .hero-scope.hero-scope--light-bg .hero-content-grid {
