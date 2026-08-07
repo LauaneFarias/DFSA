@@ -3756,9 +3756,15 @@ html[data-font-version="feedback"] .hero-ticker-link:focus-visible {
   }
   .hero-top-block {
     max-width: none;
+    /* Center the greeting/headline/search as a block in the stacked
+       layout (the desktop two-column left-alignment doesn't apply here). */
+    align-items: center;
+    text-align: center;
   }
   .hero-eyebrow-greeting {
     max-width: 34rem;
+    /* Center the constrained greeting box, not just its text. */
+    margin-inline: auto;
     font-size: clamp(0.95rem, 2.6vw, 1.18rem);
     line-height: 1.35;
     margin-bottom: 6px;
