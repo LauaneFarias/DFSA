@@ -18,8 +18,6 @@ const LEAD_1 =
   "The DFSA is the independent banking, financial services, and markets regulator of DIFC, a purpose-built financial free zone in Dubai, UAE.";
 const LEAD_2 =
   "Find out more about our purpose, vision, values, and strategic pillars on our Annual Report 2025.";
-const STRATEGY_INTRO =
-  "The DFSA's strategy is underpinned by four core strategic pillars — responding to a rapidly evolving financial landscape while continuing to support DIFC's growth as a globally competitive and resilient financial centre.";
 
 // TODO: point this at the real DFSA Annual Report 2025 URL once available.
 const ANNUAL_REPORT_URL = "#annual-report-2025";
@@ -65,21 +63,20 @@ export function AboutDfsa() {
   return (
     <section className="about-section" ref={sectionRef}>
       <div className="about-container">
-        <div className="about-layout">
-          <div className="about-left about-reveal">
-            <h2 className="about-heading">About the DFSA</h2>
-            <p className="about-lead">{LEAD_1}</p>
-            <p className="about-lead">{LEAD_2}</p>
-            <a href={ANNUAL_REPORT_URL} className="about-cta">
-              <span>Learn more</span>
-              <span className="about-cta-icon">
-                <NextArrowIcon size={14} />
-              </span>
-            </a>
-          </div>
+        <div className="about-panel">
+          <div className="about-layout">
+            <div className="about-left about-reveal">
+              <h2 className="about-heading">About the DFSA</h2>
+              <p className="about-lead">{LEAD_1}</p>
+              <p className="about-lead">{LEAD_2}</p>
+              <a href={ANNUAL_REPORT_URL} className="about-cta">
+                <span>Learn more</span>
+                <span className="about-cta-icon">
+                  <NextArrowIcon size={14} />
+                </span>
+              </a>
+            </div>
 
-          <div className="about-right">
-            <p className="about-strategy-intro about-reveal">{STRATEGY_INTRO}</p>
             <div className="about-pillars">
               {PILLARS.map((title) => (
                 <article key={title} className="about-pillar-card about-reveal">

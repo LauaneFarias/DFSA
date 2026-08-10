@@ -23,14 +23,16 @@
      news.css's --news-page-bg — matched exactly so Hero → Latest
      News → About reads as one continuous page background. */
   --about-page-bg: #eeece9;
+  /* Dark surround so the light content panel reads as an inset card. */
+  --about-surround: #17181b;
   --about-radius-lg: 20px;
   --about-radius-xl: 32px;
   --about-radius-pill: 999px;
   --about-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  background: var(--about-page-bg);
+  background: var(--about-surround);
   color: rgb(var(--about-ink-rgb));
   font-family: var(--site-font-sans);
-  padding: clamp(16px, 2vw, 28px) 0;
+  padding: clamp(28px, 4vw, 64px) 0;
 }
 .about-container {
   width: 100%;
@@ -42,6 +44,13 @@
   }
 }
 
+/* Light rounded inset panel holding all the About content. */
+.about-panel {
+  background: var(--about-page-bg);
+  border-radius: clamp(24px, 3vw, 44px);
+  padding: clamp(28px, 4vw, 72px);
+}
+
 /* ---- Two-column layout: heading + mandate copy + "Learn more" (to the
    Annual Report 2025) on the left; the strategy intro and the four
    strategic-pillar cards on the right. ---- */
@@ -49,8 +58,9 @@
   display: grid;
   grid-template-columns: minmax(240px, 0.85fr) minmax(0, 2fr);
   gap: clamp(32px, 5vw, 80px);
-  align-items: start;
-  padding-block: clamp(20px, 3vw, 40px);
+  /* Stretch so the pillar cards match the height of the left copy block,
+     reading as tall portrait tiles. */
+  align-items: stretch;
 }
 .about-left {
   display: flex;
@@ -126,32 +136,19 @@
   }
 }
 
-/* ---- Right column: strategy intro + four pillar cards ---- */
-.about-right {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(22px, 2.8vw, 38px);
-}
-.about-strategy-intro {
-  margin: 0;
-  font-size: clamp(15px, 1.25vw, 17px);
-  line-height: 1.6;
-  color: rgb(var(--about-ink-rgb));
-  max-width: 72ch;
-}
-
-/* Four equal square cards, one per strategic pillar — neutral white
-   tiles (no red) with a gold accent on hover, replacing the two
-   oversized panels. */
+/* Four equal tall portrait cards, one per strategic pillar — neutral
+   white tiles (no red) with a gold accent on hover. They stretch to the
+   height of the left copy block (see .about-layout align-items:stretch). */
 .about-pillars {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(14px, 1.4vw, 20px);
+  align-items: stretch;
 }
 .about-pillar-card {
   display: flex;
-  aspect-ratio: 1 / 1;
-  padding: clamp(18px, 1.5vw, 26px);
+  min-height: clamp(280px, 24vw, 360px);
+  padding: clamp(18px, 1.5vw, 28px);
   border-radius: var(--about-radius-lg);
   background: #ffffff;
   border: 1px solid var(--about-border);
@@ -177,8 +174,7 @@
 }
 
 @media (min-width: 981px) {
-  html[data-font-version="feedback"] .about-lead,
-  html[data-font-version="feedback"] .about-strategy-intro {
+  html[data-font-version="feedback"] .about-lead {
     font-size: 16px;
   }
   html[data-font-version="feedback"] .about-pillar-title {
@@ -197,7 +193,6 @@
     grid-template-columns: 1fr;
   }
   .about-pillar-card {
-    aspect-ratio: auto;
-    min-height: 116px;
+    min-height: 150px;
   }
 }
