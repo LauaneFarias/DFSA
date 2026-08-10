@@ -55,7 +55,7 @@ const NEWS_IMAGES = [
 
 const NEWS_ITEMS: NewsItem[] = [
   {
-    date: "18 March, 2026",
+    date: "18 March 2026",
     tag: "News",
     title: "DFSA outlines 2026 regulatory priorities for Dubai's financial centre",
     proposition: "A clear view of the priorities shaping regulation across the DIFC.",
@@ -67,7 +67,7 @@ const NEWS_ITEMS: NewsItem[] = [
     feedbackImagesImage: "/images/feedback-images-news-1.png",
   },
   {
-    date: "15 March, 2026",
+    date: "15 March 2026",
     tag: "Alerts",
     title: "Supervision Annual Outreach Session",
     proposition: "Connect with the DFSA's supervisory priorities for firms and stakeholders.",
@@ -75,7 +75,7 @@ const NEWS_ITEMS: NewsItem[] = [
     feedbackImagesImage: "/images/feedback-images-news-2.png",
   },
   {
-    date: "15 March, 2026",
+    date: "15 March 2026",
     tag: "News",
     title: "Nasdaq Dubai reopens for trading effective Wednesday, 4 March",
     proposition: "Stay informed on key market developments and operational updates.",
@@ -83,7 +83,7 @@ const NEWS_ITEMS: NewsItem[] = [
     feedbackImagesImage: "/images/feedback-images-news-3.png",
   },
   {
-    date: "15 March, 2026",
+    date: "15 March 2026",
     tag: "News",
     title: "Notice of Amendments to Legislation March 2026",
     proposition: "The latest changes to the DFSA rulebook and legislation.",
@@ -92,7 +92,7 @@ const NEWS_ITEMS: NewsItem[] = [
     feedbackImagesImage: "/images/feedback-images-news-4.png",
   },
   {
-    date: "15 March, 2026",
+    date: "15 March 2026",
     tag: "Events",
     title: "Amana Financial Services (Dubai) Limited impersonated",
     proposition: "An alert on entities falsely claiming DFSA authorisation.",
@@ -101,31 +101,31 @@ const NEWS_ITEMS: NewsItem[] = [
     feedbackImagesImage: "/images/feedback-images-news-5.png",
   },
   {
-    date: "12 March, 2026",
+    date: "12 March 2026",
     tag: "News",
     title: "Consultation Paper No. 165 open for public comment",
     image: NEWS_IMAGES[5],
   },
   {
-    date: "10 March, 2026",
+    date: "10 March 2026",
     tag: "News",
     title: "DFSA renews Memorandum of Understanding with the Central Bank of Egypt",
     image: NEWS_IMAGES[6],
   },
   {
-    date: "8 March, 2026",
+    date: "8 March 2026",
     tag: "Alerts",
     title: "Unauthorised entity offering investment advice under a fictitious licence",
     image: NEWS_IMAGES[7],
   },
   {
-    date: "5 March, 2026",
+    date: "5 March 2026",
     tag: "Events",
     title: "DIFC Fintech Week 2026 registration now open",
     image: NEWS_IMAGES[8],
   },
   {
-    date: "2 March, 2026",
+    date: "2 March 2026",
     tag: "News",
     title: "DFSA publishes 2025 Annual Report on regulatory outcomes",
     image: NEWS_IMAGES[9],
