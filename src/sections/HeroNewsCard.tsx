@@ -10,7 +10,6 @@ type NewsSlide = {
   title: string;
   proposition: string;
   date: string;
-  shortDate: string;
   image: string;
 };
 
@@ -21,24 +20,21 @@ const NEWS_SLIDES: NewsSlide[] = [
     tag: "News",
     title: "DFSA outlines 2026 regulatory priorities for Dubai's financial centre",
     proposition: "A clear view of the priorities shaping regulation across the DIFC.",
-    date: "18 March, 2026",
-    shortDate: "18.03.2026",
+    date: "18 March 2026",
     image: "/images/news/news3.jpg",
   },
   {
     tag: "News",
     title: "Nasdaq Dubai reopens for trading effective Wednesday, 4 March",
     proposition: "Stay informed on key market developments and operational updates.",
-    date: "15 March, 2026",
-    shortDate: "15.03.2026",
+    date: "15 March 2026",
     image: "/images/news/news6.jpg",
   },
   {
     tag: "Alerts",
     title: "Supervision Annual Outreach Session announced for Q2 2026",
     proposition: "Connect with the DFSA's supervisory priorities for firms and stakeholders.",
-    date: "12 March, 2026",
-    shortDate: "12.03.2026",
+    date: "12 March 2026",
     image: "/images/news/news4.jpg",
   },
 ];
@@ -148,7 +144,7 @@ export function HeroNewsCard() {
           />
           <span className="hero-news-card-image-meta">
             <span className="hero-news-card-tag hero-news-card-tag--image">{slide.tag}</span>
-            <span className="hero-news-card-date-tag">{slide.shortDate}</span>
+            <span className="hero-news-card-date-tag">{slide.date}</span>
           </span>
         </span>
         <span className="hero-news-card-body" key={`body-${index}`}>
