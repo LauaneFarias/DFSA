@@ -534,10 +534,10 @@ html[data-font-version="feedback"] .difc-card--white .difc-card-desc {
   }
 }
 
-/* ── Feedbacks 04/08: white-box journey cards (Adelle Sans style) ─────
-   The secondary cards drop the frosted glass for solid white boxes with
-   dark text — like the Adelle Sans tab — sitting over the kept facade
-   photo. (The feature card below keeps its red glass.) */
+/* ── Feedbacks 04/08 iteration base: white-box journey cards ──────────
+   Shared by Option 1 (hero-slider) and Option 2 (feedback-0408) via the
+   iteration hook. Option 2 overrides these to dark glass below (keyed on
+   data-site-tab so Option 1 keeps the white boxes). */
 html[data-site-iteration="feedback-0408"] .difc-card--white {
   background: #ffffff;
   color: #17181b;
@@ -577,5 +577,45 @@ html[data-site-iteration="feedback-0408"] .difc-card-desc {
   overflow: hidden;
 }
 
-/* 04/08: the feature card stays a solid brand-red tile (base burgundy
-   gradient) — no glass — matching the Adelle Sans look. */
+/* 04/08 iteration base: the feature card stays a solid brand-red tile
+   (base burgundy gradient) for Option 1; Option 2 overrides it to dark
+   glass below. */
+
+/* ── Option 2 only (data-site-tab): dark frosted-glass DIFC cards ──────
+   Per feedback, Option 2's journey cards use the same dark frosted glass
+   + white icons as the hero, for one consistent box treatment. Keyed on
+   data-site-tab so Option 1 (which shares the feedback-0408 iteration)
+   keeps its white boxes. */
+html[data-site-tab="feedback-0408"] .difc-card--white {
+  background: rgba(23, 24, 27, 0.46);
+  color: #ffffff;
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.42);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+html[data-site-tab="feedback-0408"] .difc-card--white .difc-card-icon {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+html[data-site-tab="feedback-0408"] .difc-card--white .difc-card-title {
+  color: #ffffff;
+}
+html[data-site-tab="feedback-0408"] .difc-card--white .difc-card-desc {
+  color: rgba(255, 255, 255, 0.72);
+}
+html[data-site-tab="feedback-0408"] .difc-card--feature {
+  background: rgba(23, 24, 27, 0.46);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+html[data-site-tab="feedback-0408"] .difc-card--feature::after {
+  display: none;
+}
+html[data-site-tab="feedback-0408"] .difc-card--feature .difc-card-icon {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+html[data-site-tab="feedback-0408"] .difc-card--feature .difc-card-arrow {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
