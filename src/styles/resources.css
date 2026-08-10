@@ -328,3 +328,87 @@ html[data-site-iteration="feedback-0408"]
     ),
     linear-gradient(135deg, rgba(91, 24, 37, 0.18), rgba(163, 30, 46, 0.12));
 }
+
+/* ── Option 2 only: drop the "Additional References" eyebrow and use the
+   alternate heading copy ("You may also be interested in…"). Both heading
+   variants render in the DOM; these rules pick the right one per tab,
+   keyed on the unique per-tab hook data-site-tab. ───────────────────── */
+.resources-heading-text--o2 {
+  display: none;
+}
+html[data-site-tab="feedback-0408"] .resources-eyebrow {
+  display: none;
+}
+html[data-site-tab="feedback-0408"] .resources-heading-text--default {
+  display: none;
+}
+html[data-site-tab="feedback-0408"] .resources-heading-text--o2 {
+  display: inline;
+}
+
+/* ── Option 2, item 8: drop the 01–04 index numbers, and make the hover
+   reveal gold instead of red (brand gold pattern + gold arrow). ────────── */
+html[data-site-tab="feedback-0408"] .resources-card-index {
+  display: none;
+}
+/* Hide every video layer (incl. the red hover clip and the gray feedback
+   clip, which has a higher-specificity display:block rule) and reveal the
+   brand gold pattern on hover instead. */
+html[data-site-tab="feedback-0408"] .resources-card-media video.resources-card-video {
+  display: none;
+}
+html[data-site-tab="feedback-0408"] .resources-card-media {
+  background: url("/patterns/dfsa-pattern-gold.png") center / cover no-repeat;
+}
+/* Neutral dark scrim (replaces the maroon one) so the white-on-hover copy
+   stays legible over the gold. */
+html[data-site-tab="feedback-0408"]
+  .resources-card--feedback-gray:hover
+  .resources-card-media::after {
+  background: linear-gradient(
+    to top,
+    rgba(23, 24, 27, 0.34) 0%,
+    rgba(23, 24, 27, 0.06) 55%,
+    rgba(23, 24, 27, 0) 78%
+  );
+}
+/* Gold arrow circle instead of red. */
+html[data-site-tab="feedback-0408"] .resources-card-arrow {
+  background: rgb(var(--resources-gold-rgb));
+}
+/* Keep the cards neutral at rest and reveal the gold only on hover (the
+   feedback tabs otherwise show the media layer always-on). */
+html[data-site-tab="feedback-0408"] .resources-card .resources-card-media {
+  opacity: 0;
+}
+html[data-site-tab="feedback-0408"] .resources-card:hover .resources-card-media,
+html[data-site-tab="feedback-0408"] .resources-card:focus-visible .resources-card-media {
+  opacity: 1;
+}
+
+/* Put the icon (left) and the arrow (right) on one top row, with the title
+   pinned to the bottom — same header layout as the About the DFSA cards.
+   A small grid does this without touching the shared markup. */
+html[data-site-tab="feedback-0408"] .resources-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "icon head"
+    "title title";
+  gap: 16px;
+}
+html[data-site-tab="feedback-0408"] .resources-card-icon {
+  grid-area: icon;
+  align-self: start;
+}
+html[data-site-tab="feedback-0408"] .resources-card-head {
+  grid-area: head;
+  justify-content: flex-end;
+  align-self: start;
+}
+html[data-site-tab="feedback-0408"] .resources-card-title {
+  grid-area: title;
+  align-self: end;
+  margin-top: 0;
+}

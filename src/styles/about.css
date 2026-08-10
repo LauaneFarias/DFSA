@@ -23,16 +23,14 @@
      news.css's --news-page-bg — matched exactly so Hero → Latest
      News → About reads as one continuous page background. */
   --about-page-bg: #eeece9;
-  /* Dark surround so the light content panel reads as an inset card. */
-  --about-surround: #17181b;
   --about-radius-lg: 20px;
   --about-radius-xl: 32px;
   --about-radius-pill: 999px;
   --about-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  background: var(--about-surround);
+  background: var(--about-page-bg);
   color: rgb(var(--about-ink-rgb));
   font-family: var(--site-font-sans);
-  padding: clamp(28px, 4vw, 64px) 0;
+  padding: clamp(16px, 2vw, 28px) 0;
 }
 .about-container {
   width: 100%;
@@ -44,47 +42,48 @@
   }
 }
 
-/* Light rounded inset panel holding all the About content. */
-.about-panel {
-  background: var(--about-page-bg);
-  border-radius: clamp(24px, 3vw, 44px);
-  padding: clamp(28px, 4vw, 72px);
-}
-
-/* ---- Two-column layout: heading + mandate copy + "Learn more" (to the
-   Annual Report 2025) on the left; the strategy intro and the four
-   strategic-pillar cards on the right. ---- */
-.about-layout {
+/* ---- Header: heading/subheading left, DFSA mandate copy + CTA
+   right — sits directly on the page's light background (no wrapping
+   panel here), matching the wireframe's plain top band.
+   align-items:start (not end) so the heading and the description
+   both start from the same top line — bottom-aligning them let the
+   description drift upward relative to the title whenever the two
+   columns' content heights didn't match. */
+.about-header {
   display: grid;
-  grid-template-columns: minmax(240px, 0.85fr) minmax(0, 2fr);
-  gap: clamp(32px, 5vw, 80px);
-  /* Stretch so the pillar cards match the height of the left copy block,
-     reading as tall portrait tiles. */
-  align-items: stretch;
-}
-.about-left {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 18px;
+  grid-template-columns: minmax(240px, 1fr) minmax(280px, 1.15fr);
+  gap: clamp(28px, 4.5vw, 64px);
+  align-items: start;
+  padding-bottom: clamp(24px, 3.6vw, 42px);
 }
 .about-heading {
   font-family: var(--site-font-sans);
   font-weight: 400;
   font-size: clamp(2.1rem, 4.2vw, 3.1rem);
   letter-spacing: -0.02em;
-  margin: 0 0 4px;
+  /* Tightened from 10px — "About the DFSA" and "Our purpose, vision
+     and values." should read as one tight title block, not two
+     loosely-spaced lines. */
+  margin: 0 0 2px;
   color: rgb(var(--about-ink-rgb));
 }
-.about-lead {
+.about-subheading {
+  font-size: 15px;
+  color: var(--about-muted);
+  margin: 0;
+}
+.about-header-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+}
+.about-intro-text {
   margin: 0;
   font-size: 15px;
   line-height: 1.7;
   color: var(--about-muted);
-  max-width: 44ch;
-}
-.about-left .about-cta {
-  margin-top: 10px;
+  max-width: 48ch;
 }
 /* "Landmark" CTA — the exact same solid-white-pill + dark circular
    arrow recipe as .news-cta/.news-cta-icon in news.css (see that
@@ -129,26 +128,353 @@
 }
 
 @media (max-width: 860px) {
-  .about-layout {
+  .about-header {
     grid-template-columns: 1fr;
     align-items: flex-start;
-    gap: 28px;
+    gap: 24px;
   }
 }
 
-/* Four equal tall portrait cards, one per strategic pillar — neutral
-   white tiles (no red) with a gold accent on hover. They stretch to the
-   height of the left copy block (see .about-layout align-items:stretch). */
+/* ---- Two full-size panels ----
+   Equal-height grid, one a background-video panel / one filled with
+   the brand maroon-to-ink gradient — the wireframe's flat light/blue
+   contrast, reinterpreted in this site's own palette instead of a
+   literal blue fill. Both are big, generously padded blocks (not
+   small floating cards) so they read with the same visual weight as
+   the wireframe's two large blocks. */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 2.4vw, 28px);
+}
+.about-panel-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(360px, 34vw, 460px);
+  padding: clamp(32px, 3.6vw, 52px);
+  border-radius: var(--about-radius-xl);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 380ms var(--about-ease),
+    box-shadow 380ms var(--about-ease);
+}
+.about-panel-card:hover {
+  transform: translateY(-6px);
+}
+
+.about-panel-card-icon {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-bottom: clamp(40px, 5.6vw, 72px);
+}
+
+.about-panel-card-title {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.4vw, 2.15rem);
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+  max-width: 20ch;
+}
+.about-panel-card-description {
+  position: relative;
+  z-index: 1;
+  margin: 16px 0 0;
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 38ch;
+}
+
+@media (min-width: 981px) {
+  html[data-font-version="feedback"] .about-subheading,
+  html[data-font-version="feedback"] .about-intro-text,
+  html[data-font-version="feedback"] .about-panel-card-description {
+    font-size: 16px;
+  }
+
+  html[data-font-version="feedback"] .about-panel-card-title {
+    font-weight: 600;
+  }
+
+  html[data-font-version="feedback"] .about-panel-card-description {
+    font-weight: 400;
+  }
+}
+/* Hidden until the card itself is hovered/focused — the panel is the
+   hover trigger, the "Learn more" pill is the payoff, replacing the
+   old arrow-only hint. Kept in normal flow (opacity/transform only,
+   not display:none) so the reveal animates smoothly and the card's
+   height never jumps. */
+.about-panel-card-cta {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(28px, 4vw, 40px);
+  align-self: flex-start;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition:
+    opacity 260ms var(--about-ease),
+    transform 260ms var(--about-ease);
+}
+.about-panel-card:hover .about-panel-card-cta,
+.about-panel-card:focus-within .about-panel-card-cta {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ---- Video variant — hero4.mp4 as a cover-fit background, shown
+   exactly as-is: no scrim, no gradient, no tint on top of it. The
+   footage itself is bright/near-white, so text here uses the same
+   dark-ink-on-light treatment the section uses everywhere else,
+   rather than the accent card's white-on-dark. */
+.about-panel-card--video {
+  background: #f6f7fa;
+  box-shadow: 0 20px 44px rgba(23, 24, 27, 0.05);
+}
+.about-panel-card--video:hover {
+  box-shadow: 0 28px 56px rgba(23, 24, 27, 0.09);
+}
+.about-panel-card-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.about-panel-card--video .about-panel-card-icon {
+  background: rgba(var(--about-ink-rgb), 0.08);
+  color: rgb(var(--about-ink-rgb));
+}
+.about-panel-card--video .about-panel-card-title {
+  color: rgb(var(--about-ink-rgb));
+}
+.about-panel-card--video .about-panel-card-description {
+  color: var(--about-muted);
+}
+
+/* ---- Accent variant — dark burgundy gradient with animated texture underneath. ---- */
+.about-panel-card--accent {
+  background: linear-gradient(
+    135deg,
+    #17181b 0%,
+    #2b151d 26%,
+    #5a1a28 52%,
+    #8d2434 78%,
+    #c45055 100%
+  );
+  color: #ffffff;
+  box-shadow: 0 24px 52px rgba(10, 4, 6, 0.3);
+}
+.about-panel-card--accent:hover {
+  box-shadow: 0 32px 64px rgba(10, 4, 6, 0.4);
+}
+/* Soft warm bloom in the far corner — echoes the gold accent used
+   throughout the site without needing a literal white patch. */
+.about-panel-card--accent::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(
+      58% 72% at 88% 92%,
+      rgba(196, 80, 85, 0.42) 0%,
+      rgba(196, 80, 85, 0.16) 36%,
+      rgba(196, 80, 85, 0) 72%
+    ),
+    radial-gradient(
+      70% 80% at 6% 4%,
+      rgba(10, 8, 12, 0.82) 0%,
+      rgba(10, 8, 12, 0.3) 44%,
+      rgba(10, 8, 12, 0) 76%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(23, 24, 27, 0.94) 0%,
+      rgba(45, 18, 26, 0.9) 28%,
+      rgba(91, 24, 37, 0.84) 58%,
+      rgba(163, 30, 46, 0.72) 100%
+    );
+  pointer-events: none;
+}
+.about-panel-card--accent .about-panel-card-video {
+  filter: grayscale(1) contrast(1.15);
+  opacity: 0.36;
+  mix-blend-mode: screen;
+}
+.about-panel-card--accent .about-panel-card-icon,
+.about-panel-card--accent .about-panel-card-title,
+.about-panel-card--accent .about-panel-card-description,
+.about-panel-card--accent .about-panel-card-cta {
+  z-index: 2;
+}
+.about-panel-card--accent .about-panel-card-icon {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+.about-panel-card--accent .about-panel-card-title {
+  color: #ffffff;
+}
+.about-panel-card--accent .about-panel-card-description {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Only Feedback + Images swaps the policy card's original footage for the
+   supplied video. The existing ::before layer stays above it, preserving the
+   darker top-left gradient and established red treatment. */
+.about-panel-card-video--feedback-images {
+  display: none;
+}
+
+html[data-site-version="feedback-images"]
+  .about-panel-card--accent
+  .about-panel-card-video--default {
+  display: none;
+}
+
+html[data-site-version="feedback-images"]
+  .about-panel-card--video
+  .about-panel-card-video--default {
+  display: none;
+}
+
+html[data-site-version="feedback-images"]
+  .about-panel-card--accent
+  .about-panel-card-video--feedback-images {
+  display: block;
+  filter: none;
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+
+html[data-site-version="feedback-images"]
+  .about-panel-card--video
+  .about-panel-card-video--feedback-images {
+  display: block;
+  filter: none;
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+
+html[data-site-version="feedback-images"] .about-panel-card--accent::before {
+  background:
+    radial-gradient(
+      76% 88% at 4% 2%,
+      rgba(8, 7, 10, 0.78) 0%,
+      rgba(15, 8, 12, 0.46) 42%,
+      rgba(15, 8, 12, 0) 78%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(24, 10, 16, 0.42) 0%,
+      rgba(91, 24, 37, 0.24) 56%,
+      rgba(163, 30, 46, 0.18) 100%
+    );
+}
+
+@media (max-width: 860px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-panel-card {
+    min-height: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 2 ONLY — alternate "purpose, vision, values" layout
+   ═══════════════════════════════════════════════════════════════════════
+   Everything above is the default About (header + two big panel cards) and
+   stays exactly as it was on every tab. Option 2 swaps in the layout below:
+   heading + copy on the left, a 2×2 grid of white pillar cards on the right.
+
+   The component renders BOTH layouts in the DOM (same pattern as LatestNews
+   with its .news-0408 variant); these rules decide which is visible.
+
+   Scope note — keyed on data-site-tab, NOT data-site-iteration: Option 1
+   (hero-slider) and Option 2 (feedback-0408) share
+   data-site-iteration="feedback-0408" (Option 1 reuses the whole 04/08
+   iteration), so scoping on the iteration would leak this onto Option 1.
+   data-site-tab is unique per tab, so this stays on Option 2 alone. */
+
+/* The new panel is hidden by default; Option 2 hides the default layout
+   (header + grid) and reveals the panel instead. */
+.about-panel {
+  display: none;
+}
+html[data-site-tab="feedback-0408"] .about-header,
+html[data-site-tab="feedback-0408"] .about-grid {
+  display: none;
+}
+html[data-site-tab="feedback-0408"] .about-panel {
+  display: block;
+}
+
+/* Light rounded container (blends into the page bg — no dark frame). */
+.about-panel {
+  background: var(--about-page-bg);
+  border-radius: clamp(24px, 3vw, 44px);
+  padding: clamp(24px, 3vw, 48px);
+}
+
+/* Text column on the left (~20% wider than the first pass: 0.6fr → 0.72fr),
+   2×2 pillar grid on the right. */
+.about-layout {
+  display: grid;
+  align-items: start;
+  grid-template-columns: minmax(264px, 0.72fr) minmax(0, 2.28fr);
+  gap: clamp(32px, 5vw, 80px);
+}
+.about-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+.about-lead {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--about-muted);
+  max-width: 44ch;
+}
+.about-left .about-cta {
+  margin-top: 10px;
+}
+
+/* Four neutral white pillar cards, 2×2, sized to match the DIFC journey
+   cards' height (their grid rows are minmax(220px,1fr)); title sits at the
+   bottom-left. */
 .about-pillars {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(14px, 1.4vw, 20px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 1.6vw, 24px);
   align-items: stretch;
 }
 .about-pillar-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
-  min-height: clamp(280px, 24vw, 360px);
-  padding: clamp(18px, 1.5vw, 28px);
+  flex-direction: column;
+  min-height: clamp(160px, 26vw, 220px);
+  padding: 20px;
   border-radius: var(--about-radius-lg);
   background: #ffffff;
   border: 1px solid var(--about-border);
@@ -163,16 +489,111 @@
   border-color: rgba(var(--about-gold-rgb), 0.65);
   box-shadow: 0 26px 54px -30px rgba(23, 24, 27, 0.3);
 }
+
+/* Gold DFSA pattern revealed on hover — same interaction as the "You may
+   also look into these" cards (a hidden media layer that fades in on
+   hover), using the brand gold pattern image instead of a video. */
+.about-pillar-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  background: url("/patterns/dfsa-pattern-gold.png") center / cover no-repeat;
+  transition: opacity 420ms var(--about-ease);
+}
+/* Soft dark gradient over the lower half so the white-on-hover title stays
+   legible against the gold pattern, while the top stays vivid gold. */
+.about-pillar-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(23, 24, 27, 0.36) 0%,
+    rgba(23, 24, 27, 0.08) 46%,
+    rgba(23, 24, 27, 0) 70%
+  );
+}
+.about-pillar-card:hover .about-pillar-media,
+.about-pillar-card:focus-within .about-pillar-media {
+  opacity: 1;
+}
+
+/* Top row: icon badge (left) + hover-reveal arrow (right), matching the
+   resource cards' icon + ArrowUpRight affordance. */
+.about-pillar-head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.about-pillar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  flex-shrink: 0;
+  background: rgba(var(--about-ink-rgb), 0.06);
+  color: rgb(var(--about-ink-rgb));
+  transition:
+    background 280ms var(--about-ease),
+    color 280ms var(--about-ease);
+}
+/* On hover the badge goes dark-glass and the icon flips white, lifting off
+   the gold pattern. */
+.about-pillar-card:hover .about-pillar-icon {
+  background: rgba(23, 24, 27, 0.26);
+  color: #ffffff;
+}
+.about-pillar-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  /* Gold circle with a white arrow — only ever shown on hover, over the
+     gold pattern, matching the white title/icon treatment. */
+  background: var(--about-gold);
+  color: #ffffff;
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition:
+    opacity 220ms var(--about-ease),
+    transform 220ms var(--about-ease);
+}
+.about-pillar-card:hover .about-pillar-arrow,
+.about-pillar-card:focus-within .about-pillar-arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
 .about-pillar-title {
+  position: relative;
+  z-index: 1;
   margin: 0;
+  margin-top: auto;
   align-self: flex-start;
   font-weight: 500;
   font-size: clamp(14px, 1vw, 17px);
   line-height: 1.3;
   letter-spacing: -0.01em;
   color: rgb(var(--about-ink-rgb));
+  transition: color 280ms var(--about-ease);
 }
-
+/* On hover the gold pattern fills the card, so the title flips to white. */
+.about-pillar-card:hover .about-pillar-title,
+.about-pillar-card:focus-within .about-pillar-title {
+  color: #ffffff;
+}
+/* Keep the section heading "About the DFSA" on a single line (Option 2). */
+.about-panel .about-heading {
+  white-space: nowrap;
+}
 @media (min-width: 981px) {
   html[data-font-version="feedback"] .about-lead {
     font-size: 16px;
@@ -181,18 +602,11 @@
     font-weight: 600;
   }
 }
-
-/* Two-up on tablet, single column on phones. */
-@media (max-width: 1100px) {
-  .about-pillars {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
 @media (max-width: 520px) {
-  .about-pillars {
+  html[data-site-tab="feedback-0408"] .about-pillars {
     grid-template-columns: 1fr;
   }
-  .about-pillar-card {
+  html[data-site-tab="feedback-0408"] .about-pillar-card {
     min-height: 150px;
   }
 }

@@ -177,3 +177,56 @@ html[data-font-version="feedback"] .achievements-section {
     animation-play-state: paused;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 2 ONLY — "DFSA at a glance"
+   ═══════════════════════════════════════════════════════════════════════
+   Reworded title/source + a different set of ticker figures, plus a much
+   tighter gap between the heading and the marquee (the default 80–176px felt
+   disjointed). Both variants render; these rules pick the right one per tab,
+   keyed on the unique per-tab hook data-site-tab. */
+
+/* By default show the original title/source + ticker, hide the glance set. */
+.ach-title--glance,
+.ach-src--glance,
+.achievements-panel--glance {
+  display: none;
+}
+
+html[data-site-tab="feedback-0408"] .ach-title--default,
+html[data-site-tab="feedback-0408"] .ach-src--default,
+html[data-site-tab="feedback-0408"] .achievements-panel--default {
+  display: none;
+}
+html[data-site-tab="feedback-0408"] .ach-title--glance,
+html[data-site-tab="feedback-0408"] .ach-src--glance {
+  display: inline;
+}
+html[data-site-tab="feedback-0408"] .achievements-panel--glance {
+  display: block;
+}
+
+/* Bring the title/source close to the ticker so they read as one unit. */
+html[data-site-tab="feedback-0408"] .achievements-head {
+  margin-bottom: clamp(24px, 3vw, 48px);
+}
+
+/* Move "DFSA at a glance" up, directly above About the DFSA. The shared
+   feedback-images order is News 1 · About 2 · Approach 3 · Achievements 4 …;
+   these data-site-tab overrides re-slot it to News 1 · Achievements 2 ·
+   About 3 · Approach 4 for Option 2 only (they come after — and match the
+   specificity of — the feedback-images order rules above, so they win). */
+html[data-site-tab="feedback-0408"] .achievements-section {
+  order: 2;
+}
+html[data-site-tab="feedback-0408"] .about-section {
+  order: 3;
+}
+html[data-site-tab="feedback-0408"] .approach-section {
+  order: 4;
+}
+
+/* A bit more breathing room between the ticker figures. */
+html[data-site-tab="feedback-0408"] .achievement-item {
+  padding-inline: 44px;
+}

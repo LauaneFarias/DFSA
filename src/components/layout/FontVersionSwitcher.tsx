@@ -70,9 +70,9 @@ function applyFontVersion(next: FontVersion) {
 }
 
 export function FontVersionSwitcher() {
-  // Default to Option 1 (the hero-slider tab) for first-time visitors;
+  // Default to Option 2 (the feedback-0408 tab) for first-time visitors;
   // a saved choice in localStorage still wins on mount.
-  const [fontVersion, setFontVersion] = useState<FontVersion>("hero-slider");
+  const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408");
 
   useEffect(() => {
     const id = window.setTimeout(() => {

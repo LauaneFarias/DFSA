@@ -102,8 +102,17 @@ export function AdditionalResources() {
     <section className="resources-section" ref={sectionRef}>
       <div className="resources-container">
         <div className="resources-header resources-reveal">
+          {/* Eyebrow hidden on Option 2 (see resources.css). */}
           <p className="resources-eyebrow">Additional References</p>
-          <h2 className="resources-heading">You may also look into these</h2>
+          {/* Both headings render; CSS shows the right one per tab. */}
+          <h2 className="resources-heading">
+            <span className="resources-heading-text resources-heading-text--default">
+              You may also look into these
+            </span>
+            <span className="resources-heading-text resources-heading-text--o2">
+              You may also be interested in…
+            </span>
+          </h2>
         </div>
 
         <div className="resources-grid">

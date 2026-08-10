@@ -488,3 +488,23 @@ html[data-site-iteration="feedback-0408"] .approach-card p {
   min-height: 0;
   overflow: hidden;
 }
+
+/* ── Option 2 only: its own background photo (glass-canopy DIFC gate).
+   Scoped to data-site-tab so Option 1 keeps approach-0408-bg.jpg above.
+   The new image is layered over the old one, so if the file isn't present
+   yet the previous background still shows (graceful fallback). */
+html[data-site-tab="feedback-0408"] .approach-panel {
+  background:
+    url("/images/approach-0408-glass.jpg") center / cover no-repeat,
+    url("/images/approach-0408-bg.jpg") center / cover no-repeat;
+}
+
+/* Option 2: reduce the gap between the icon and the title — the base card
+   uses justify-content:space-between, which pushes the icon to the top and
+   the copy to the bottom; group them at the top instead. */
+html[data-site-tab="feedback-0408"] .approach-card {
+  justify-content: flex-start;
+  gap: 14px;
+  /* Slightly tighter padding. */
+  padding: clamp(16px, 1.5vw, 22px);
+}

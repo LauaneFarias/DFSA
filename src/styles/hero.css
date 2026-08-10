@@ -334,6 +334,38 @@ html[data-site-version="feedback-images"]
   .hero-service-card-title {
   color: #ffffff;
 }
+
+/* ── Option 2: make EVERY hero card a clear dark glass ─────────────────
+   The feedback-images rule above only darkens :not(.is-featured) cards and
+   at 0.46 they read faint over the dark hero video. On Option 2 apply the
+   dark-glass material to ALL cards (featured included) with a slightly
+   stronger tint + a subtle light edge, so they read as defined glass cards
+   like the DIFC / Our Approach tiles. Matches the base rule's specificity
+   and comes later, so it wins. */
+html[data-site-tab="feedback-0408"]
+  .hero-scope.hero-scope--light-bg
+  .hero-service-card:not(.is-featured),
+html[data-site-tab="feedback-0408"]
+  .hero-scope.hero-scope--light-bg
+  .hero-service-card.is-featured {
+  /* Match Option 1's hero cards exactly: same 0.56 dark-glass tint + shadow,
+     but no border and blur(14px) — Option 1's cards have no light edge. */
+  background: rgba(23, 24, 27, 0.56);
+  border: none;
+  box-shadow: 0 20px 44px -18px rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+html[data-site-tab="feedback-0408"]
+  .hero-scope.hero-scope--light-bg
+  .hero-service-card
+  .hero-service-card-icon,
+html[data-site-tab="feedback-0408"]
+  .hero-scope.hero-scope--light-bg
+  .hero-service-card
+  .hero-service-card-title {
+  color: #ffffff;
+}
 /* "What We Do" / "DFSA Resources" tabs — line/underline style instead
    of the rounded pill-with-gradient-fill Option 1 uses. Per feedback:
    plain black text, no rounded corners, no background chip — just an
@@ -3319,6 +3351,70 @@ html[data-font-version="feedback"] .hero-news-card::before {
     );
   pointer-events: none;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 2 — REMOVE the hero feature/news card
+   ═══════════════════════════════════════════════════════════════════════
+   Per feedback, Option 2 drops the big news/feature card from the hero; the
+   service tiles expand to fill the full width in its place (see the bento
+   rules further below). To bring the card back, delete just this one rule —
+   the card's dark-glass styling is kept intact underneath. */
+html[data-site-tab="feedback-0408"] .hero-news-card {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 2 — hero feature/news card styling (retained; card is hidden above)
+   ═══════════════════════════════════════════════════════════════════════
+   Dark-glass card matching the service tiles (0.56 tint, no border, blur 14).
+   A STRONG scrim over the thumbnail keeps the whole card reading dark no
+   matter which news photo is showing — some slides are bright daytime shots
+   that otherwise made the card look white next to the dark tiles.
+   Geometry is left entirely to the shared bento rules below
+   (align-self: stretch + a flex-fill photo), so the card bottom always lines
+   up with the service grid. No per-tab align-self / aspect-ratio overrides
+   here — those fought the bento and made the card hang past the grid at some
+   widths. */
+html[data-site-tab="feedback-0408"] .hero-news-card,
+html[data-site-tab="feedback-0408"] .hero-scope--light-bg .hero-news-card {
+  background: rgba(23, 24, 27, 0.56);
+  border: none;
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.42);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  padding: 14px;
+}
+html[data-site-tab="feedback-0408"] .hero-news-card::before,
+html[data-site-tab="feedback-0408"] .hero-news-card-feedback-video {
+  display: none;
+}
+/* Strong dark scrim over the thumbnail — sits below the meta tags (z-index 2)
+   so "News / 15 March 2026" stays crisp while the photo itself is knocked
+   back to a dark tone that sits alongside the service tiles. */
+html[data-site-tab="feedback-0408"] .hero-news-card-thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 21, 24, 0.5) 0%,
+    rgba(20, 21, 24, 0.58) 55%,
+    rgba(20, 21, 24, 0.68) 100%
+  );
+  pointer-events: none;
+}
+@media (min-width: 981px) {
+  /* Clamp the description to two lines so the body stays compact and the card
+     never grows taller than its bento cell (the photo flexes to fill the
+     rest of the height). */
+  html[data-site-tab="feedback-0408"] .hero-news-card-proposition {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+}
 html[data-font-version="feedback"] .hero-news-card-feedback-video {
   position: absolute;
   inset: 0;
@@ -4495,4 +4591,33 @@ html[data-site-tab="hero-slider"] .hero-scope--light-bg .hero-news-card-feedback
     height: 148px;
     min-height: 0;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 2 — uniform icon sizing across every section
+   ═══════════════════════════════════════════════════════════════════════
+   Card icon badges ranged 40–52px with 20–28px glyphs across sections.
+   Normalise them all to a 48px badge with a 24px glyph so the icons read at
+   one consistent size everywhere on the page. Scoped to data-site-tab. */
+html[data-site-tab="feedback-0408"] .about-pillar-icon,
+html[data-site-tab="feedback-0408"] .resources-card-icon,
+html[data-site-tab="feedback-0408"] .approach-card-domain-icon,
+html[data-site-tab="feedback-0408"] .difc-card-icon,
+html[data-site-tab="feedback-0408"] .hero-service-card-icon {
+  width: 48px;
+  height: 48px;
+}
+/* Hero icon badge needs the extra .hero-scope--light-bg specificity to beat
+   the scope's own 40px rule. */
+html[data-site-tab="feedback-0408"] .hero-scope--light-bg .hero-service-card-icon {
+  width: 48px;
+  height: 48px;
+}
+html[data-site-tab="feedback-0408"] .about-pillar-icon svg,
+html[data-site-tab="feedback-0408"] .resources-card-icon svg,
+html[data-site-tab="feedback-0408"] .approach-card-domain-icon svg,
+html[data-site-tab="feedback-0408"] .difc-card-icon svg,
+html[data-site-tab="feedback-0408"] .hero-service-card-icon svg {
+  width: 24px;
+  height: 24px;
 }

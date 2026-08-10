@@ -394,3 +394,97 @@ html[data-site-version="feedback-images"] .footer-logo {
     gap: 32px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 2 ONLY — full-bleed video footer
+   ═══════════════════════════════════════════════════════════════════════
+   The maroon video background fills the whole section edge-to-edge (no card,
+   no inset, no rounded corners, no black frame, no rules). Content sits on
+   top in three aligned columns — logo · nav links · subscription. All scoped
+   to data-site-tab, which only Option 2 sets.
+
+   1. Drop the redundant "DFSA / Dubai Financial Services Authority" text
+      lockup beside the logo — the logo mark already carries the name.
+   2. .footer-main is display:contents so its children join the container
+      grid, letting logo | nav links | subscription sit in one aligned row. */
+
+html[data-site-tab="feedback-0408"] .footer-brand-name,
+html[data-site-tab="feedback-0408"] .footer-divider {
+  display: none;
+}
+
+/* Section carries no padding of its own — the video (.footer-bg, inset:0)
+   stays full-bleed; the container provides the content's breathing room. */
+html[data-site-tab="feedback-0408"] .footer-section {
+  padding: 0;
+}
+html[data-site-tab="feedback-0408"] .footer-container {
+  display: grid;
+  /* Rebalanced: a bit more room for the brand mark on the left and the
+     subscription block on the right, so the row reads as three deliberate
+     zones rather than a wide nav with two slivers either side. */
+  grid-template-columns: minmax(160px, 0.9fr) minmax(0, 1.5fr) minmax(280px, 1.3fr);
+  grid-template-areas:
+    "brand nav news"
+    "bottom bottom bottom";
+  column-gap: clamp(36px, 4.5vw, 96px);
+  row-gap: clamp(32px, 3.5vw, 52px);
+  align-items: start;
+  padding-block: clamp(56px, 6vw, 104px);
+  padding-inline: clamp(32px, 4.5vw, 80px);
+}
+/* Promote .footer-main's children into the container grid so the logo, the
+   nav links and the subscription block share one aligned layout. */
+html[data-site-tab="feedback-0408"] .footer-main {
+  display: contents;
+}
+
+html[data-site-tab="feedback-0408"] .footer-brand {
+  grid-area: brand;
+  align-self: start;
+  align-items: flex-start;
+}
+/* Larger mark so the brand anchors the row with real presence. */
+html[data-site-tab="feedback-0408"] .footer-logo {
+  height: clamp(72px, 6vw, 104px);
+}
+html[data-site-tab="feedback-0408"] .footer-nav-groups {
+  grid-area: nav;
+  gap: clamp(20px, 2.4vw, 44px);
+}
+html[data-site-tab="feedback-0408"] .footer-newsletter {
+  grid-area: news;
+  padding-bottom: 0;
+  /* Left-align in the column (the default centered band doesn't suit a
+     side-by-side column) and let the headline wrap instead of forcing one
+     line, so it never overflows the column. */
+  align-items: flex-start;
+  text-align: left;
+}
+html[data-site-tab="feedback-0408"] .footer-newsletter-heading {
+  white-space: normal;
+}
+html[data-site-tab="feedback-0408"] .footer-newsletter-sub {
+  margin-inline: 0;
+}
+html[data-site-tab="feedback-0408"] .footer-bottom {
+  grid-area: bottom;
+  justify-content: flex-start;
+  border-top: none;
+  padding: 0;
+  /* Separate the copyright from the content row above it. */
+  margin-top: clamp(16px, 2.5vw, 40px);
+}
+
+/* Stack the three columns on narrow screens. */
+@media (max-width: 680px) {
+  html[data-site-tab="feedback-0408"] .footer-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "brand"
+      "news"
+      "nav"
+      "bottom";
+    row-gap: clamp(24px, 6vw, 36px);
+  }
+}

@@ -567,6 +567,16 @@ html[data-site-iteration="feedback-0408"] .difc-panel-video {
   opacity: 0 !important;
 }
 
+/* ── Option 2 only: its own background photo (Museum of the Future).
+   Scoped to data-site-tab so Option 1 keeps difc-0408-bg.jpg above. The new
+   image layers over the old one, so the previous background shows as a
+   graceful fallback until the file is added. */
+html[data-site-tab="feedback-0408"] .difc-panel-bg {
+  background:
+    url("/images/difc-0408-museum.jpg") center / cover no-repeat,
+    url("/images/difc-0408-bg.jpg") center / cover no-repeat;
+}
+
 /* 04/08: descriptions shown by default (no hover-reveal), capped at 2 lines. */
 html[data-site-iteration="feedback-0408"] .difc-card-desc {
   opacity: 1;
@@ -615,7 +625,45 @@ html[data-site-tab="feedback-0408"] .difc-card--feature .difc-card-icon {
   background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
 }
+/* Red circular arrow (same accent as the Our Approach cards), revealed on
+   hover — for both the feature card and the white cards. */
 html[data-site-tab="feedback-0408"] .difc-card--feature .difc-card-arrow {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--difc-accent);
   color: #ffffff;
+}
+
+/* Restore a visible hover on the dark-glass white cards. The dark-glass
+   rest rule above (box-shadow/background) out-specified the base
+   .difc-card:hover, leaving these cards static — these higher-specificity
+   :hover rules give them the same lift + shadow + red arrow reveal as the
+   rest of the site's cards. */
+html[data-site-tab="feedback-0408"] .difc-card--white .difc-card-arrow {
+  background: var(--difc-accent);
+  color: #ffffff;
+}
+html[data-site-tab="feedback-0408"] .difc-card--white:hover {
+  transform: translateY(-4px);
+  background: rgba(23, 24, 27, 0.56);
+  box-shadow: 0 28px 56px -20px rgba(0, 0, 0, 0.55);
+}
+html[data-site-tab="feedback-0408"] .difc-card--white:hover .difc-card-arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* Option 2: group icon + title + description together at the top (the base
+   title's margin-top:auto pushed the title to the bottom, leaving a big gap
+   under the icon). */
+html[data-site-tab="feedback-0408"] .difc-card-title {
+  margin-top: 0;
+}
+/* Slightly tighter card padding (also pulls the arrow in to match). */
+html[data-site-tab="feedback-0408"] .difc-section {
+  --difc-card-padding: 16px;
+}
+/* The feature card ("DFSA Authorised Firm") keeps its text at the bottom
+   (the white cards group at the top; the feature tile reads better with the
+   title anchored low, as before). */
+html[data-site-tab="feedback-0408"] .difc-card--feature .difc-card-title {
+  margin-top: auto;
 }
