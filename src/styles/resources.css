@@ -412,3 +412,95 @@ html[data-site-tab="feedback-0408"] .resources-card-title {
   align-self: end;
   margin-top: 0;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 2 — "You may also be interested in…": IMAGE-LED cards
+   ═══════════════════════════════════════════════════════════════════════
+   Replace the flat, oversized white boxes with photography-led cards: a
+   full-bleed photo, a dark gradient scrim, and the title + arrow overlaid at
+   the bottom. More enticing and more compact. Appended last so it overrides
+   the earlier data-site-tab card rules. */
+
+/* Card photo — hidden on other tabs; full-bleed cover on Option 2. Next/Image
+   `fill` already positions it absolute inset:0, so we just set fit + zoom. */
+.resources-card-photo {
+  display: none;
+}
+html[data-site-tab="feedback-0408"] .resources-card-photo {
+  display: block;
+  z-index: 0;
+  object-fit: cover;
+  transition: transform 600ms var(--resources-ease);
+}
+
+html[data-site-tab="feedback-0408"] .resources-card {
+  display: block;
+  aspect-ratio: 4 / 5;
+  min-height: 0;
+  padding: 0;
+  background: #16181c;
+}
+/* Dark scrim (deeper at the bottom) so the overlaid title stays legible. */
+html[data-site-tab="feedback-0408"] .resources-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(16, 18, 22, 0) 42%, rgba(16, 18, 22, 0.8) 100%);
+  pointer-events: none;
+}
+/* Hover: gently zoom the photo + lift the card. */
+html[data-site-tab="feedback-0408"] .resources-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 56px -20px rgba(23, 24, 27, 0.42);
+}
+html[data-site-tab="feedback-0408"] .resources-card:hover .resources-card-photo {
+  transform: scale(1.06);
+}
+
+/* Drop the video media, icon badge and index number on the image cards. */
+html[data-site-tab="feedback-0408"] .resources-card-media,
+html[data-site-tab="feedback-0408"] .resources-card-icon,
+html[data-site-tab="feedback-0408"] .resources-card-index {
+  display: none;
+}
+
+/* Title overlaid at the bottom-left, white. */
+html[data-site-tab="feedback-0408"] .resources-card-title {
+  position: absolute;
+  z-index: 2;
+  left: 20px;
+  right: 66px;
+  bottom: 18px;
+  margin: 0;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+/* Arrow → a glass circle at the bottom-right; fills gold on hover. */
+html[data-site-tab="feedback-0408"] .resources-card-head {
+  position: absolute;
+  z-index: 2;
+  right: 16px;
+  bottom: 16px;
+  width: auto;
+}
+html[data-site-tab="feedback-0408"] .resources-card-arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  transition:
+    background 320ms var(--resources-ease),
+    transform 320ms var(--resources-ease);
+}
+html[data-site-tab="feedback-0408"] .resources-card:hover .resources-card-arrow {
+  background: rgb(var(--resources-gold-rgb));
+  color: #ffffff;
+}

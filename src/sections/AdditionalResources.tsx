@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { DURATION, EASE_SIGNATURE_CSS } from "@/animations/easings";
 import { gsap, ScrollTrigger } from "@/animations/gsap";
@@ -20,6 +21,8 @@ type Resource = {
   featured?: boolean;
   feedbackTone: "red" | "gray";
   feedbackVideoSrc: string;
+  /** Option 2 image-led card photo. */
+  image: string;
 };
 
 // Hover-only background clip for the resource cards — muted/looped,
@@ -36,6 +39,7 @@ const RESOURCES: Resource[] = [
     icon: <EnforcementIcon size={26} />,
     feedbackTone: "gray",
     feedbackVideoSrc: "/videos/feedback-images-growth-light.mp4",
+    image: "/images/resources-0408-enforcement.jpg",
   },
   {
     index: "02",
@@ -44,6 +48,7 @@ const RESOURCES: Resource[] = [
     featured: true,
     feedbackTone: "gray",
     feedbackVideoSrc: "/videos/feedback-images-growth-light.mp4",
+    image: "/images/resources-0408-islamic.jpg",
   },
   {
     index: "03",
@@ -51,6 +56,7 @@ const RESOURCES: Resource[] = [
     icon: <InnovationIcon size={26} />,
     feedbackTone: "gray",
     feedbackVideoSrc: "/videos/feedback-images-growth-light.mp4",
+    image: "/images/resources-0408-innovation.jpg",
   },
   {
     index: "04",
@@ -58,6 +64,7 @@ const RESOURCES: Resource[] = [
     icon: <CareerIcon size={26} />,
     feedbackTone: "gray",
     feedbackVideoSrc: "/videos/feedback-images-growth-light.mp4",
+    image: "/images/resources-0408-careers.jpg",
   },
 ];
 
@@ -148,6 +155,14 @@ export function AdditionalResources() {
                 card.querySelector<HTMLVideoElement>(".resources-card-video--hover-red")?.pause();
               }}
             >
+              {/* Option 2 image-led card photo (hidden on other tabs via CSS). */}
+              <Image
+                className="resources-card-photo"
+                src={item.image}
+                alt=""
+                fill
+                sizes="(max-width: 980px) 90vw, 24vw"
+              />
               <div className="resources-card-media" aria-hidden="true">
                 <video
                   className="resources-card-video resources-card-video--default"

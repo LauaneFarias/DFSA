@@ -508,3 +508,14 @@ html[data-site-tab="feedback-0408"] .approach-card {
   /* Slightly tighter padding. */
   padding: clamp(16px, 1.5vw, 22px);
 }
+
+/* Option 2: cap the card description at 2 lines. The copy has been shortened
+   to whole sentences that fit within 2 lines, so this cap holds the layout
+   without ever showing an ellipsis ("leader dots"). */
+html[data-site-tab="feedback-0408"] .approach-card p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 0;
+}

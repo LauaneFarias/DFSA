@@ -218,6 +218,11 @@ html[data-site-tab="feedback-0408"] .achievements-head {
    specificity of — the feedback-images order rules above, so they win). */
 html[data-site-tab="feedback-0408"] .achievements-section {
   order: 2;
+  /* Match the other sections' vertical rhythm — the default feedback
+     achievements padding (clamp(56px,7vw,112px)) left far too much space
+     above/below. Use the same clamp Our Approach / Start your DIFC journey
+     use so the band sits with the same amount of space as the rest. */
+  padding-block: clamp(32px, 4.1vw, 59px);
 }
 html[data-site-tab="feedback-0408"] .about-section {
   order: 3;

@@ -413,6 +413,12 @@ html[data-site-tab="feedback-0408"] .footer-divider {
   display: none;
 }
 
+/* Make the footer video read BLACK instead of maroon — desaturate it fully
+   and darken, so it keeps the subtle motion/texture but in a black tone. */
+html[data-site-tab="feedback-0408"] .footer-bg-video {
+  filter: grayscale(1) brightness(0.5) contrast(1.08);
+}
+
 /* Section carries no padding of its own — the video (.footer-bg, inset:0)
    stays full-bleed; the container provides the content's breathing room. */
 html[data-site-tab="feedback-0408"] .footer-section {
@@ -463,6 +469,10 @@ html[data-site-tab="feedback-0408"] .footer-newsletter {
 }
 html[data-site-tab="feedback-0408"] .footer-newsletter-heading {
   white-space: normal;
+}
+/* Break "& Alerts" onto its own line so "Alerts" isn't left orphaned. */
+html[data-site-tab="feedback-0408"] .footer-newsletter-heading-alerts {
+  display: block;
 }
 html[data-site-tab="feedback-0408"] .footer-newsletter-sub {
   margin-inline: 0;

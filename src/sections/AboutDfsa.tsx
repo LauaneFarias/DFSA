@@ -219,14 +219,16 @@ export function AboutDfsa() {
           <div className="about-layout">
             <div className="about-left about-reveal">
               <h2 className="about-heading">About the DFSA</h2>
-              <p className="about-lead">{LEAD_1}</p>
-              <p className="about-lead">{LEAD_2}</p>
-              <a href={ANNUAL_REPORT_URL} className="about-cta">
-                <span>Learn more</span>
-                <span className="about-cta-icon">
-                  <NextArrowIcon size={14} />
-                </span>
-              </a>
+              <div className="about-lead-group">
+                <p className="about-lead">{LEAD_1}</p>
+                <p className="about-lead">{LEAD_2}</p>
+                <a href={ANNUAL_REPORT_URL} className="about-cta">
+                  <span>Learn more</span>
+                  <span className="about-cta-icon">
+                    <NextArrowIcon size={14} />
+                  </span>
+                </a>
+              </div>
             </div>
 
             <div className="about-pillars">

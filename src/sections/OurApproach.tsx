@@ -22,32 +22,28 @@ type ApproachItem = {
 const ITEMS: ApproachItem[] = [
   {
     label: "Audit",
-    description:
-      "Overseeing the quality and independence of audit work carried out for DIFC-registered entities, including firms' methodologies, quality controls and professional judgement.",
+    description: "Overseeing the quality and independence of audit work.",
     icon: <AuditIcon size={28} />,
   },
   {
     label: "Cyber Risk",
-    description:
-      "Assessing how firms identify, manage and disclose cyber and technology-related risk exposure, from governance and incident response to the resilience of critical systems.",
+    description: "Assessing how firms manage and disclose cyber risk.",
     icon: <CyberRiskIcon size={28} />,
   },
   {
     label: "Insurance",
-    description:
-      "Supervising insurers, reinsurers and intermediaries operating within the DIFC, with a focus on solvency, conduct and governance standards that protect policyholders.",
+    description: "Supervising DIFC insurers, reinsurers and intermediaries.",
     icon: <InsuranceIcon size={28} />,
   },
   {
     label: "Operational and Technology Risk",
     description:
-      "Reviewing the resilience of firms' systems, controls and third-party technology dependencies, including business continuity planning and outsourcing arrangements.",
+      "Reviewing the resilience of firms' systems, controls and technology dependencies.",
     icon: <OperationalRiskIcon size={28} />,
   },
   {
     label: "Markets Supervision",
-    description:
-      "Monitoring trading venues and market conduct to protect the integrity of DIFC markets, covering trading activity, disclosure practices and market infrastructure.",
+    description: "Monitoring trading venues and market conduct to protect DIFC market integrity.",
     icon: <MarketsSupervisionIcon size={28} />,
   },
 ];

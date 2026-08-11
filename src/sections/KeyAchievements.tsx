@@ -69,14 +69,15 @@ export function KeyAchievements() {
         <header className="achievements-head">
           <p className="achievements-eyebrow">
             <span className="ach-title ach-title--default">Audit Monitoring in Numbers</span>
-            <span className="ach-title ach-title--glance">DFSA at a glance</span>
+            <span className="ach-title ach-title--glance">DFSA at a Glance</span>
           </p>
           <p className="achievements-source">
             <span className="ach-src ach-src--default">
               2025 Annual Report — data as at 31 December 2025
             </span>
             <span className="ach-src ach-src--glance">
-              As at 31 December 2025 – data from the 2025 Annual Report
+              As at 31 December 2025 – data from our 2025 Annual Report: Shaping the financial
+              markets of the future.
             </span>
           </p>
         </header>
