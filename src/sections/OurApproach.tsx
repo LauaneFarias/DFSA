@@ -96,7 +96,7 @@ export function OurApproach() {
           <div className="approach-grid">
             <div className="approach-left approach-reveal">
               <div className="approach-left-copy">
-                <h2 className="approach-heading">Our approach to...</h2>
+                <h2 className="approach-heading">Our approach to</h2>
               </div>
             </div>
 

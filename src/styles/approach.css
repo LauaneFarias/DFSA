@@ -499,6 +499,28 @@ html[data-site-tab="feedback-0408"] .approach-panel {
     url("/images/approach-0408-bg.jpg") center / cover no-repeat;
 }
 
+/* Option 2: match the heading's weight + size to "Start your DIFC journey"
+   (the .difc-eyebrow), which is clamp(2.1rem, 4vw, 3rem) / 400 — the Our
+   Approach heading was a size larger. */
+html[data-site-tab="feedback-0408"] .approach-heading {
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  font-weight: 400;
+  /* Match the DIFC eyebrow's line-height exactly (both 1.08). */
+  line-height: 1.08;
+}
+
+/* Option 2: match the CARD title + description to the DIFC white cards
+   ("Authorised Market Institution" etc.) — 18px/600 title, 16px/400 desc —
+   so the two card families read the same. */
+html[data-site-tab="feedback-0408"] .approach-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.18;
+  /* DIFC card titles use normal tracking — clear the tightened default so
+     the two card families are typographically identical. */
+  letter-spacing: normal;
+}
+
 /* Option 2: reduce the gap between the icon and the title — the base card
    uses justify-content:space-between, which pushes the icon to the top and
    the copy to the bottom; group them at the top instead. */
@@ -518,4 +540,6 @@ html[data-site-tab="feedback-0408"] .approach-card p {
   -webkit-line-clamp: 2;
   overflow: hidden;
   min-height: 0;
+  font-size: 16px;
+  line-height: 1.5;
 }

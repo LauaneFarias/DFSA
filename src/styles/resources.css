@@ -446,7 +446,12 @@ html[data-site-tab="feedback-0408"] .resources-card::after {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(180deg, rgba(16, 18, 22, 0) 42%, rgba(16, 18, 22, 0.8) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(16, 18, 22, 0) 26%,
+    rgba(16, 18, 22, 0.5) 62%,
+    rgba(16, 18, 22, 0.94) 100%
+  );
   pointer-events: none;
 }
 /* Hover: gently zoom the photo + lift the card. */

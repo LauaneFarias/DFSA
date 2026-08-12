@@ -804,3 +804,19 @@ html[data-site-iteration="feedback-0408"] .news-0408-cell:nth-child(4) {
     animation: none;
   }
 }
+
+/* Option 2: match the four grid-card titles + descriptions to the DIFC /
+   "Our approach to" cards — 18px/600 title, 16px/400 description — so the
+   news cards read as the same card family. The base title uses
+   clamp(15px, 1vw, 18px) and the prop clamp(12px, 0.8vw, 13px), which drift
+   below the target on most widths; pin them to fixed values here. The large
+   feature-story headline is intentionally left at its hero scale. Scoped to
+   data-site-tab (Option 2 only) so Option 1's shared news-0408 layout is
+   untouched. */
+html[data-site-tab="feedback-0408"] .news-0408-cell-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+html[data-site-tab="feedback-0408"] .news-0408-cell-prop {
+  font-size: 16px;
+}

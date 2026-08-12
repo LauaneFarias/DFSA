@@ -651,11 +651,32 @@ html[data-site-tab="feedback-0408"] .difc-card--white:hover .difc-card-arrow {
   transform: translate(0, 0);
 }
 
+/* Option 2: keep "Start your DIFC journey" on a single line at every width.
+   The base markup carries a forced <br> ("Start your" / "DIFC journey") that
+   is only hidden above 981px; hide it here across all widths so the heading
+   reads as one line wherever it fits (wrapping naturally only on very narrow
+   screens). */
+html[data-site-tab="feedback-0408"] .difc-eyebrow br {
+  display: none;
+}
+
 /* Option 2: group icon + title + description together at the top (the base
    title's margin-top:auto pushed the title to the bottom, leaving a big gap
    under the icon). */
 html[data-site-tab="feedback-0408"] .difc-card-title {
   margin-top: 0;
+  /* Pin to a fixed 18px so it matches the "Our approach to" card titles at
+     EVERY width. The base uses clamp(18px, 1.25vw, 22px), which grows to 22px
+     on wide (>1440px) displays — the Approach titles are a fixed 18px, so the
+     two sections only matched below 1440px until now. */
+  font-size: 18px;
+}
+/* Option 2: vertically centre the grid-card content (icon + title +
+   description) within each white card — the base column layout top-aligns it,
+   leaving empty space below. The tall feature card keeps its bottom-anchored
+   lead treatment (its title's margin-top:auto overrides this). */
+html[data-site-tab="feedback-0408"] .difc-card--white {
+  justify-content: center;
 }
 /* Slightly tighter card padding (also pulls the arrow in to match). */
 html[data-site-tab="feedback-0408"] .difc-section {
@@ -666,4 +687,7 @@ html[data-site-tab="feedback-0408"] .difc-section {
    title anchored low, as before). */
 html[data-site-tab="feedback-0408"] .difc-card--feature .difc-card-title {
   margin-top: auto;
+  /* Match the other card titles (18px) — the base feature title is larger
+     (clamp(19px, 1.45vw, 24px)). All DIFC card titles read at 18px now. */
+  font-size: 18px;
 }
