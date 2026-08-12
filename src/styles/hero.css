@@ -4160,6 +4160,18 @@ html[data-site-version="feedback-images"] .hero-navbar-outer:not(.is-scrolled) .
   filter: brightness(0) invert(1);
 }
 
+/* Option 2: use the text-free DFSA mark in the header at all times — other
+   feedback tabs show the full logo-with-text until the nav scrolls. At the top
+   the mark stays white (logo-mark-white.svg) over the dark film; once scrolled
+   it already swaps to the maroon mark via the shared feedback rules. */
+html[data-site-tab="feedback-0408"] .hero-navbar-outer:not(.is-scrolled) .hero-logo--full {
+  opacity: 0;
+}
+html[data-site-tab="feedback-0408"] .hero-navbar-outer:not(.is-scrolled) .hero-logo--mark {
+  opacity: 1;
+  height: 52px;
+}
+
 html[data-site-version="feedback-images"]
   .hero-navbar-outer:not(.is-scrolled)
   .hero-navbar-center
@@ -4264,6 +4276,15 @@ html[data-site-iteration="feedback-0408"] .hero-bg-video-scrim {
       rgba(4, 7, 11, 0.5) 44%,
       rgba(4, 7, 11, 0.68) 100%
     );
+}
+
+/* Option 2 only: the film was reading too dark — the darkening comes from the
+   video's own filter (brightness 0.5 on the shared iteration rule above), not
+   the scrim (which is already the light variant). Lift the brightness so the
+   footage reads clearly; keep a light saturate/contrast so it still sits back
+   behind the white text. (Tunable live at the review.) */
+html[data-site-tab="feedback-0408"] .hero-bg-video {
+  filter: brightness(0.82) saturate(0.9) contrast(1.02);
 }
 
 /* ── Feedbacks 04/08: ticker tab dividers ────────────────────────────

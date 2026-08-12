@@ -435,7 +435,9 @@ html[data-site-tab="feedback-0408"] .resources-card-photo {
 
 html[data-site-tab="feedback-0408"] .resources-card {
   display: block;
-  aspect-ratio: 4 / 5;
+  /* Slightly landscape (was square) so the tiles sit a bit shorter — closer
+     to the DIFC/Approach card height — while still showing the photography. */
+  aspect-ratio: 6 / 5;
   min-height: 0;
   padding: 0;
   background: #16181c;
@@ -479,7 +481,8 @@ html[data-site-tab="feedback-0408"] .resources-card-title {
   bottom: 18px;
   margin: 0;
   color: #ffffff;
-  font-size: 18px;
+  /* Bumped from 18px — the title read too small against the large tile. */
+  font-size: 20px;
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.01em;

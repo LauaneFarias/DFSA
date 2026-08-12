@@ -203,12 +203,54 @@ html[data-site-tab="feedback-0408"] .ach-src--glance {
   display: inline;
 }
 html[data-site-tab="feedback-0408"] .achievements-panel--glance {
+  /* Natural height — the section's height + centring is handled on the
+     container so the title and ticker stay together as one group (see below),
+     rather than the ticker floating in the middle of a tall band. */
   display: block;
+  min-height: 0;
 }
 
-/* Bring the title/source close to the ticker so they read as one unit. */
+/* Option 2: enlarge the glance source line so it carries more weight under
+   the title (base is clamp(14px, 1.4vw, 17px)). */
+html[data-site-tab="feedback-0408"] .ach-src--glance {
+  font-size: clamp(16px, 1.65vw, 20px);
+}
+
+/* Option 2: fade the ticker at both edges so figures GRADUATE onto the line
+   (ease in/out) rather than hard-appearing at the boundary — the same soft
+   edge-mask used on the hero news ticker, widened for this full-bleed strip
+   so the two-line labels arrive gently instead of "brutally". */
+html[data-site-tab="feedback-0408"] .achievements-panel--glance {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 clamp(48px, 7vw, 140px),
+    #000 calc(100% - clamp(48px, 7vw, 140px)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 clamp(48px, 7vw, 140px),
+    #000 calc(100% - clamp(48px, 7vw, 140px)),
+    transparent 100%
+  );
+}
+
+/* Fixed 48px gap between the title/source and the ticker. */
 html[data-site-tab="feedback-0408"] .achievements-head {
-  margin-bottom: clamp(24px, 3vw, 48px);
+  margin-bottom: 48px;
+}
+
+/* Keep the title + ticker together as one group and centre it vertically in
+   the middle of the (tall) section — the min-height gives the section its
+   height, justify-content:center floats the tight title+ticker pair in the
+   middle rather than pinning the title to the top. */
+html[data-site-tab="feedback-0408"] .achievements-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 460px;
 }
 
 /* Move "DFSA at a glance" up, directly above About the DFSA. The shared

@@ -424,10 +424,32 @@ html[data-site-tab="feedback-0408"] .about-grid {
 }
 html[data-site-tab="feedback-0408"] .about-panel {
   display: block;
-  /* Put About the DFSA inside a white rounded box, like the Latest News
-     panel — a white card sitting on the page background. */
-  background: #ffffff;
-  box-shadow: 0 24px 60px -34px rgba(23, 24, 27, 0.26);
+  /* Mirror "Start your DIFC journey": a rounded panel with a photographic
+     backdrop + scrim and white text — not a flat white box. The photo lives
+     ON the panel (like .difc-panel-bg), clipped to its rounded corners. */
+  position: relative;
+  overflow: hidden;
+  color: #ffffff;
+  background:
+    linear-gradient(
+      155deg,
+      rgba(6, 10, 18, 0.5) 0%,
+      rgba(6, 10, 18, 0.34) 52%,
+      rgba(6, 10, 18, 0.62) 100%
+    ),
+    url("/images/feedback-images-service-hover.png") center / cover no-repeat;
+  box-shadow: 0 34px 80px -36px rgba(6, 10, 18, 0.5);
+}
+
+/* Section returns to the plain page background — the photo now sits on the
+   panel itself (like the DIFC panel), so the section frames it in beige just
+   like "Start your DIFC journey" does. */
+html[data-site-tab="feedback-0408"] .about-section {
+  background: var(--about-page-bg);
+  padding: clamp(16px, 2vw, 28px) 0;
+}
+html[data-site-tab="feedback-0408"] .about-container {
+  padding-inline: 32px;
 }
 
 /* Light rounded container (blends into the page bg — no dark frame). */
@@ -686,13 +708,16 @@ html[data-site-tab="feedback-0408"] .about-pillar-icon {
     gap: clamp(12px, 1vw, 16px);
   }
   html[data-site-tab="feedback-0408"] .about-pillar-card {
-    min-height: 120px;
+    /* Grow the single card row so the whole About panel matches the height of
+       the Our Approach (~679px) and Start your DIFC journey (~721px) panels —
+       those have a 2-row grid, so this one row has to be taller to fill the
+       same section height. */
+    min-height: 300px;
   }
-  /* In these compact boxes, group the title directly under the icon instead
-     of pinning it to the bottom (the base uses margin-top:auto, which leaves
-     an odd gap between icon and title here). */
+  /* Pin the title to the bottom of the card (icon top, title bottom) — the
+     same anchoring as the DIFC journey cards, now that the boxes are tall. */
   html[data-site-tab="feedback-0408"] .about-pillar-title {
-    margin-top: 4px;
+    margin-top: auto;
   }
 }
 @media (max-width: 520px) {
@@ -702,4 +727,48 @@ html[data-site-tab="feedback-0408"] .about-pillar-icon {
   html[data-site-tab="feedback-0408"] .about-pillar-card {
     min-height: 150px;
   }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Option 2 — "About the DFSA" mirrors "Start your DIFC journey"
+   ════════════════════════════════════════════════════════════════════════
+   The panel above is now a photo backdrop with a scrim; these rules flip the
+   text to white and turn the pillar boxes into the same dark frosted-glass
+   cards as the DIFC journey grid (rgba(23,24,27,0.46) + blur(14px)). Appended
+   last so they override the earlier beige-box treatment. */
+
+/* Heading + intro copy → white over the photo. */
+html[data-site-tab="feedback-0408"] .about-panel .about-heading {
+  color: #ffffff;
+}
+html[data-site-tab="feedback-0408"] .about-lead {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* Pillar cards → dark frosted glass, matching .difc-card exactly. */
+html[data-site-tab="feedback-0408"] .about-pillar-card {
+  background: rgba(23, 24, 27, 0.46);
+  border: none;
+  border-radius: 20px;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.35);
+}
+html[data-site-tab="feedback-0408"] .about-pillar-card:hover {
+  background: rgba(23, 24, 27, 0.54);
+  border: none;
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.4);
+}
+/* Drop the gold-pattern hover reveal — DIFC cards just brighten the glass. */
+html[data-site-tab="feedback-0408"] .about-pillar-media {
+  display: none;
+}
+/* Icon badge + title in white, like the DIFC card icon + title. */
+html[data-site-tab="feedback-0408"] .about-pillar-icon {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+html[data-site-tab="feedback-0408"] .about-pillar-title,
+html[data-site-tab="feedback-0408"] .about-pillar-card:hover .about-pillar-title {
+  color: #ffffff;
 }
