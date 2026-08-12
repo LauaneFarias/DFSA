@@ -708,11 +708,9 @@ html[data-site-tab="feedback-0408"] .about-pillar-icon {
     gap: clamp(12px, 1vw, 16px);
   }
   html[data-site-tab="feedback-0408"] .about-pillar-card {
-    /* Grow the single card row so the whole About panel matches the height of
-       the Our Approach (~679px) and Start your DIFC journey (~721px) panels —
-       those have a 2-row grid, so this one row has to be taller to fill the
-       same section height. */
-    min-height: 300px;
+    /* Back to the earlier, more compact card height (the taller 300px pass
+       made these read larger than the DIFC/Approach cards). */
+    min-height: 200px;
   }
   /* Pin the title to the bottom of the card (icon top, title bottom) — the
      same anchoring as the DIFC journey cards, now that the boxes are tall. */
@@ -759,10 +757,9 @@ html[data-site-tab="feedback-0408"] .about-pillar-card:hover {
   border: none;
   box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.4);
 }
-/* Drop the gold-pattern hover reveal — DIFC cards just brighten the glass. */
-html[data-site-tab="feedback-0408"] .about-pillar-media {
-  display: none;
-}
+/* Keep the gold-pattern hover reveal — cards are dark glass at rest and the
+   gold DFSA pattern fades in on hover (base .about-pillar-media handles the
+   opacity 0 → 1 transition). */
 /* Icon badge + title in white, like the DIFC card icon + title. */
 html[data-site-tab="feedback-0408"] .about-pillar-icon {
   background: rgba(255, 255, 255, 0.12);
