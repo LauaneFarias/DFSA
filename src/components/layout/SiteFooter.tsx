@@ -100,8 +100,8 @@ export function SiteFooter() {
         <div className="footer-newsletter">
           <div className="footer-newsletter-copy">
             <h2 className="footer-newsletter-heading">
-              Stay Updated With DFSA{" "}
-              <span className="footer-newsletter-heading-alerts">News &amp; Alerts</span>
+              Stay updated with DFSA{" "}
+              <span className="footer-newsletter-heading-alerts">news &amp; alert</span>
             </h2>
             <p className="footer-newsletter-sub">
               Sign up to receive the latest news, alerts, updates and publications

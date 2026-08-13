@@ -34,20 +34,19 @@ type AuthorisationType = {
 const TYPES: AuthorisationType[] = [
   {
     label: "DFSA Authorised Firm",
-    description: "Firms conducting financial services in or from the DIFC under a DFSA licence.",
+    description: "Firms conducting financial services in or from the DIFC.",
     icon: <FirmIcon />,
     variant: "feature",
   },
   {
     label: "DFSA Authorised Individual",
-    description: "Individuals approved by the DFSA to perform licensed or controlled functions.",
+    description: "Individuals approved by the DFSA to perform controlled functions.",
     icon: <IndividualIcon />,
     variant: "white",
   },
   {
     label: "Authorised Market Institution",
-    description:
-      "Exchanges and clearing houses authorised to operate trading and settlement infrastructure in the DIFC.",
+    description: "Exchanges and clearing houses running DIFC trading and settlement systems.",
     icon: <InstitutionIcon />,
     variant: "white",
   },
@@ -59,8 +58,7 @@ const TYPES: AuthorisationType[] = [
   },
   {
     label: "Registered DNFBPs",
-    description:
-      "Designated non-financial businesses and professions supervised for anti-money laundering compliance.",
+    description: "Non-financial businesses and professions supervised for anti-money laundering.",
     icon: <DnfbpIcon />,
     variant: "white",
   },

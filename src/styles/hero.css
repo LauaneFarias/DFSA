@@ -3387,12 +3387,15 @@ html[data-site-tab="feedback-0408"] .hero-scope--light-bg .hero-news-card-feedba
   display: none;
 }
 @media (min-width: 981px) {
-  /* Clamp the description to two lines (as Option 1 does). */
+  /* Clamp the description to two lines (as Option 1 does). Reserve the
+     bottom-right corner for the slide dots (the date that normally sits there
+     is hidden on Option 2), so the second line never runs under them. */
   html[data-site-tab="feedback-0408"] .hero-news-card-proposition {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
+    padding-right: 46px;
   }
 }
 html[data-font-version="feedback"] .hero-news-card-feedback-video {
@@ -4651,9 +4654,9 @@ html[data-site-tab="feedback-0408"] .hero-service-card-icon svg {
   height: 24px;
 }
 
-/* Option 2: the hero service-card titles ("homepage buttons") read too small
-   at 14px — raise them to 16px so they match the readable body size used in
-   Start your DIFC journey. High specificity to beat the base/light-bg rules. */
+/* Option 2: the hero service-card titles ("homepage buttons") read too small —
+   raise them to 18px so they match the DIFC / Approach / News card titles.
+   High specificity to beat the base/light-bg rules. */
 html[data-site-tab="feedback-0408"] .hero-scope--light-bg .hero-service-card-title {
-  font-size: 16px;
+  font-size: 18px;
 }
