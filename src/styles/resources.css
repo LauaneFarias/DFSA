@@ -435,9 +435,10 @@ html[data-site-tab="feedback-0408"] .resources-card-photo {
 
 html[data-site-tab="feedback-0408"] .resources-card {
   display: block;
-  /* Slightly landscape (was square) so the tiles sit a bit shorter — closer
-     to the DIFC/Approach card height — while still showing the photography. */
-  aspect-ratio: 6 / 5;
+  /* Landscape 16/9 tiles (~186px tall at desktop) so these secondary cards no
+     longer tower over the primary hero buttons (~142px) — the bottom no longer
+     out-sizes the top. Still comfortably shows the photography. */
+  aspect-ratio: 16 / 9;
   min-height: 0;
   padding: 0;
   background: #16181c;
