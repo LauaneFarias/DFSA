@@ -4343,6 +4343,12 @@ html[data-site-iteration="feedback-0408"] .hero-ticker-tab:not(:last-child)::aft
     gap: 14px;
     align-items: stretch;
   }
+  /* Per client: a little more room between the Search bar and the top of the
+     bento — nudge the card row down a touch. Scoped to the v3 marker so it
+     applies to Option 3 ONLY; Option 2 keeps the original (deployed) spacing. */
+  html[data-hero-revision="v3"] .hero-bottom-row {
+    padding-top: 41px;
+  }
 
   /* News card → tall left column, stretched to the full bento height and
      re-laid-out vertically (image on top, copy below) so it doesn't look
