@@ -10,6 +10,7 @@ type FontVersion =
   | "feedback"
   | "feedback-images"
   | "feedback-0408"
+  | "feedback-0408-v3"
   | "hero-slider";
 
 const FONT_OPTIONS = [
@@ -19,9 +20,15 @@ const FONT_OPTIONS = [
   { value: "feedback", label: "Feedback" },
   { value: "feedback-images", label: "Feedback + Images" },
   // Option 1 (hero-slider) is listed before Option 2 (feedback-0408) so
-  // the visible tab bar reads left-to-right "Option 1, Option 2".
+  // the visible tab bar reads left-to-right "Option 1, Option 2, Option 3".
   { value: "hero-slider", label: "Option 1" },
   { value: "feedback-0408", label: "Option 2" },
+  // Option 3 is Option 2 with the post-feedback above-fold revision (lighter
+  // frosted-glass buttons + near-clear film). It reuses Option 2's entire
+  // style set via the same siteTab/siteVersion/siteIteration hooks, and adds a
+  // heroRevision="v3" marker that only the revised hero rules target — so the
+  // two tabs are identical except above the fold, for an easy A/B compare.
+  { value: "feedback-0408-v3", label: "Option 3" },
 ] as const;
 
 // Versions kept fully wired (styles, logic, and localStorage restore all
@@ -56,12 +63,22 @@ function applyFontVersion(next: FontVersion) {
   // so it rides the same siteVersion + siteIteration hooks as 04/08 and
   // carries its exact identity on siteTab, which those two slider-only
   // tweaks target in isolation.
+  // Option 3 (feedback-0408-v3) is a pure superset of Option 2: it maps to the
+  // exact same siteVersion / siteIteration / siteTab / fontVersion hooks, so it
+  // inherits every Option 2 style. Its ONLY distinction is the heroRevision
+  // marker below, which the revised above-fold rules key on.
+  const isV3 = next === "feedback-0408-v3";
   const reusesFeedbackImages =
-    next === "feedback-images" || next === "feedback-0408" || next === "hero-slider";
+    next === "feedback-images" || next === "feedback-0408" || next === "hero-slider" || isV3;
   root.dataset.siteVersion = reusesFeedbackImages ? "feedback-images" : next;
-  root.dataset.siteIteration = next === "hero-slider" ? "feedback-0408" : next;
-  root.dataset.siteTab = next;
+  root.dataset.siteIteration = next === "hero-slider" || isV3 ? "feedback-0408" : next;
+  root.dataset.siteTab = isV3 ? "feedback-0408" : next;
   root.dataset.fontVersion = reusesFeedbackImages ? "feedback" : next;
+  if (isV3) {
+    root.dataset.heroRevision = "v3";
+  } else {
+    delete root.dataset.heroRevision;
+  }
   try {
     window.localStorage.setItem(STORAGE_KEY, next);
   } catch {
