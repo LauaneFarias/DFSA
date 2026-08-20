@@ -34,7 +34,18 @@ const FONT_OPTIONS = [
 // Versions kept fully wired (styles, logic, and localStorage restore all
 // intact) but HIDDEN from the visible tab bar per request. Nothing is
 // deleted — to bring a tab back, just remove its value from this list.
-const HIDDEN_VERSIONS: readonly FontVersion[] = ["niveau", "graphik", "feedback"];
+// For the Juma sign-off share, only Option 3 (feedback-0408-v3) is shown; the
+// rest are hidden so the footer offers no other options. To restore the full
+// switcher, trim this list back to ["niveau", "graphik", "feedback"].
+const HIDDEN_VERSIONS: readonly FontVersion[] = [
+  "niveau",
+  "graphik",
+  "feedback",
+  "adelle",
+  "feedback-images",
+  "hero-slider",
+  "feedback-0408",
+];
 
 const VISIBLE_OPTIONS = FONT_OPTIONS.filter((option) => !HIDDEN_VERSIONS.includes(option.value));
 
@@ -87,15 +98,17 @@ function applyFontVersion(next: FontVersion) {
 }
 
 export function FontVersionSwitcher() {
-  // Default to Option 2 (the feedback-0408 tab) for first-time visitors;
-  // a saved choice in localStorage still wins on mount.
-  const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408");
+  // Default to Option 3 (the feedback-0408-v3 tab) for the Juma sign-off share.
+  const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408-v3");
 
   useEffect(() => {
     const id = window.setTimeout(() => {
       try {
         const saved = window.localStorage.getItem(STORAGE_KEY);
-        if (isFontVersion(saved)) setFontVersion(saved);
+        // Only restore a saved choice if it's still a VISIBLE option — so a
+        // stale value (e.g. an old "Option 2") can't override the Option 3
+        // default now that the other tabs are hidden for the share.
+        if (isFontVersion(saved) && !HIDDEN_VERSIONS.includes(saved)) setFontVersion(saved);
       } catch {
         // Keep the server-rendered default if storage is unavailable.
       }
