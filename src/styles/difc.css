@@ -581,8 +581,9 @@ html[data-site-tab="feedback-0408"] .difc-panel-bg {
    of Finance" image with the concrete-lattice-ceiling architecture shot. Later
    in source so it wins on those two tabs; Options 1 & 2 keep the Museum image. */
 html[data-hero-revision="v4"] .difc-panel-bg {
-  /* Dubai skyline emerging above the morning fog (Burj Khalifa on the right). */
-  background: url("/images/iStock-1163368822.jpg") center 40% / cover no-repeat;
+  /* DIFC Gate skyline looking up — clock tower, maze tower, the Gate on the
+     right (iStock-2276964355). */
+  background: url("/images/iStock-2276964355.jpg") center 30% / cover no-repeat;
 }
 
 /* 04/08: descriptions shown by default (no hover-reveal), capped at 2 lines. */

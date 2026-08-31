@@ -4718,17 +4718,19 @@ html[data-hero-revision="v4"] .hero-dot-texture {
   display: none !important;
 }
 html[data-hero-revision="v4"] .hero-scope.hero-scope--light-bg .hero-bg {
-  /* DIFC Gate skyline still (looking up at the Gate + Sheikh Zayed Rd towers).
-     Option 4 overrides .hero-bg to none for its video, so this only shows on
-     Option 3. */
-  background: url("/images/iStock-2276964355.jpg") center 45% / cover no-repeat;
+  /* DIFC Gate with the reflecting pool — the iconic, symmetric hero shot
+     (DIFC_Architecture_012). Option 4 overrides .hero-bg to none for its video,
+     so this only shows on Option 3. */
+  background: url("/images/DIFC_Architecture_012.jpg") center / cover no-repeat;
 }
 html[data-hero-revision="v4"] .hero-bg-video-scrim {
+  /* Keep enough at the very top for the white nav over the pale sky, but lighter
+     through the middle/lower so the Gate + reflecting pool read bright. */
   background: linear-gradient(
     180deg,
-    rgba(8, 11, 16, 0.36) 0%,
-    rgba(8, 11, 16, 0.22) 44%,
-    rgba(8, 11, 16, 0.46) 100%
+    rgba(8, 11, 16, 0.34) 0%,
+    rgba(8, 11, 16, 0.12) 44%,
+    rgba(8, 11, 16, 0.38) 100%
   ) !important;
 }
 

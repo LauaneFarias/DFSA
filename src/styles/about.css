@@ -775,16 +775,17 @@ html[data-site-tab="feedback-0408"] .about-pillar-card:hover .about-pillar-title
    legibility). Later in source so it wins over the feedback-0408 panel bg;
    Options 1 & 2 keep the previous image. */
 html[data-hero-revision="v4"] .about-panel {
-  /* Dark glass facade with diagonal light bands + palm (difc-0408-bg). Light
-     scrim — a top-left dab behind the heading, near-clear elsewhere. */
+  /* Dubai skyline above the morning fog, Burj Khalifa (iStock-1163368822). Pale
+     image, so a firmer top-left dab keeps the white heading legible, fading off
+     fast so the rest of the image stays bright. */
   background:
     linear-gradient(
-      160deg,
-      rgba(6, 10, 18, 0.42) 0%,
-      rgba(6, 10, 18, 0.12) 42%,
-      rgba(6, 10, 18, 0.24) 100%
+      155deg,
+      rgba(6, 10, 18, 0.6) 0%,
+      rgba(6, 10, 18, 0.16) 36%,
+      rgba(6, 10, 18, 0.12) 100%
     ),
-    url("/images/difc-0408-bg.jpg") center 40% / cover no-repeat;
+    url("/images/iStock-1163368822.jpg") center 42% / cover no-repeat;
 }
 
 /* Options 3 & 4 (data-hero-revision v4): give the About pillar cards the same
