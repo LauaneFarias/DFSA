@@ -61,6 +61,23 @@ export function HeroNewsCard() {
   // the card's photo and text paint immediately, then the texture mounts
   // and fades in behind them.
   const [showFeedbackVideo, setShowFeedbackVideo] = useState(false);
+  // The burgundy-texture video is hidden by CSS on every feedback-0408 tab
+  // (Options 1–3), yet it was still downloading (~8 MB) and making the card
+  // feel slow. Track whether we're on one of those tabs and skip mounting the
+  // video entirely there — it only ever renders on the tabs that actually show
+  // it (e.g. "Feedback + Images").
+  const [is0408, setIs0408] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIs0408(document.documentElement.dataset.siteTab === "feedback-0408");
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-site-tab"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -119,7 +136,7 @@ export function HeroNewsCard() {
 
   return (
     <div className="hero-news-card">
-      {showFeedbackVideo ? (
+      {showFeedbackVideo && !is0408 ? (
         <video
           ref={feedbackVideoRef}
           className="hero-news-card-feedback-video"

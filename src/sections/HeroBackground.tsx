@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { cn } from "@/lib/cn";
 
@@ -48,6 +48,22 @@ export function HeroBackground({ activeScene, bgMode }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const reduceMotion = usePrefersReducedMotion();
+
+  // Option 4 (feedback-0408-v5) sets data-hero-bg="video": it replaces the
+  // static image background with the hero4.mp4 clip. Only mount that video
+  // layer on that tab so it never downloads elsewhere (see HeroNewsCard for the
+  // same guard on the same ~8 MB file).
+  const [heroBgVideo, setHeroBgVideo] = useState(false);
+  useEffect(() => {
+    const check = () => setHeroBgVideo(document.documentElement.dataset.heroBg === "video");
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-hero-bg"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   // Background-video playback (play the visible layer, pause hidden /
   // off-screen ones so the browser's concurrent-decode cap isn't hit) is
@@ -134,6 +150,21 @@ export function HeroBackground({ activeScene, bgMode }: Props) {
         preload="auto"
         aria-hidden="true"
       />
+      {/* Option 4 (data-hero-bg="video"): the same decorative header clip the
+          first tab (Adelle Sans) uses, as the moving background in place of the
+          static architecture image. Only mounted on that tab. */}
+      {heroBgVideo ? (
+        <video
+          className="hero-bg-video hero-bg-video--v5"
+          src="/videos/iStock-1432335897.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+        />
+      ) : null}
       <div className="hero-bg-video-scrim hero-bg-video-scrim--light" />
 
       <div className="hero-bg-parallax" ref={bgRef}>

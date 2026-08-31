@@ -64,12 +64,20 @@ export function VideoAutoplayManager() {
 
     // (b) visibility — the version switcher flips which layers are shown
     // via CSS (opacity/display) without moving them in the viewport, so
-    // re-evaluate every video when those root attributes change.
-    const reapplyAll = () => videos.forEach(apply);
+    // re-evaluate every video when those root attributes change. Re-query the
+    // DOM here (not the mount-time list) so videos mounted later — e.g. Option
+    // 4's data-hero-bg="video" background clip — get picked up and played too.
+    const reapplyAll = () =>
+      Array.from(document.querySelectorAll<HTMLVideoElement>("video")).forEach(apply);
     const mo = new MutationObserver(reapplyAll);
     mo.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-site-iteration", "data-site-version", "data-font-version"],
+      attributeFilter: [
+        "data-site-iteration",
+        "data-site-version",
+        "data-font-version",
+        "data-hero-bg",
+      ],
     });
 
     // (c) some browsers block muted autoplay until the first user gesture;

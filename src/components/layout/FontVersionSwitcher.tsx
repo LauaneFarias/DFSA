@@ -11,6 +11,8 @@ type FontVersion =
   | "feedback-images"
   | "feedback-0408"
   | "feedback-0408-v3"
+  | "feedback-0408-v4"
+  | "feedback-0408-v5"
   | "hero-slider";
 
 const FONT_OPTIONS = [
@@ -19,33 +21,26 @@ const FONT_OPTIONS = [
   { value: "adelle", label: "Adelle Sans" },
   { value: "feedback", label: "Feedback" },
   { value: "feedback-images", label: "Feedback + Images" },
-  // Option 1 (hero-slider) is listed before Option 2 (feedback-0408) so
-  // the visible tab bar reads left-to-right "Option 1, Option 2, Option 3".
-  { value: "hero-slider", label: "Option 1" },
-  { value: "feedback-0408", label: "Option 2" },
-  // Option 3 is Option 2 with the post-feedback above-fold revision (lighter
-  // frosted-glass buttons + near-clear film). It reuses Option 2's entire
-  // style set via the same siteTab/siteVersion/siteIteration hooks, and adds a
-  // heroRevision="v3" marker that only the revised hero rules target — so the
-  // two tabs are identical except above the fold, for an easy A/B compare.
-  { value: "feedback-0408-v3", label: "Option 3" },
+  // The old "Option 1" (hero-slider) has been retired — it's hidden below.
+  // The three live tabs are renumbered so the bar now reads "Option 1,
+  // Option 2, Option 3" over these three builds (labels only — the underlying
+  // hooks/values are unchanged):
+  //   Option 1 = feedback-0408      (dark-glass hero)
+  //   Option 2 = feedback-0408-v3   (lighter frosted-glass hero)
+  //   Option 3 = feedback-0408-v4   (COO image-led direction, static image bg)
+  //   Option 4 = feedback-0408-v5   (same image-led tiles, hero4.mp4 video bg)
+  { value: "hero-slider", label: "(retired)" },
+  { value: "feedback-0408", label: "Option 1" },
+  { value: "feedback-0408-v3", label: "Option 2" },
+  { value: "feedback-0408-v4", label: "Option 3" },
+  { value: "feedback-0408-v5", label: "Option 4" },
 ] as const;
 
 // Versions kept fully wired (styles, logic, and localStorage restore all
 // intact) but HIDDEN from the visible tab bar per request. Nothing is
 // deleted — to bring a tab back, just remove its value from this list.
-// For the Juma sign-off share, only Option 3 (feedback-0408-v3) is shown; the
-// rest are hidden so the footer offers no other options. To restore the full
-// switcher, trim this list back to ["niveau", "graphik", "feedback"].
-const HIDDEN_VERSIONS: readonly FontVersion[] = [
-  "niveau",
-  "graphik",
-  "feedback",
-  "adelle",
-  "feedback-images",
-  "hero-slider",
-  "feedback-0408",
-];
+// hero-slider is the retired old "Option 1".
+const HIDDEN_VERSIONS: readonly FontVersion[] = ["niveau", "graphik", "feedback", "hero-slider"];
 
 const VISIBLE_OPTIONS = FONT_OPTIONS.filter((option) => !HIDDEN_VERSIONS.includes(option.value));
 
@@ -78,17 +73,38 @@ function applyFontVersion(next: FontVersion) {
   // exact same siteVersion / siteIteration / siteTab / fontVersion hooks, so it
   // inherits every Option 2 style. Its ONLY distinction is the heroRevision
   // marker below, which the revised above-fold rules key on.
+  // Options 3, 4 and 5 are all pure supersets of Option 2: same siteVersion /
+  // siteIteration / siteTab / fontVersion hooks (so they inherit every Option 2
+  // style), distinguished only by the heroRevision marker their hero rules key
+  // on ("v3" = lighter frosted glass; "v4" = the COO image-led direction).
+  // The visible "Option 4" (feedback-0408-v5) reuses the v4 image-led tiles
+  // (heroRevision "v4") and adds heroBg="video" so its background is the
+  // hero4.mp4 clip instead of the static image.
   const isV3 = next === "feedback-0408-v3";
+  const isV4 = next === "feedback-0408-v4";
+  const isV5 = next === "feedback-0408-v5";
+  const isV3OrV4OrV5 = isV3 || isV4 || isV5;
   const reusesFeedbackImages =
-    next === "feedback-images" || next === "feedback-0408" || next === "hero-slider" || isV3;
+    next === "feedback-images" ||
+    next === "feedback-0408" ||
+    next === "hero-slider" ||
+    isV3OrV4OrV5;
   root.dataset.siteVersion = reusesFeedbackImages ? "feedback-images" : next;
-  root.dataset.siteIteration = next === "hero-slider" || isV3 ? "feedback-0408" : next;
-  root.dataset.siteTab = isV3 ? "feedback-0408" : next;
+  root.dataset.siteIteration = next === "hero-slider" || isV3OrV4OrV5 ? "feedback-0408" : next;
+  root.dataset.siteTab = isV3OrV4OrV5 ? "feedback-0408" : next;
   root.dataset.fontVersion = reusesFeedbackImages ? "feedback" : next;
   if (isV3) {
     root.dataset.heroRevision = "v3";
+  } else if (isV4 || isV5) {
+    // v5 shares the v4 image-led tile treatment.
+    root.dataset.heroRevision = "v4";
   } else {
     delete root.dataset.heroRevision;
+  }
+  if (isV5) {
+    root.dataset.heroBg = "video";
+  } else {
+    delete root.dataset.heroBg;
   }
   try {
     window.localStorage.setItem(STORAGE_KEY, next);
@@ -98,8 +114,8 @@ function applyFontVersion(next: FontVersion) {
 }
 
 export function FontVersionSwitcher() {
-  // Default to Option 3 (the feedback-0408-v3 tab) for the Juma sign-off share.
-  const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408-v3");
+  // Default to Option 4 (the feedback-0408-v4 tab) — the current WIP direction.
+  const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408-v4");
 
   useEffect(() => {
     const id = window.setTimeout(() => {

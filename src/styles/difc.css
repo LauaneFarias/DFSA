@@ -577,6 +577,14 @@ html[data-site-tab="feedback-0408"] .difc-panel-bg {
     url("/images/difc-0408-bg.jpg") center / cover no-repeat;
 }
 
+/* Options 3 & 4 (data-hero-revision v4): per COO feedback, replace the "Museum
+   of Finance" image with the concrete-lattice-ceiling architecture shot. Later
+   in source so it wins on those two tabs; Options 1 & 2 keep the Museum image. */
+html[data-hero-revision="v4"] .difc-panel-bg {
+  /* Dubai skyline emerging above the morning fog (Burj Khalifa on the right). */
+  background: url("/images/iStock-1163368822.jpg") center 40% / cover no-repeat;
+}
+
 /* 04/08: descriptions shown by default (no hover-reveal), capped at 2 lines. */
 html[data-site-iteration="feedback-0408"] .difc-card-desc {
   opacity: 1;
@@ -690,4 +698,36 @@ html[data-site-tab="feedback-0408"] .difc-card--feature .difc-card-title {
   /* Match the other card titles (18px) — the base feature title is larger
      (clamp(19px, 1.45vw, 24px)). All DIFC card titles read at 18px now. */
   font-size: 18px;
+}
+
+/* Options 3 & 4 (data-hero-revision v4): give the DIFC cards Option 2's LIGHT
+   frosted-glass treatment (translucent, lit top-edge, strong blur) instead of
+   the dark glass — the section's architecture image glows through. */
+html[data-hero-revision="v4"] .difc-card--white,
+html[data-hero-revision="v4"] .difc-card--feature {
+  background: linear-gradient(
+    155deg,
+    rgba(78, 84, 96, 0.38) 0%,
+    rgba(56, 61, 71, 0.46) 100%
+  ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    0 22px 48px -20px rgba(0, 0, 0, 0.48) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(1.3) !important;
+  backdrop-filter: blur(26px) saturate(1.3) !important;
+}
+
+/* Options 3 & 4: the base .difc-panel-scrim is a heavy maroon+black wash that
+   was over-darkening (and reddening) the bright foggy-skyline still. Lighten it
+   to a subtle top-left brand dab so the image reads bright; the heading stays
+   legible via its text-shadow (see about.css). */
+html[data-hero-revision="v4"] .difc-panel-scrim {
+  background-color: rgba(14, 12, 18, 0.16);
+  background-image: linear-gradient(
+    160deg,
+    rgba(70, 16, 24, 0.3) 0%,
+    rgba(12, 14, 20, 0.1) 42%,
+    rgba(12, 14, 20, 0.26) 100%
+  );
 }

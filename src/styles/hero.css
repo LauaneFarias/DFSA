@@ -4697,3 +4697,352 @@ html[data-hero-revision="v3"] .hero-scope--light-bg .hero-news-card {
 html[data-hero-revision="v3"] .hero-bg-video {
   filter: brightness(0.98) saturate(0.9) contrast(1.02);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 4 — COO feedback direction (WIP prototype)
+   ═══════════════════════════════════════════════════════════════════════
+   Static abstract-architecture background (no video), no left news/carousel
+   card, and the five actions rebuilt as smaller image-led tiles — the liked
+   "You may be interested in" treatment. Keyed on data-hero-revision="v4";
+   inherits all Option 2 styling via data-site-tab, appended last so it wins.
+   NB: card imagery is placeholder architecture crops to show the treatment —
+   the final image set is still TBC. */
+
+/* 1 — Static architecture still instead of the video (+ hide the decorative
+   bloom / dot layers so the image reads clean). */
+html[data-hero-revision="v4"] .hero-bg-video {
+  display: none !important;
+}
+html[data-hero-revision="v4"] .hero-bg-shape,
+html[data-hero-revision="v4"] .hero-dot-texture {
+  display: none !important;
+}
+html[data-hero-revision="v4"] .hero-scope.hero-scope--light-bg .hero-bg {
+  /* DIFC Gate skyline still (looking up at the Gate + Sheikh Zayed Rd towers).
+     Option 4 overrides .hero-bg to none for its video, so this only shows on
+     Option 3. */
+  background: url("/images/iStock-2276964355.jpg") center 45% / cover no-repeat;
+}
+html[data-hero-revision="v4"] .hero-bg-video-scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 11, 16, 0.36) 0%,
+    rgba(8, 11, 16, 0.22) 44%,
+    rgba(8, 11, 16, 0.46) 100%
+  ) !important;
+}
+
+/* 2 — Drop the left news / carousel card. */
+html[data-hero-revision="v4"] .hero-news-card {
+  display: none !important;
+}
+
+/* 3 — Image-led tile treatment (mirrors .resources-card on Option 2). */
+html[data-hero-revision="v4"] .hero-service-card {
+  overflow: hidden;
+  justify-content: flex-start;
+  border: none !important;
+  border-radius: 18px;
+  background-color: #16181c !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: 0 18px 40px -22px rgba(6, 10, 18, 0.5) !important;
+}
+/* Per-card placeholder architecture crops. */
+html[data-hero-revision="v4"] .hero-card-row .hero-service-card:nth-child(1) {
+  background-image: url("/images/feedback-images-service-hover.png") !important;
+}
+html[data-hero-revision="v4"] .hero-card-row .hero-service-card:nth-child(2) {
+  background-image: url("/images/approach-0408-glass.jpg") !important;
+}
+html[data-hero-revision="v4"] .hero-card-row .hero-service-card:nth-child(3) {
+  background-image: url("/images/difc-0408-museum.jpg") !important;
+}
+html[data-hero-revision="v4"] .hero-card-row .hero-service-card:nth-child(4) {
+  background-image: url("/images/iStock-2270383910.jpg") !important;
+}
+html[data-hero-revision="v4"] .hero-card-row .hero-service-card:nth-child(5) {
+  background-image: url("/images/resources-0408-careers.jpg") !important;
+}
+/* Bottom-heavy scrim so the overlaid title stays legible. */
+html[data-hero-revision="v4"] .hero-service-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* A flat 10% darken across the whole image, plus the bottom-heavy scrim that
+     keeps the overlaid title legible. */
+  background:
+    linear-gradient(rgba(12, 15, 20, 0.1), rgba(12, 15, 20, 0.1)),
+    linear-gradient(
+      180deg,
+      rgba(12, 15, 20, 0) 30%,
+      rgba(12, 15, 20, 0.5) 62%,
+      rgba(12, 15, 20, 0.92) 100%
+    );
+  pointer-events: none;
+}
+html[data-hero-revision="v4"] .hero-service-card:hover {
+  transform: translateY(-4px);
+}
+/* Small icon badge, top-left. */
+html[data-hero-revision="v4"] .hero-scope.hero-scope--light-bg .hero-service-card-icon {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  /* Centre the glyph in the badge — the .hero-scope--light-bg rule left-aligns
+     it (justify-content: flex-start), which left the icon looking off. This
+     selector carries the scope so it outranks that rule. */
+  justify-content: center;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+}
+/* Title overlaid at the bottom, white. */
+html[data-hero-revision="v4"] .hero-service-card-title {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  color: #ffffff !important;
+  font-size: 15px !important;
+  font-weight: 600;
+  line-height: 1.25;
+}
+html[data-hero-revision="v4"] .hero-service-card-underline {
+  display: none;
+}
+
+@media (min-width: 981px) {
+  /* Five image-led tiles in a single row (the news card is gone). */
+  html[data-hero-revision="v4"] .hero-scope--light-bg .hero-card-row {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    grid-template-rows: auto !important;
+    gap: 14px;
+    /* Push the single row of tiles to the bottom of the bento area so they sit
+       lower on the page. */
+    align-content: end;
+  }
+  html[data-hero-revision="v4"] .hero-card-row .hero-service-card {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    width: auto !important;
+    /* Explicit compact height (an aspect-ratio here resolves the WIDTH from a
+       stretched grid-row height and blows the tiles out, so they overlap). A
+       fixed height keeps the width at the 1fr cell. Bumped a little taller. */
+    height: clamp(190px, 16vw, 232px) !important;
+    min-height: 0 !important;
+  }
+}
+
+@media (min-width: 981px) {
+  /* Option 2's bento makes cards 4 + 5 span 3 columns (grid-column: span 3
+     !important). That's more specific than the blanket v4 reset above, so pin
+     these two explicitly back to single cells for the 5-across row. */
+  html[data-hero-revision="v4"] .hero-card-row .hero-service-card:nth-child(4),
+  html[data-hero-revision="v4"] .hero-card-row .hero-service-card:nth-child(5) {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  /* Title + search drop toward the middle of the page: bottom-align the top
+     row's content (its lower edge sits at the hero's vertical centre) so the
+     headline + search read lower, and the tiles anchor at the bottom below. */
+  html[data-hero-revision="v4"] .hero-top-row {
+    align-items: flex-end;
+    padding-bottom: clamp(12px, 3vh, 40px);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 4 (data-hero-bg="video") — hero4.mp4 moving background
+   ═══════════════════════════════════════════════════════════════════════
+   Option 4 reuses every Option 3 (v4) image-led tile rule (it carries
+   heroRevision="v4"); the only difference is the background: the hero4.mp4
+   clip instead of the static architecture image. */
+
+/* Drop the v4 static image. */
+html[data-hero-bg="video"] .hero-scope.hero-scope--light-bg .hero-bg {
+  background: none !important;
+}
+/* The v4 rules hide every .hero-bg-video; re-show just the hero4 layer so it
+   plays as the full-bleed background. */
+html[data-hero-bg="video"] .hero-bg-video--v5 {
+  display: block !important;
+}
+
+/* Option 4: show the video in its true colour — drop the darkening film filter
+   and the scrim that sat on top (they made it read grey). */
+html[data-hero-bg="video"] .hero-bg-video--v5 {
+  filter: none !important;
+}
+html[data-hero-bg="video"] .hero-bg-video-scrim {
+  display: none !important;
+}
+/* Black hero text so it stays readable over the lighter video (no dark scrim
+   behind it any more). */
+html[data-hero-bg="video"] .hero-eyebrow-greeting,
+html[data-hero-bg="video"] .hero-headline,
+html[data-hero-bg="video"] .hero-headline-default,
+html[data-hero-bg="video"] .hero-headline-desktop-line,
+html[data-hero-bg="video"] .hero-headline-mobile-line {
+  color: #17181b !important;
+}
+
+/* Option 4: the light video bg needs the DARK (scrolled-state) nav — dark nav
+   items + the maroon logo mark — instead of the white nav used over a dark bg,
+   matching the fixed nav on scroll. */
+html[data-hero-bg="video"] .hero-navbar-outer:not(.is-scrolled) .hero-navbar-center a,
+html[data-hero-bg="video"]
+  .hero-navbar-outer:not(.is-scrolled)
+  .hero-profile-pill
+  .hero-profile-lang,
+html[data-hero-bg="video"] .hero-navbar-outer:not(.is-scrolled) .hero-navbar-sign-in,
+html[data-hero-bg="video"] .hero-navbar-outer:not(.is-scrolled) .hero-navbar-search-btn {
+  color: rgba(23, 24, 27, 0.85) !important;
+}
+/* Logo mark → DFSA maroon (same filter the scrolled nav uses). */
+html[data-hero-bg="video"] .hero-navbar-outer:not(.is-scrolled) .hero-logo--mark {
+  filter: brightness(0) saturate(100%) invert(17%) sepia(64%) saturate(2886%) hue-rotate(337deg)
+    brightness(87%) contrast(91%) !important;
+}
+/* Dividers / underline → dark. */
+html[data-hero-bg="video"] .hero-navbar-outer:not(.is-scrolled) .hero-profile-pill::before,
+html[data-hero-bg="video"] .hero-navbar-outer:not(.is-scrolled) .hero-navbar-sign-in::before {
+  background: rgba(23, 24, 27, 0.24) !important;
+}
+html[data-hero-bg="video"] .hero-navbar-outer:not(.is-scrolled)::after {
+  background: rgba(23, 24, 27, 0.16) !important;
+}
+
+/* Option 4: light video bg — the bottom news ticker uses the light treatment
+   (transparent strip, dark text, subtle dark rule) like the first tab, instead
+   of the dark strip + white text used over a dark background. */
+html[data-hero-bg="video"] .hero-news-ticker {
+  background: transparent !important;
+  border-color: rgba(17, 22, 16, 0.08) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+html[data-hero-bg="video"] .hero-ticker-text,
+html[data-hero-bg="video"] .hero-ticker-link {
+  color: rgb(17, 22, 16) !important;
+}
+html[data-hero-bg="video"] .hero-ticker-time {
+  color: rgba(17, 22, 16, 0.4) !important;
+}
+html[data-hero-bg="video"] .hero-ticker-tab {
+  color: rgba(17, 22, 16, 0.85) !important;
+}
+
+/* The active ticker tab keeps its dark pill — give it white text (the dark-text
+   rule above turned it dark-on-dark). Matches the first tab's active pill. */
+html[data-hero-bg="video"] .hero-ticker-tab.is-active {
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 3 refinement — hero action cards as Option 2 LIGHT frosted glass at
+   rest, revealing their architecture image on HOVER (the Option 1/2 idea),
+   sized to the 16/9 proportion of the "You may be interested in" tiles.
+   Scoped with :not([data-hero-bg="video"]) so Option 4 keeps its video
+   background + solid image-led tiles untouched.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Resting state: light frosted glass — undoes the image-led solid fill. The
+   extra .hero-card-row lifts specificity to match the per-nth-child image
+   rules above, so this shorthand clears their background-image. */
+html[data-hero-revision="v4"]:not([data-hero-bg="video"]) .hero-card-row .hero-service-card {
+  overflow: hidden;
+  background: linear-gradient(
+    155deg,
+    rgba(78, 84, 96, 0.38) 0%,
+    rgba(56, 61, 71, 0.46) 100%
+  ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    0 22px 48px -20px rgba(0, 0, 0, 0.48) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(1.3) !important;
+  backdrop-filter: blur(26px) saturate(1.3) !important;
+}
+
+/* Hover image layer — the pre-tinted red skyscraper (Hover image.png) fades in
+   over the glass. The maroon is baked into the image, so every card shares it
+   and the CSS wash below is dropped to a neutral bottom-darken only. */
+html[data-hero-revision="v4"]:not([data-hero-bg="video"]) .hero-service-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background-image: url("/images/Hover%20image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 440ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+html[data-hero-revision="v4"]:not([data-hero-bg="video"]) .hero-service-card:hover::before {
+  opacity: 1;
+}
+
+/* On hover the revealed image is washed in a DFSA-maroon overlay (multiplied
+   over the photo so the architecture still reads through it, darker toward the
+   bottom for the title). Clean glass at rest. */
+html[data-hero-revision="v4"]:not([data-hero-bg="video"]) .hero-service-card::after {
+  z-index: 0;
+  opacity: 0;
+  /* Neutral bottom-darken only — the red tint already lives in Hover image.png,
+     so this just keeps the white title legible without double-tinting. */
+  background: linear-gradient(
+    180deg,
+    rgba(18, 10, 12, 0) 46%,
+    rgba(18, 10, 12, 0.55) 100%
+  ) !important;
+  transition: opacity 440ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+html[data-hero-revision="v4"]:not([data-hero-bg="video"]) .hero-service-card:hover::after {
+  opacity: 1;
+}
+/* White rule under the title on hover (matches the Option 2 card). */
+html[data-hero-revision="v4"]:not([data-hero-bg="video"])
+  .hero-service-card:hover
+  .hero-service-card-underline {
+  display: block;
+  position: relative;
+  z-index: 1;
+  height: 2px;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.92) !important;
+}
+
+@media (min-width: 981px) {
+  /* Sized to the "You may be interested in" tiles: 16/9, not the taller
+     image-led height. align-self:start stops the grid row stretching the card
+     (a stretched height would make aspect-ratio resolve the wrong way and the
+     tiles overlap). */
+  html[data-hero-revision="v4"]:not([data-hero-bg="video"]) .hero-card-row .hero-service-card {
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    align-self: start !important;
+    min-height: 0 !important;
+  }
+}
+
+/* Option 3: drop the headline + search block lower so the search bar sits
+   closer to the hero's vertical centre (was riding above it). Scoped away
+   from Option 4. */
+html[data-hero-revision="v4"]:not([data-hero-bg="video"]) .hero-top-row {
+  padding-bottom: 0 !important;
+  transform: translateY(clamp(10px, 2.4vh, 26px));
+}

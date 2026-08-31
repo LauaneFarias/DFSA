@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DURATION, EASE_SIGNATURE_CSS } from "@/animations/easings";
 import { gsap, ScrollTrigger } from "@/animations/gsap";
 import {
@@ -96,6 +96,22 @@ export function AboutDfsa() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = usePrefersReducedMotion();
 
+  // The default-layout background videos are hidden by CSS on every
+  // feedback-0408 tab (the pillar-card layout is shown instead), yet they were
+  // still autoplaying and downloading ~8 MB (hero4.mp4) and slowing the whole
+  // page. Skip mounting them on those tabs so nothing loads there.
+  const [is0408, setIs0408] = useState(false);
+  useEffect(() => {
+    const check = () => setIs0408(document.documentElement.dataset.siteTab === "feedback-0408");
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-site-tab"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   // Play the default layout's background videos (original behaviour). On
   // Option 2 the default layout is display:none, so these are hidden; the
   // global VideoAutoplayManager pauses any that aren't actually on screen.
@@ -174,7 +190,7 @@ export function AboutDfsa() {
               key={card.key}
               className={`about-panel-card about-panel-card--${card.variant} about-reveal`}
             >
-              {card.videoSrc ? (
+              {card.videoSrc && !is0408 ? (
                 <video
                   className="about-panel-card-video about-panel-card-video--default"
                   src={card.videoSrc}
@@ -182,11 +198,11 @@ export function AboutDfsa() {
                   muted
                   loop
                   playsInline
-                  preload="auto"
+                  preload="none"
                   aria-hidden="true"
                 />
               ) : null}
-              {card.feedbackImagesVideoSrc ? (
+              {card.feedbackImagesVideoSrc && !is0408 ? (
                 <video
                   className="about-panel-card-video about-panel-card-video--feedback-images"
                   src={card.feedbackImagesVideoSrc}
@@ -197,7 +213,7 @@ export function AboutDfsa() {
                   muted
                   loop
                   playsInline
-                  preload="auto"
+                  preload="none"
                   aria-hidden="true"
                 />
               ) : null}
