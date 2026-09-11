@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { DURATION, EASE_SIGNATURE_CSS } from "@/animations/easings";
-import { gsap, ScrollTrigger } from "@/animations/gsap";
+import { gsap } from "@/animations/gsap";
 import {
   ArrowUpRightIcon,
   AuditorIcon,
@@ -88,24 +88,54 @@ export function DifcJourney() {
     if (!section) return;
 
     const targets = section.querySelectorAll<HTMLElement>(".difc-reveal");
-    const ctx = gsap.context(() => {
-      gsap.set(targets, { opacity: 0, y: 28 });
-      ScrollTrigger.batch(targets, {
-        start: "top 88%",
-        once: true,
-        onEnter: (batch) =>
-          gsap.to(batch, {
-            opacity: 1,
-            y: 0,
-            duration: DURATION.slow,
-            ease: EASE_SIGNATURE_CSS,
-            stagger: 0.08,
-            overwrite: true,
-          }),
-      });
-    }, section);
+    gsap.set(targets, { opacity: 0, y: 28 });
 
-    return () => ctx.revert();
+    // Reveal via IntersectionObserver rather than ScrollTrigger.batch — the batch
+    // was leaving its trigger positions stale after late layout shifts (the hero
+    // video, images, and the Option 3 (feedbacks) section reorder) and never
+    // firing, which left the header + cards stuck at opacity 0.
+    let revealed = false;
+    const reveal = (animate: boolean) => {
+      if (revealed) return;
+      revealed = true;
+      if (animate) {
+        gsap.to(targets, {
+          opacity: 1,
+          y: 0,
+          duration: DURATION.slow,
+          ease: EASE_SIGNATURE_CSS,
+          stagger: 0.08,
+          overwrite: true,
+        });
+      } else {
+        gsap.set(targets, { opacity: 1, y: 0 });
+      }
+    };
+
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          reveal(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.12 },
+    );
+    io.observe(section);
+
+    // Guarantee visibility: an occluded / backgrounded tab pauses both the
+    // observer and rAF-driven tweens, which would leave the content stuck hidden.
+    // If the reveal hasn't run shortly after mount, force it with an immediate
+    // (non-rAF) set so the header + cards can never stay invisible.
+    const fallbackId = window.setTimeout(() => {
+      reveal(false);
+      io.disconnect();
+    }, 1400);
+
+    return () => {
+      window.clearTimeout(fallbackId);
+      io.disconnect();
+    };
   }, [reduceMotion]);
 
   // Same autoplay/muted/loop + reduced-motion-pauses pattern as
@@ -152,7 +182,7 @@ export function DifcJourney() {
           <div className="difc-header difc-reveal">
             <p className="difc-eyebrow">
               Start your <br />
-              DIFC journey
+              DIFC <span className="difc-journey-word">journey</span>
             </p>
             <div className="difc-header-action">
               <p className="difc-header-desc">

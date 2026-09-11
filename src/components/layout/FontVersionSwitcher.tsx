@@ -13,6 +13,7 @@ type FontVersion =
   | "feedback-0408-v3"
   | "feedback-0408-v4"
   | "feedback-0408-v5"
+  | "feedback-0408-v6"
   | "hero-slider";
 
 const FONT_OPTIONS = [
@@ -29,18 +30,36 @@ const FONT_OPTIONS = [
   //   Option 2 = feedback-0408-v3   (lighter frosted-glass hero)
   //   Option 3 = feedback-0408-v4   (COO image-led direction, static image bg)
   //   Option 4 = feedback-0408-v5   (same image-led tiles, hero4.mp4 video bg)
+  // The client approved Option 3. Options 1, 2 and 4 (and the older tabs) are now
+  // hidden — see HIDDEN_VERSIONS. "Option 3 (feedbacks)" (feedback-0408-v6) is a
+  // clone of the approved Option 3: it inherits every v4 style and adds the
+  // feedbackRound="r2" marker so the round-2 amendments land only on it, leaving
+  // the approved Option 3 frozen for comparison.
   { value: "hero-slider", label: "(retired)" },
   { value: "feedback-0408", label: "Option 1" },
   { value: "feedback-0408-v3", label: "Option 2" },
   { value: "feedback-0408-v4", label: "Option 3" },
   { value: "feedback-0408-v5", label: "Option 4" },
+  { value: "feedback-0408-v6", label: "Option 3 (feedbacks)" },
 ] as const;
 
 // Versions kept fully wired (styles, logic, and localStorage restore all
 // intact) but HIDDEN from the visible tab bar per request. Nothing is
 // deleted — to bring a tab back, just remove its value from this list.
 // hero-slider is the retired old "Option 1".
-const HIDDEN_VERSIONS: readonly FontVersion[] = ["niveau", "graphik", "feedback", "hero-slider"];
+const HIDDEN_VERSIONS: readonly FontVersion[] = [
+  "niveau",
+  "graphik",
+  "adelle",
+  "feedback",
+  "feedback-images",
+  "hero-slider",
+  // Client approved Option 3 — the alternatives are hidden so the bar shows only
+  // "Option 3" (approved, frozen) and "Option 3 (feedbacks)" (round-2 WIP).
+  "feedback-0408",
+  "feedback-0408-v3",
+  "feedback-0408-v5",
+];
 
 const VISIBLE_OPTIONS = FONT_OPTIONS.filter((option) => !HIDDEN_VERSIONS.includes(option.value));
 
@@ -83,20 +102,21 @@ function applyFontVersion(next: FontVersion) {
   const isV3 = next === "feedback-0408-v3";
   const isV4 = next === "feedback-0408-v4";
   const isV5 = next === "feedback-0408-v5";
-  const isV3OrV4OrV5 = isV3 || isV4 || isV5;
+  // Option 3 (feedbacks): an exact clone of the approved Option 3 (v4), plus a
+  // feedbackRound marker so the round-2 amendments can target it in isolation
+  // (html[data-feedback-round="r2"]) while the approved Option 3 stays frozen.
+  const isV6 = next === "feedback-0408-v6";
+  const isImageLed = isV3 || isV4 || isV5 || isV6;
   const reusesFeedbackImages =
-    next === "feedback-images" ||
-    next === "feedback-0408" ||
-    next === "hero-slider" ||
-    isV3OrV4OrV5;
+    next === "feedback-images" || next === "feedback-0408" || next === "hero-slider" || isImageLed;
   root.dataset.siteVersion = reusesFeedbackImages ? "feedback-images" : next;
-  root.dataset.siteIteration = next === "hero-slider" || isV3OrV4OrV5 ? "feedback-0408" : next;
-  root.dataset.siteTab = isV3OrV4OrV5 ? "feedback-0408" : next;
+  root.dataset.siteIteration = next === "hero-slider" || isImageLed ? "feedback-0408" : next;
+  root.dataset.siteTab = isImageLed ? "feedback-0408" : next;
   root.dataset.fontVersion = reusesFeedbackImages ? "feedback" : next;
   if (isV3) {
     root.dataset.heroRevision = "v3";
-  } else if (isV4 || isV5) {
-    // v5 shares the v4 image-led tile treatment.
+  } else if (isV4 || isV5 || isV6) {
+    // v5 (video bg) and v6 (feedbacks clone) share the v4 image-led treatment.
     root.dataset.heroRevision = "v4";
   } else {
     delete root.dataset.heroRevision;
@@ -106,6 +126,11 @@ function applyFontVersion(next: FontVersion) {
   } else {
     delete root.dataset.heroBg;
   }
+  if (isV6) {
+    root.dataset.feedbackRound = "r2";
+  } else {
+    delete root.dataset.feedbackRound;
+  }
   try {
     window.localStorage.setItem(STORAGE_KEY, next);
   } catch {
@@ -114,7 +139,8 @@ function applyFontVersion(next: FontVersion) {
 }
 
 export function FontVersionSwitcher() {
-  // Default to Option 4 (the feedback-0408-v4 tab) — the current WIP direction.
+  // Default to the approved Option 3 (feedback-0408-v4). "Option 3 (feedbacks)"
+  // is available on the bar for the round-2 work-in-progress.
   const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408-v4");
 
   useEffect(() => {

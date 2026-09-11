@@ -5048,3 +5048,367 @@ html[data-hero-revision="v4"]:not([data-hero-bg="video"]) .hero-top-row {
   padding-bottom: 0 !important;
   transform: translateY(clamp(10px, 2.4vh, 26px));
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 3 (feedbacks) — round-2 amendments, all gated on
+   data-feedback-round="r2" so the approved Option 3 stays frozen.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Section reorder: At a Glance moves directly under the banner + ticker, then
+   Latest News, Start your DIFC Journey, About the DFSA, Our approach, and the
+   "You may be interested in" block. Uses flex `order` (the .home-flow is already
+   a flex column) so the DOM/JSX — and therefore the approved Option 3 — are
+   left untouched. */
+html[data-feedback-round="r2"] .home-flow {
+  flex-direction: column;
+}
+html[data-feedback-round="r2"] .home-flow > .achievements-section {
+  order: 1;
+}
+html[data-feedback-round="r2"] .home-flow > .news-section {
+  order: 2;
+}
+html[data-feedback-round="r2"] .home-flow > .difc-section {
+  order: 3;
+}
+html[data-feedback-round="r2"] .home-flow > .about-section {
+  order: 4;
+}
+html[data-feedback-round="r2"] .home-flow > .approach-section {
+  order: 5;
+}
+html[data-feedback-round="r2"] .home-flow > .resources-section {
+  order: 6;
+}
+
+/* At a Glance sits directly under the banner + ticker. Per the client, give it a
+   consistent 160px of breathing room top and bottom. .home-flow > lifts
+   specificity above the data-site-tab padding rule regardless of stylesheet
+   order. */
+html[data-feedback-round="r2"] .home-flow > .achievements-section {
+  /* 160px above; below trimmed by 120px (160 → 40) to tighten the gap to Latest
+     News. */
+  padding-block: 160px 40px;
+}
+
+/* Drop the 460px min-height that centred the figures in a tall band — with At a
+   Glance up top we want it compact, not a big empty block. (Descendant selector
+   outranks the data-site-tab min-height rule.) */
+html[data-feedback-round="r2"] .achievements-section .achievements-container {
+  min-height: 0;
+}
+
+/* Tighten the gap between the "DFSA at a Glance" title block and the figures —
+   the 48px data-site-tab value felt loose now the band sits compact at the top.
+   Descendant selector outranks the data-site-tab rule regardless of file order. */
+html[data-feedback-round="r2"] .achievements-section .achievements-head {
+  margin-bottom: clamp(18px, 2vw, 28px);
+}
+
+/* At a Glance subtitle: break "Annual Report: Shaping the financial markets of the
+   future." onto its own line on the feedbacks tab only. On Option 3 the span
+   stays inline, so the line reads exactly as before. */
+html[data-feedback-round="r2"] .ach-src-break {
+  display: block;
+}
+
+/* Start your DIFC Journey cards → the client's elegant frosted-card reference:
+   a see-through frost (kept subtly dark so white text stays legible on the pale
+   foggy-skyline bg), a hairline border, generous radius, a thin outline-ring icon
+   badge, and light title + description. Feedbacks tab only; .difc-panel lifts
+   specificity above the v4/feedback card rules. */
+html[data-feedback-round="r2"] .difc-panel .difc-card--white,
+html[data-feedback-round="r2"] .difc-panel .difc-card--feature {
+  /* Genuinely transparent frosted glass — a whisper of white frost over the
+     (now darkened, see the panel scrim below) skyline. The dark background is
+     what lets the card stay see-through while the white text stays legible. */
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 30px 60px -30px rgba(0, 0, 0, 0.5) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.15) !important;
+  backdrop-filter: blur(18px) saturate(1.15) !important;
+}
+html[data-feedback-round="r2"] .difc-panel .difc-card-icon {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: 50% !important;
+  color: #ffffff !important;
+}
+html[data-feedback-round="r2"] .difc-panel .difc-card-title {
+  /* Push title (and the description after it) to the bottom, so the text sits
+     over the darker base of the frost — the reference's badge-top / text-bottom
+     layout. */
+  margin-top: auto !important;
+  color: #ffffff !important;
+  font-weight: 400 !important;
+}
+html[data-feedback-round="r2"] .difc-panel .difc-card-desc {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+/* Darken the DIFC skyline on the feedbacks tab so the now-transparent glass cards
+   (and their white title/description) read against it — the v4 scrim is
+   deliberately light for the approved tab, so r2 deepens it. .difc-panel lifts
+   specificity above the v4 scrim rule. */
+html[data-feedback-round="r2"] .difc-panel .difc-panel-scrim {
+  background-color: rgba(10, 13, 18, 0.44);
+  background-image: linear-gradient(160deg, rgba(10, 13, 18, 0.36) 0%, rgba(10, 13, 18, 0.5) 100%);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 3 (feedbacks): the glassy transparent card treatment applied across
+   the page — Our approach, About the DFSA and the hero cards — matching the
+   DIFC Journey cards. Transparent white frost + strong blur + hairline border +
+   thin outline-ring badge + light text pushed to the bottom, over a darkened
+   section background so the see-through cards + white text stay legible.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Card shells (appended last + these selectors outrank the earlier glass rules). */
+html[data-feedback-round="r2"] .approach-panel .approach-card,
+html[data-feedback-round="r2"] .about-panel .about-pillar-card,
+html[data-feedback-round="r2"] .hero-scope .hero-card-row .hero-service-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 30px 60px -30px rgba(0, 0, 0, 0.5) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.15) !important;
+  backdrop-filter: blur(18px) saturate(1.15) !important;
+}
+
+/* Thin outline-ring icon badges. */
+html[data-feedback-round="r2"] .approach-card-domain-icon,
+html[data-feedback-round="r2"] .about-pillar-icon,
+html[data-feedback-round="r2"] .hero-scope .hero-service-card-icon {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: 50% !important;
+  color: #ffffff !important;
+}
+
+/* White titles (text-fill too, for the About pillar titles). */
+html[data-feedback-round="r2"] .approach-panel .approach-card h3,
+html[data-feedback-round="r2"] .about-panel .about-pillar-title,
+html[data-feedback-round="r2"] .hero-scope .hero-card-row .hero-service-card-title {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-weight: 400 !important;
+}
+
+/* Push the copy to the bottom of the card (badge-top / text-bottom). */
+html[data-feedback-round="r2"] .approach-panel .approach-card-copy {
+  margin-top: auto !important;
+}
+html[data-feedback-round="r2"] .approach-panel .approach-card p {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+/* Darken the section backgrounds so the transparent cards + white text read. */
+html[data-feedback-round="r2"] .approach-panel {
+  background:
+    linear-gradient(160deg, rgba(10, 13, 18, 0.42) 0%, rgba(10, 13, 18, 0.5) 100%),
+    url("/images/iStock-2270383910.jpg") center 42% / cover no-repeat !important;
+}
+html[data-feedback-round="r2"] .about-section .about-panel {
+  background:
+    linear-gradient(
+      160deg,
+      rgba(8, 11, 16, 0.5) 0%,
+      rgba(8, 11, 16, 0.44) 50%,
+      rgba(8, 11, 16, 0.58) 100%
+    ),
+    url("/images/iStock-2270384014.jpg") center 42% / cover no-repeat !important;
+}
+html[data-feedback-round="r2"] .hero-bg-video-scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 11, 16, 0.34) 0%,
+    rgba(8, 11, 16, 0.12) 40%,
+    rgba(8, 11, 16, 0.55) 100%
+  ) !important;
+}
+
+/* Feedbacks tab: capitalise "Journey" in the DIFC heading (Option 3 keeps it
+   lowercase — the span is inline there with no transform). */
+html[data-feedback-round="r2"] .difc-journey-word {
+  text-transform: capitalize;
+}
+
+/* Feedbacks tab: bottom-align the DIFC header row so the "Learn more" button
+   drops to the bottom (level with the heading's baseline), like About the DFSA. */
+html[data-feedback-round="r2"] .difc-header {
+  align-items: flex-end;
+}
+html[data-feedback-round="r2"] .difc-header-action {
+  justify-content: flex-end;
+}
+
+/* Feedbacks tab: use the foggy Dubai skyline (Burj Khalifa above the fog) as the
+   hero background instead of the Gate-reflection shot. Appended last so it wins
+   over the v4 hero-bg rule; Option 3 keeps its own hero. */
+html[data-feedback-round="r2"] .hero-scope.hero-scope--light-bg .hero-bg {
+  /* A subtle flat overlay to take the edge off the bright fog. */
+  background:
+    linear-gradient(rgba(12, 15, 20, 0.06), rgba(12, 15, 20, 0.06)),
+    url("/images/iStock-1163368822.jpg") center 40% / cover no-repeat;
+}
+
+/* Feedbacks tab: the hero action cards stagger in over ~0.44s (110ms per card),
+   so the last card visibly lags behind the rest ("one card taking time to load").
+   Reveal them together instead — keep the splash-coordinated base delay, drop the
+   per-card stagger. */
+html[data-feedback-round="r2"] .hero-scope .hero-card-row .hero-service-card {
+  animation-delay: 5.4s !important;
+}
+
+/* Feedbacks tab: the "Learn more" button sat at the top of the DIFC header (the
+   header flex-wraps, so it stayed on the heading's line while the description
+   wrapped below). Pin it to the bottom-right so it lines up with the description
+   text instead. */
+html[data-feedback-round="r2"] .difc-header {
+  position: relative;
+}
+html[data-feedback-round="r2"] .difc-header .difc-cta {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  white-space: nowrap;
+}
+html[data-feedback-round="r2"] .difc-header .difc-cta span {
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   OPTION 3 (feedbacks): hover mega-menu on the top nav links, content mirroring
+   dfsa.ae. Glass background (not white). These elements only render on the
+   feedbacks tab (see FloatingNav), so no extra r2 gating is needed here.
+   ═══════════════════════════════════════════════════════════════════════ */
+.hero-nav-mega-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+/* While the mega is open (hero state), hide the nav's full-width divider line so
+   the panel can sit at a clean small gap below the nav without the line (which
+   renders above the panel) cutting across it. */
+html[data-font-version="feedback"] .hero-navbar-outer.has-open-mega::after {
+  opacity: 0;
+}
+.hero-nav-mega-panel {
+  /* Full-width panel below the floating nav (like dfsa.ae), inset to match the
+     nav's 14px margins. The panel MIRRORS the nav's two states (see the
+     is-scrolled variant below) so the menu always reads as one surface with the
+     bar it drops from, and butts flush against it with no gap.
+
+     DEFAULT = the hero state: the nav bar is a full-width transparent lockup
+     with WHITE links over the hero (its lockup ends ~y90). Its divider line is
+     hidden while the mega is open (see .has-open-mega below), so the panel can
+     drop at the same small ~8px gap as the reference — a glassy DARK-tinted
+     sheet carrying WHITE text, the same glassy feel it had over the hero. */
+  position: fixed;
+  top: 100px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: flex-start;
+  gap: clamp(28px, 4vw, 80px);
+  padding: clamp(28px, 2.8vw, 44px) clamp(40px, 6vw, 120px);
+  border-radius: 24px;
+  /* Same airy glass family as the hero cards: lighter/more translucent tint
+     (0.32, vs the earlier heavier 0.42) plus the cards' exact bright rim + inset
+     top highlight. The nav's own divider line is hidden while the mega is open
+     (see .has-open-mega), so the top rim no longer doubles it — the panel can
+     carry the full rim like a card while still holding white text over the
+     brighter top of the hero. */
+  background: rgba(24, 28, 36, 0.32);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  backdrop-filter: blur(18px) saturate(1.15);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 30px 60px -30px rgba(0, 0, 0, 0.5);
+  z-index: 120;
+  /* Portaled + conditionally rendered (see FloatingNav), so it mounts open —
+     unfold it downward from the nav line (clip reveal, no overlap upward). The
+     140ms JS close-delay bridges the pointer gap. */
+  animation: heroNavMegaIn 240ms var(--hero-ease, ease) both;
+}
+/* SCROLLED = the nav has shrunk to its light frosted pill (top 14, bottom ~72,
+   background rgba(247,246,243,0.78), blur 22px). The panel matches that surface
+   exactly and butts flush under the pill, carrying the nav's DARK links. */
+.hero-nav-mega-panel.is-scrolled {
+  /* The scrolled nav is a rounded PILL (left/right 22px). Align the panel to the
+     SAME width and give it a small deliberate gap below the pill, so it reads as
+     one clean dropdown card in the pill's family — instead of a second, wider
+     rounded card whose corners collide with the pill's. Full rounded border (it
+     is its own card now, no longer flush to a bar). Same small ~8px gap below
+     the pill as the reference. */
+  top: 80px;
+  left: 22px;
+  right: 22px;
+  background: rgba(247, 246, 243, 0.82);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  backdrop-filter: blur(22px) saturate(1.25);
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 24px;
+  box-shadow: 0 24px 50px -28px rgba(0, 0, 0, 0.3);
+}
+@keyframes heroNavMegaIn {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0 round 0 0 24px 24px);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 0 0 24px 24px);
+  }
+}
+.hero-nav-mega-col {
+  min-width: 148px;
+}
+.hero-nav-mega-heading {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  /* Hero state: muted WHITE eyebrow on the dark glass. */
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 12px;
+}
+/* Scrolled state: muted DARK eyebrow on the light frosted panel. */
+.hero-nav-mega-panel.is-scrolled .hero-nav-mega-heading {
+  color: rgba(23, 24, 27, 0.5);
+}
+.hero-nav-mega-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.hero-nav-mega-col li {
+  margin: 0;
+}
+.hero-nav-mega-col a {
+  /* Hero state: WHITE links on the dark glass, matching the nav's white links
+     over the hero. */
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13.5px;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+.hero-nav-mega-col a:hover {
+  color: #ffffff;
+}
+/* Scrolled state: DARK links on the light frosted panel, matching the nav's
+   dark links; DFSA maroon on hover, same accent as the brand/logo. */
+.hero-nav-mega-panel.is-scrolled .hero-nav-mega-col a {
+  color: rgba(23, 24, 27, 0.85);
+}
+.hero-nav-mega-panel.is-scrolled .hero-nav-mega-col a:hover {
+  color: rgb(150, 22, 40);
+}

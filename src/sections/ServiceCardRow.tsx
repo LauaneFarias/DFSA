@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   AuthorisationIcon,
+  BellIcon,
   EnforcementIcon,
   InnovationIcon,
   RegisterIcon,
@@ -46,6 +47,15 @@ const ACTION_CARDS: ServiceCard[] = [
   },
 ];
 
+/** Option 3 (feedbacks): the client asked to replace the Careers card (the 5th)
+ * with Alerts and move Careers to the footer. Same scene index so the hover /
+ * active-scene tint wiring stays unchanged. */
+const ALERTS_CARD: ServiceCard = {
+  scene: 4,
+  title: "View DFSA\nAlerts",
+  icon: <BellIcon size={ICON_SIZE} />,
+};
+
 type Props = {
   activeScene: number;
   onSelect: (scene: number) => void;
@@ -78,6 +88,19 @@ function splitTitle(title: string): [string, string] {
  */
 export function ServiceCardRow({ activeScene, onSelect }: Props) {
   const [isDragging, setIsDragging] = useState(false);
+  // Option 3 (feedbacks): swap the 5th card (Careers) for Alerts on that tab only.
+  const [isR2, setIsR2] = useState(false);
+  useEffect(() => {
+    const sync = () => setIsR2(document.documentElement.dataset.feedbackRound === "r2");
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-feedback-round"],
+    });
+    return () => observer.disconnect();
+  }, []);
+  const cards = isR2 ? ACTION_CARDS.map((c, i) => (i === 4 ? ALERTS_CARD : c)) : ACTION_CARDS;
   // Whether the row is scrolled all the way to its start/end — drives
   // the edge-fade mask below so it only fades a side that actually has
   // more (cut-off) content that way.
@@ -158,7 +181,7 @@ export function ServiceCardRow({ activeScene, onSelect }: Props) {
         onMouseDown={onRowMouseDown}
         onScroll={updateEdgeState}
       >
-        {ACTION_CARDS.map((card, index) => {
+        {cards.map((card, index) => {
           const isActive = card.scene === activeScene;
           const [titleLine1, titleLine2] = splitTitle(card.title);
           return (

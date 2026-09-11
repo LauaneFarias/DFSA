@@ -44,43 +44,57 @@ const FEEDS: Record<FeedId, { text: string; time: string }[]> = {
 export function HeroNewsTicker() {
   const [active, setActive] = useState<FeedId>("publications");
   const [isFeedbackVersion, setIsFeedbackVersion] = useState(false);
-  const items = FEEDS[active];
+  // Option 3 (feedbacks): the client asked for a single moving News feed with no
+  // switcher. On that tab we lock the feed to "news" and swap the tab group for a
+  // static "News" label; every other tab keeps the full Publications/Alerts/News
+  // switcher.
+  const [isR2, setIsR2] = useState(false);
+  const effectiveActive: FeedId = isR2 ? "news" : active;
+  const items = FEEDS[effectiveActive];
   const loopItems = [...items, ...items];
 
   useEffect(() => {
     const syncVersion = () => {
-      setIsFeedbackVersion(document.documentElement.dataset.fontVersion === "feedback");
+      const root = document.documentElement;
+      setIsFeedbackVersion(root.dataset.fontVersion === "feedback");
+      setIsR2(root.dataset.feedbackRound === "r2");
     };
     syncVersion();
     const observer = new MutationObserver(syncVersion);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-font-version"],
+      attributeFilter: ["data-font-version", "data-feedback-round"],
     });
     return () => observer.disconnect();
   }, []);
 
   return (
     <div className="hero-news-ticker">
-      <div className="hero-ticker-tabs" role="tablist" aria-label="News feed">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            role="tab"
-            aria-selected={active === tab.id}
-            className={cn("hero-ticker-tab", active === tab.id && "is-active")}
-            onClick={() => setActive(tab.id)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      {isR2 ? (
+        <div className="hero-ticker-tabs" role="presentation">
+          <span className="hero-ticker-tab is-active">News</span>
+        </div>
+      ) : (
+        <div className="hero-ticker-tabs" role="tablist" aria-label="News feed">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={active === tab.id}
+              className={cn("hero-ticker-tab", active === tab.id && "is-active")}
+              onClick={() => setActive(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="hero-ticker-viewport">
-        <div className="hero-ticker-track" key={active}>
+        <div className="hero-ticker-track" key={effectiveActive}>
           {loopItems.map((item, i) => (
-            <span className="hero-ticker-item" key={`${active}-${i}`}>
+            <span className="hero-ticker-item" key={`${effectiveActive}-${i}`}>
               {isFeedbackVersion ? (
                 <a
                   className="hero-ticker-text hero-ticker-link"

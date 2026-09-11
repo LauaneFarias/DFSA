@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { ArrowRightIcon, CloseIcon, SearchIcon, TwoLinesIcon } from "@/components/ui/icons";
 import { getHeroLogoSrc } from "@/hooks/useHeroThemeOption";
 import { cn } from "@/lib/cn";
@@ -36,6 +37,115 @@ const MEGA_MENU = [
   },
 ] as const;
 
+// Option 3 (feedbacks): hover mega-menu content mirroring the live DFSA site
+// (dfsa.ae). Each top-nav label maps to a set of columns (heading + links).
+// Links are placeholders (href="#") until wired to real destinations.
+const R2_MEGA: Record<string, { heading: string; links: string[] }[]> = {
+  About: [
+    {
+      heading: "Who we are",
+      links: [
+        "The DFSA",
+        "Governance",
+        "How we regulate",
+        "International Assessment",
+        "Corporate Social Responsibility",
+      ],
+    },
+    {
+      heading: "Our structure",
+      links: ["Board of Directors", "Executive Team", "Financial Markets Tribunal", "DFSA Journey"],
+    },
+  ],
+  "Legal Framework": [
+    {
+      heading: "Legislation & Guidance",
+      links: [
+        "Legislation",
+        "Consultation Papers",
+        "Call For Evidence",
+        "Policy Statements",
+        "Amendments to Legislation",
+      ],
+    },
+    { heading: "Rules & Law", links: ["DFSA Rulebook", "DFSA Administered Law"] },
+  ],
+  "What We Do": [
+    {
+      heading: "AML, CTF & Sanctions",
+      links: [
+        "Summary",
+        "Regulatory Framework",
+        "Supervisory Methodology",
+        "AML/CTF & Sanctions Obligations",
+        "Financial Crime Prevention Notices",
+      ],
+    },
+    {
+      heading: "Authorisation Services",
+      links: [
+        "Overview",
+        "Getting Help",
+        "Expanding Your Business",
+        "Collective Investment Funds",
+        "DFSA Listing Authority",
+        "Checklists",
+        "Forms",
+        "Approved Documents",
+      ],
+    },
+    {
+      heading: "Enforcement",
+      links: [
+        "About Enforcement",
+        "Decision Notices & Regulatory Actions",
+        "International Relations",
+      ],
+    },
+    {
+      heading: "How We Regulate",
+      links: [
+        "Markets Supervision",
+        "Supervision",
+        "Audit Supervision",
+        "Cyber Risk Supervision",
+        "Insurance Supervision",
+        "Sustainable Finance",
+        "Client Assets",
+      ],
+    },
+  ],
+  Resources: [
+    { heading: "Consumer", links: ["Investment Guide", "Complaints"] },
+    {
+      heading: "Regulatory",
+      links: [
+        "Consultation Papers",
+        "Discussion Papers",
+        "Laws and Rules",
+        "Guides & Handbooks",
+        "Speeches",
+        "FAQs",
+        "Forms",
+        "Fees",
+      ],
+    },
+    {
+      heading: "Publications & Reports",
+      links: [
+        "Annual Report",
+        "Business Plan",
+        "DFSA in Action",
+        "Audit Monitoring Reports",
+        "Cyber Reports",
+        "Explainers",
+        "Thematic Reviews",
+      ],
+    },
+    { heading: "DFSA Alerts", links: ["Alerts", "How to avoid being scammed"] },
+  ],
+};
+
 type Props = {
   /** Which of the two demo landing-page themes is active — see Hero.tsx. */
   themeOption: "1" | "2";
@@ -67,6 +177,32 @@ export function FloatingNav({ themeOption }: Props) {
     MEGA_MENU[0].label,
   );
   const activeMega = MEGA_MENU.find((item) => item.label === activeMegaLabel) ?? MEGA_MENU[0];
+
+  // Option 3 (feedbacks): the client asked to drop "More" from the top nav.
+  const [isR2, setIsR2] = useState(false);
+  useEffect(() => {
+    const sync = () => setIsR2(document.documentElement.dataset.feedbackRound === "r2");
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-feedback-round"],
+    });
+    return () => observer.disconnect();
+  }, []);
+  const navbarLinks = isR2 ? NAVBAR_LINKS.filter((label) => label !== "More") : NAVBAR_LINKS;
+
+  // Option 3 (feedbacks): full-width hover mega-menu, portaled to <body> so it
+  // escapes the transformed nav bar and can span the viewport.
+  const [navMega, setNavMega] = useState<string | null>(null);
+  const megaCloseTimer = useRef<number | null>(null);
+  const openMega = (label: string) => {
+    if (megaCloseTimer.current) window.clearTimeout(megaCloseTimer.current);
+    setNavMega(label);
+  };
+  const closeMega = () => {
+    megaCloseTimer.current = window.setTimeout(() => setNavMega(null), 140);
+  };
 
   useEffect(() => {
     function onScroll() {
@@ -108,6 +244,7 @@ export function FloatingNav({ themeOption }: Props) {
           "hero-navbar-outer",
           scrolled && "is-scrolled",
           introPlayed && "has-played-intro",
+          navMega && "has-open-mega",
         )}
       >
         <div className="hero-navbar-left">
@@ -136,11 +273,28 @@ export function FloatingNav({ themeOption }: Props) {
         </div>
 
         <nav className="hero-navbar-center" aria-label="Primary">
-          {NAVBAR_LINKS.map((label) => (
-            <a key={label} href="#">
-              {label}
-            </a>
-          ))}
+          {navbarLinks.map((label) => {
+            const mega = isR2 ? R2_MEGA[label] : undefined;
+            if (!mega) {
+              return (
+                <a key={label} href="#">
+                  {label}
+                </a>
+              );
+            }
+            return (
+              <div
+                key={label}
+                className="hero-nav-mega-item"
+                onMouseEnter={() => openMega(label)}
+                onMouseLeave={closeMega}
+              >
+                <a href="#" className={cn(navMega === label && "is-open")}>
+                  {label}
+                </a>
+              </div>
+            );
+          })}
           {MEGA_MENU.map((item) => (
             <a key={item.label} href="#" className="hero-navbar-feedback-link">
               {item.label}
@@ -150,6 +304,37 @@ export function FloatingNav({ themeOption }: Props) {
             E-portal
           </a>
         </nav>
+
+        {isR2 &&
+          navMega &&
+          R2_MEGA[navMega] &&
+          createPortal(
+            <div
+              /* Portaled to <body>, so it can't inherit the header's is-scrolled
+                 state via CSS — mirror it here so the mega can match the nav's
+                 two looks: glassy/dark over the hero, light frosted when the nav
+                 has shrunk to its scrolled pill. */
+              className={cn("hero-nav-mega-panel", scrolled && "is-scrolled")}
+              role="menu"
+              aria-label={navMega}
+              onMouseEnter={() => openMega(navMega)}
+              onMouseLeave={closeMega}
+            >
+              {R2_MEGA[navMega].map((col) => (
+                <div key={col.heading} className="hero-nav-mega-col">
+                  <div className="hero-nav-mega-heading">{col.heading}</div>
+                  <ul>
+                    {col.links.map((link) => (
+                      <li key={link}>
+                        <a href="#">{link}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>,
+            document.body,
+          )}
 
         <div className="hero-navbar-right">
           <button

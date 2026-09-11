@@ -76,8 +76,12 @@ export function KeyAchievements() {
               2025 Annual Report — data as at 31 December 2025
             </span>
             <span className="ach-src ach-src--glance">
-              As at 31 December 2025 – data from our 2025 Annual Report: Shaping the financial
-              markets of the future.
+              As at 31 December 2025 – data from our 2025{" "}
+              {/* Wrapped so Option 3 (feedbacks) can break it onto its own line via
+                  CSS (.ach-src-break -> display:block) without touching Option 3. */}
+              <span className="ach-src-break">
+                Annual Report: Shaping the financial markets of the future.
+              </span>
             </span>
           </p>
         </header>

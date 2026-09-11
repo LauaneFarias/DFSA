@@ -35,6 +35,21 @@ export function SiteFooter() {
   const feedbackImagesVideoRef = useRef<HTMLVideoElement>(null);
   const reduceMotion = usePrefersReducedMotion();
 
+  // Option 3 (feedbacks): the client asked to move Careers out of the hero and
+  // into the footer's Navigation column.
+  const [isR2, setIsR2] = useState(false);
+  useEffect(() => {
+    const sync = () => setIsR2(document.documentElement.dataset.feedbackRound === "r2");
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-feedback-round"],
+    });
+    return () => observer.disconnect();
+  }, []);
+  const navLinks = isR2 ? [...FOOTER_LINKS, "Careers"] : FOOTER_LINKS;
+
   useEffect(() => {
     const videos = [videoRef.current, feedbackImagesVideoRef.current].filter(
       (video): video is HTMLVideoElement => video !== null,
@@ -174,7 +189,7 @@ export function SiteFooter() {
             <nav className="footer-links-group" aria-label="Footer">
               <div className="footer-links-heading">Navigation</div>
               <ul className="footer-links-list">
-                {FOOTER_LINKS.map((label) => (
+                {navLinks.map((label) => (
                   <li key={label}>
                     <a href="#">{label}</a>
                   </li>
