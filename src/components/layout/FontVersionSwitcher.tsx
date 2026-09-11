@@ -154,9 +154,9 @@ function applyFontVersion(next: FontVersion) {
 }
 
 export function FontVersionSwitcher() {
-  // Default to the approved Option 3 (feedback-0408-v4). "Option 3 (feedbacks)"
-  // is available on the bar for the round-2 work-in-progress.
-  const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408-v4");
+  // Default to "Option 3 (feedbacks)" (feedback-0408-v6) — the round-2 build the
+  // client is now reviewing. The approved Option 3 (v4) stays on the bar too.
+  const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408-v6");
 
   useEffect(() => {
     const id = window.setTimeout(() => {
