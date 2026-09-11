@@ -5412,3 +5412,31 @@ html[data-font-version="feedback"] .hero-navbar-outer.has-open-mega::after {
 .hero-nav-mega-panel.is-scrolled .hero-nav-mega-col a:hover {
   color: rgb(150, 22, 40);
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Option 3 (mega menu) — data-feedback-mega="white"
+   The client asked to also see the mega as a SOLID WHITE panel with DARK text
+   (vs the glassy adaptive treatment). This overrides only the colour of the
+   panel + text in BOTH nav states; it keeps the same adaptive positioning /
+   gap / rounded corners as the glassy version.
+   ───────────────────────────────────────────────────────────────────────── */
+html[data-feedback-mega="white"] .hero-nav-mega-panel,
+html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled {
+  background: rgba(255, 255, 255, 0.97);
+  -webkit-backdrop-filter: blur(12px) saturate(1.05);
+  backdrop-filter: blur(12px) saturate(1.05);
+  border: 1px solid rgba(20, 24, 32, 0.08);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.28);
+}
+html[data-feedback-mega="white"] .hero-nav-mega-heading,
+html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled .hero-nav-mega-heading {
+  color: rgba(23, 24, 27, 0.5);
+}
+html[data-feedback-mega="white"] .hero-nav-mega-col a,
+html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled .hero-nav-mega-col a {
+  color: rgba(23, 24, 27, 0.85);
+}
+html[data-feedback-mega="white"] .hero-nav-mega-col a:hover,
+html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled .hero-nav-mega-col a:hover {
+  color: rgb(150, 22, 40);
+}

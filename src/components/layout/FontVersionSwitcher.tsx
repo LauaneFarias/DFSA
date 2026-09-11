@@ -14,6 +14,7 @@ type FontVersion =
   | "feedback-0408-v4"
   | "feedback-0408-v5"
   | "feedback-0408-v6"
+  | "feedback-0408-v7"
   | "hero-slider";
 
 const FONT_OPTIONS = [
@@ -41,6 +42,11 @@ const FONT_OPTIONS = [
   { value: "feedback-0408-v4", label: "Option 3" },
   { value: "feedback-0408-v5", label: "Option 4" },
   { value: "feedback-0408-v6", label: "Option 3 (feedbacks)" },
+  // "Option 3 (mega menu)" (feedback-0408-v7) is a clone of the feedbacks tab
+  // (all round-2 amendments) that additionally carries data-feedback-mega="white"
+  // so the hover mega menu renders as a solid WHITE panel with DARK text — the
+  // alternative the client asked to see alongside the glassy version.
+  { value: "feedback-0408-v7", label: "Option 3 (mega menu)" },
 ] as const;
 
 // Versions kept fully wired (styles, logic, and localStorage restore all
@@ -106,7 +112,10 @@ function applyFontVersion(next: FontVersion) {
   // feedbackRound marker so the round-2 amendments can target it in isolation
   // (html[data-feedback-round="r2"]) while the approved Option 3 stays frozen.
   const isV6 = next === "feedback-0408-v6";
-  const isImageLed = isV3 || isV4 || isV5 || isV6;
+  // Option 3 (mega menu): same round-2 clone as v6, plus a feedbackMega marker
+  // that switches the hover mega menu to a solid white / dark-text treatment.
+  const isV7 = next === "feedback-0408-v7";
+  const isImageLed = isV3 || isV4 || isV5 || isV6 || isV7;
   const reusesFeedbackImages =
     next === "feedback-images" || next === "feedback-0408" || next === "hero-slider" || isImageLed;
   root.dataset.siteVersion = reusesFeedbackImages ? "feedback-images" : next;
@@ -115,8 +124,9 @@ function applyFontVersion(next: FontVersion) {
   root.dataset.fontVersion = reusesFeedbackImages ? "feedback" : next;
   if (isV3) {
     root.dataset.heroRevision = "v3";
-  } else if (isV4 || isV5 || isV6) {
-    // v5 (video bg) and v6 (feedbacks clone) share the v4 image-led treatment.
+  } else if (isV4 || isV5 || isV6 || isV7) {
+    // v5 (video bg), v6 (feedbacks clone) and v7 (feedbacks + white mega) all
+    // share the v4 image-led treatment.
     root.dataset.heroRevision = "v4";
   } else {
     delete root.dataset.heroRevision;
@@ -126,10 +136,15 @@ function applyFontVersion(next: FontVersion) {
   } else {
     delete root.dataset.heroBg;
   }
-  if (isV6) {
+  if (isV6 || isV7) {
     root.dataset.feedbackRound = "r2";
   } else {
     delete root.dataset.feedbackRound;
+  }
+  if (isV7) {
+    root.dataset.feedbackMega = "white";
+  } else {
+    delete root.dataset.feedbackMega;
   }
   try {
     window.localStorage.setItem(STORAGE_KEY, next);
