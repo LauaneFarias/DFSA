@@ -5453,35 +5453,10 @@ html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled .hero-nav-mega
   color: rgb(150, 22, 40);
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Option 3 (mega menu) ONLY — smaller "About the DFSA" pillar boxes.
-   Per client: shrink the box (not the text) and keep the icon, so the card no
-   longer covers half of the background image behind it. Scoped to
-   data-feedback-mega="white" so the "Option 3 (feedbacks)" tab keeps the
-   current, larger cards — letting the client toggle the two tabs and see the
-   difference side by side. These come after the data-feedback-round="r2" pillar
-   rules (same specificity), so source order + !important win over them.
-   ───────────────────────────────────────────────────────────────────────── */
-html[data-feedback-mega="white"] .about-panel .about-pillar-card {
-  min-height: clamp(92px, 12vw, 116px) !important;
-  padding: 14px !important;
-}
-html[data-feedback-mega="white"] .about-panel .about-pillar-head {
-  /* Tighter icon→title gap now the box is shorter. */
-  margin-bottom: 6px !important;
-}
-/* Smaller icon badge (kept, just smaller — "with the icon but smaller"). The box
-   height is content-driven — icon + wrapped title set the floor — so shrinking
-   the icon is what actually makes the card shorter and stops it eating half the
-   background image. 48px → 34px. */
-html[data-feedback-mega="white"] .about-panel .about-pillar-icon {
-  width: 34px !important;
-  height: 34px !important;
-}
-/* NOTE: the grid gap is deliberately NOT overridden here — the client asked to
-   keep the box WIDTH the same as before on the mega-menu tab, so only the card
-   HEIGHT (min-height + padding + icon above) is reduced; the columns/gap that
-   set the width are left untouched. */
+/* NOTE: the "About the DFSA" pillar boxes are intentionally NOT resized on the
+   mega-menu tab — per client they stay exactly as on "Option 3 (feedbacks)"
+   (original card size + 48px icon). Only the hero quick-action boxes differ on
+   this tab (see below). */
 
 /* ─────────────────────────────────────────────────────────────────────────
    Option 3 (mega menu) ONLY — smaller hero quick-action boxes.
@@ -5504,4 +5479,10 @@ html[data-feedback-mega="white"] .hero-scope .hero-card-row .hero-service-card {
 html[data-feedback-mega="white"] .hero-scope .hero-card-row .hero-service-card-icon {
   width: 32px !important;
   height: 32px !important;
+}
+/* Per client: the glyph inside the circle looks too big for the smaller mega
+   badge — trim it a bit (24px → 18px) so it sits with more breathing room. */
+html[data-feedback-mega="white"] .hero-scope .hero-card-row .hero-service-card-icon svg {
+  width: 18px !important;
+  height: 18px !important;
 }
