@@ -5086,9 +5086,9 @@ html[data-feedback-round="r2"] .home-flow > .resources-section {
    specificity above the data-site-tab padding rule regardless of stylesheet
    order. */
 html[data-feedback-round="r2"] .home-flow > .achievements-section {
-  /* Per client: an even 100px of breathing room above and below the At a Glance
-     ticker. */
-  padding-block: 100px;
+  /* Per client: 100px of breathing room above the At a Glance ticker and 120px
+     below it. */
+  padding-block: 100px 120px;
 }
 
 /* Drop the 460px min-height that centred the figures in a tall band — with At a
