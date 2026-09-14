@@ -5086,9 +5086,9 @@ html[data-feedback-round="r2"] .home-flow > .resources-section {
    specificity above the data-site-tab padding rule regardless of stylesheet
    order. */
 html[data-feedback-round="r2"] .home-flow > .achievements-section {
-  /* 160px above; below trimmed by 120px (160 → 40) to tighten the gap to Latest
-     News. */
-  padding-block: 160px 40px;
+  /* Per client: an even 100px of breathing room above and below the At a Glance
+     ticker. */
+  padding-block: 100px;
 }
 
 /* Drop the 460px min-height that centred the figures in a tall band — with At a
@@ -5177,6 +5177,18 @@ html[data-feedback-round="r2"] .hero-scope .hero-card-row .hero-service-card {
   -webkit-backdrop-filter: blur(18px) saturate(1.15) !important;
   backdrop-filter: blur(18px) saturate(1.15) !important;
 }
+
+/* NOTE: the About pillar "grey boxes" are NOT resized at the r2 (both-tabs)
+   level — the client wants the "Option 3 (feedbacks)" tab to keep the original
+   card size, and only the "Option 3 (mega menu)" tab to show the shorter boxes.
+   That mega-only override lives at the very end of this file
+   (data-feedback-mega="white"). */
+
+/* NOTE: the hero quick-action "grey boxes" are NOT resized at the r2 (both-tabs)
+   level either — "Option 3 (feedbacks)" keeps the original hero cards, and only
+   "Option 3 (mega menu)" gets the smaller ones, so the two tabs read
+   differently. That mega-only override lives at the end of this file
+   (data-feedback-mega="white"). */
 
 /* Thin outline-ring icon badges. */
 html[data-feedback-round="r2"] .approach-card-domain-icon,
@@ -5439,4 +5451,57 @@ html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled .hero-nav-mega
 html[data-feedback-mega="white"] .hero-nav-mega-col a:hover,
 html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled .hero-nav-mega-col a:hover {
   color: rgb(150, 22, 40);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Option 3 (mega menu) ONLY — smaller "About the DFSA" pillar boxes.
+   Per client: shrink the box (not the text) and keep the icon, so the card no
+   longer covers half of the background image behind it. Scoped to
+   data-feedback-mega="white" so the "Option 3 (feedbacks)" tab keeps the
+   current, larger cards — letting the client toggle the two tabs and see the
+   difference side by side. These come after the data-feedback-round="r2" pillar
+   rules (same specificity), so source order + !important win over them.
+   ───────────────────────────────────────────────────────────────────────── */
+html[data-feedback-mega="white"] .about-panel .about-pillar-card {
+  min-height: clamp(92px, 12vw, 116px) !important;
+  padding: 14px !important;
+}
+html[data-feedback-mega="white"] .about-panel .about-pillar-head {
+  /* Tighter icon→title gap now the box is shorter. */
+  margin-bottom: 6px !important;
+}
+/* Smaller icon badge (kept, just smaller — "with the icon but smaller"). The box
+   height is content-driven — icon + wrapped title set the floor — so shrinking
+   the icon is what actually makes the card shorter and stops it eating half the
+   background image. 48px → 34px. */
+html[data-feedback-mega="white"] .about-panel .about-pillar-icon {
+  width: 34px !important;
+  height: 34px !important;
+}
+/* NOTE: the grid gap is deliberately NOT overridden here — the client asked to
+   keep the box WIDTH the same as before on the mega-menu tab, so only the card
+   HEIGHT (min-height + padding + icon above) is reduced; the columns/gap that
+   set the width are left untouched. */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Option 3 (mega menu) ONLY — smaller hero quick-action boxes.
+   Same idea as the pillar cards: on the mega tab the hero cards are shorter
+   with a smaller icon, so this tab reads clearly different from the (original,
+   larger) "Option 3 (feedbacks)" cards. WIDTH is untouched — the cards keep
+   their existing width; only the fixed height + padding + icon shrink.
+   ───────────────────────────────────────────────────────────────────────── */
+html[data-feedback-mega="white"] .hero-scope .hero-card-row .hero-service-card {
+  /* Explicit box per client: 273px wide × 120px tall. Drop the 16/9
+     aspect-ratio (see the min-width:981px rule) and pin flex-basis so the row
+     can't stretch the cards past 273px. */
+  aspect-ratio: auto !important;
+  flex: 0 0 273px !important;
+  width: 273px !important;
+  max-width: 273px !important;
+  height: 120px !important;
+  padding: 14px !important;
+}
+html[data-feedback-mega="white"] .hero-scope .hero-card-row .hero-service-card-icon {
+  width: 32px !important;
+  height: 32px !important;
 }
