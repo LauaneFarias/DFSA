@@ -129,6 +129,7 @@ html[data-font-version="feedback"] .approach-section {
 }
 .approach-card {
   position: relative;
+  overflow: hidden;
   min-height: clamp(160px, 12vw, 194px);
   display: flex;
   flex-direction: column;
@@ -157,6 +158,8 @@ html[data-font-version="feedback"] .approach-section {
   min-height: clamp(150px, 10vw, 174px);
 }
 .approach-card-domain-icon {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -165,10 +168,48 @@ html[data-font-version="feedback"] .approach-section {
   color: var(--approach-accent);
 }
 .approach-card-copy {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding-right: 76px;
+}
+
+/* Hover-only video clip — same play-on-hover reveal as the DIFC journey
+   cards (.difc-card-media), using the policy clip. Selector uses two
+   classes (`.approach-card .approach-card-media`) for a bit of headroom
+   over any future `.approach-card > *` stacking rule. */
+.approach-card .approach-card-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 420ms var(--approach-ease);
+}
+.approach-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(23, 24, 27, 0.6) 0%,
+    rgba(23, 24, 27, 0.22) 46%,
+    rgba(23, 24, 27, 0) 75%
+  );
+}
+.approach-card-media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Reveal scoped to "Option 3 (mega menu)" only (data-feedback-mega="white")
+   — every other tab, including "Option 3 (feedbacks)", keeps its existing
+   card treatment untouched. */
+html[data-feedback-mega="white"] .approach-panel .approach-card:hover .approach-card-media {
+  opacity: 1 !important;
 }
 .approach-card h3 {
   margin: 0;

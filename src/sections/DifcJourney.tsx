@@ -17,6 +17,12 @@ import { cn } from "@/lib/cn";
 
 const PANEL_VIDEO_SRC = "/videos/hero2.mp4";
 
+// Hover-only reveal clip for the white cards — muted/looped, paused until
+// hovered (same play-on-hover pattern as .resources-card-video--hover-red
+// in AdditionalResources.tsx), so four autoplaying videos aren't running
+// at once for no reason.
+const CARD_HOVER_VIDEO_SRC = "/videos/feedback-images-policy.mp4";
+
 type CardVariant = "white" | "feature";
 
 type AuthorisationType = {
@@ -210,7 +216,35 @@ export function DifcJourney() {
                 className={cn("difc-card", `difc-card--${type.variant}`)}
                 key={type.label}
                 aria-label={type.label}
+                onMouseEnter={(event) => {
+                  // Only "Option 3 (mega menu)" gets the video reveal (every
+                  // card, both variants) — every other tab, including
+                  // "Option 3 (feedbacks)", leaves this hidden clip untouched.
+                  if (document.documentElement.dataset.feedbackMega !== "white") return;
+                  event.currentTarget
+                    .querySelector<HTMLVideoElement>(".difc-card-video")
+                    ?.play()
+                    .catch(() => {
+                      /* autoplay-on-hover can be blocked before any user gesture — safe to ignore */
+                    });
+                }}
+                onMouseLeave={(event) => {
+                  event.currentTarget.querySelector<HTMLVideoElement>(".difc-card-video")?.pause();
+                }}
               >
+                <div className="difc-card-media" aria-hidden="true">
+                  <video
+                    className="difc-card-video"
+                    src={CARD_HOVER_VIDEO_SRC}
+                    muted
+                    loop
+                    playsInline
+                    preload="none"
+                    onLoadedMetadata={(event) => {
+                      event.currentTarget.playbackRate = 0.5;
+                    }}
+                  />
+                </div>
                 <span className="difc-card-icon">{type.icon}</span>
                 <h3 className="difc-card-title">{type.label}</h3>
                 <p className="difc-card-desc">{type.description}</p>

@@ -19,6 +19,10 @@ type ApproachItem = {
   icon: React.ReactNode;
 };
 
+// Same hover-reveal clip as the DIFC journey cards (DifcJourney.tsx),
+// only shown on "Option 3 (mega menu)" (see the onMouseEnter check below).
+const CARD_HOVER_VIDEO_SRC = "/videos/feedback-images-policy.mp4";
+
 const ITEMS: ApproachItem[] = [
   {
     label: "Audit",
@@ -106,7 +110,39 @@ export function OurApproach() {
                   key={item.label}
                   className={`approach-card-slot approach-card--${index + 1} approach-reveal`}
                 >
-                  <article className="approach-card">
+                  <article
+                    className="approach-card"
+                    onMouseEnter={(event) => {
+                      // Only "Option 3 (mega menu)" gets the video reveal —
+                      // every other tab, including "Option 3 (feedbacks)",
+                      // leaves this hidden clip untouched.
+                      if (document.documentElement.dataset.feedbackMega !== "white") return;
+                      event.currentTarget
+                        .querySelector<HTMLVideoElement>(".approach-card-video")
+                        ?.play()
+                        .catch(() => {
+                          /* autoplay-on-hover can be blocked before any user gesture — safe to ignore */
+                        });
+                    }}
+                    onMouseLeave={(event) => {
+                      event.currentTarget
+                        .querySelector<HTMLVideoElement>(".approach-card-video")
+                        ?.pause();
+                    }}
+                  >
+                    <div className="approach-card-media" aria-hidden="true">
+                      <video
+                        className="approach-card-video"
+                        src={CARD_HOVER_VIDEO_SRC}
+                        muted
+                        loop
+                        playsInline
+                        preload="none"
+                        onLoadedMetadata={(event) => {
+                          event.currentTarget.playbackRate = 0.5;
+                        }}
+                      />
+                    </div>
                     <span className="approach-card-domain-icon" aria-hidden="true">
                       {item.icon}
                     </span>

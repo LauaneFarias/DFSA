@@ -5086,9 +5086,9 @@ html[data-feedback-round="r2"] .home-flow > .resources-section {
    specificity above the data-site-tab padding rule regardless of stylesheet
    order. */
 html[data-feedback-round="r2"] .home-flow > .achievements-section {
-  /* Per client: 100px of breathing room above the At a Glance ticker and 120px
-     below it. */
-  padding-block: 100px 120px;
+  /* Per client: 100px of breathing room above the At a Glance ticker; below it
+     the large gap is removed so the section ends just after the stats. */
+  padding-block: 100px 40px;
 }
 
 /* Drop the 460px min-height that centred the figures in a tall band — with At a
@@ -5157,6 +5157,102 @@ html[data-feedback-round="r2"] .difc-panel .difc-panel-scrim {
   background-image: linear-gradient(160deg, rgba(10, 13, 18, 0.36) 0%, rgba(10, 13, 18, 0.5) 100%);
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   Option 3 (mega menu) ONLY — Start your DIFC Journey keeps its skyline
+   background (image/video + scrim, same as "Option 3 (feedbacks)"), and the
+   cards now use the exact same dark-glass recipe as the hero's own quick-
+   action cards / "Our approach" / "About" pillar cards on the r2 tabs
+   (see the "Card shells" rule above: rgba(255,255,255,0.05) + blur(18px)
+   saturate(1.15) + hairline border + inset highlight), per the client's
+   request to match the hero's glass effect exactly. */
+/* Client feedback: grow the background panel to a fixed 700px, pin the
+   header to its top edge (40px padding) and the card grid to its bottom
+   edge (40px padding) — space-between instead of the base vertically-
+   centred single block, so the two pieces sit at opposite edges of the
+   taller panel rather than both huddling at the bottom. */
+html[data-feedback-mega="white"] .difc-panel {
+  min-height: 700px !important;
+  justify-content: space-between !important;
+  padding-top: 40px !important;
+  padding-bottom: 40px !important;
+}
+html[data-feedback-mega="white"] .difc-panel .difc-card--white,
+html[data-feedback-mega="white"] .difc-panel .difc-card--feature {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 30px 60px -30px rgba(0, 0, 0, 0.5) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.15) !important;
+  backdrop-filter: blur(18px) saturate(1.15) !important;
+}
+html[data-feedback-mega="white"] .difc-panel .difc-card--feature::before,
+html[data-feedback-mega="white"] .difc-panel .difc-card--feature::after {
+  display: none !important;
+}
+html[data-feedback-mega="white"] .difc-panel .difc-card-icon {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: 50% !important;
+  color: #ffffff !important;
+}
+html[data-feedback-mega="white"] .difc-panel .difc-card-title {
+  margin-top: auto !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-weight: 400 !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+}
+html[data-feedback-mega="white"] .difc-panel .difc-card-desc {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+html[data-feedback-mega="white"] .difc-panel .difc-card-arrow {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  color: #ffffff !important;
+}
+/* Per the Figma spec (node 456:3470): the four plain white cards centre
+   their icon + title + description as one block (justify-center), unlike
+   the feature tile which anchors its copy to the bottom — so only the
+   feature card keeps the margin-top:auto push. */
+html[data-feedback-mega="white"] .difc-panel .difc-card--white {
+  justify-content: center !important;
+}
+html[data-feedback-mega="white"] .difc-panel .difc-card--white .difc-card-title {
+  margin-top: 0 !important;
+}
+/* Figma also swaps the bottom row's order — "Registered DNFBPs" (col 2)
+   before "Registered Auditor" (col 3) — versus the source order used
+   elsewhere on the page (Auditor, then DNFBPs). Reorder visually here
+   rather than in the shared TYPES array, so every other tab (including
+   "Option 3 (feedbacks)") keeps its existing order untouched. */
+html[data-feedback-mega="white"] .difc-grid > .difc-card:nth-child(4) {
+  order: 5;
+}
+html[data-feedback-mega="white"] .difc-grid > .difc-card:nth-child(5) {
+  order: 4;
+}
+/* Header/eyebrow/description/CTA stay white — the panel keeps its dark
+   skyline background + scrim (restored above), so the base white header
+   text (same as "Option 3 (feedbacks)") is already legible; no override
+   needed here. */
+/* Client feedback: the shaded boxes (esp. the tall "DFSA Authorised Firm"
+   feature tile, which spans both grid rows) are too big for their content.
+   Shrink the individual card boxes — NOT the background panel itself,
+   which keeps its own height/min-height untouched — so every card hugs
+   its content instead of stretching to fill a tall panel. */
+html[data-feedback-mega="white"] .difc-section {
+  --difc-card-padding: 14px;
+}
+html[data-feedback-mega="white"] .difc-grid {
+  grid-template-rows: repeat(2, minmax(0, auto)) !important;
+  gap: 14px !important;
+}
+html[data-feedback-mega="white"] .difc-panel .difc-card {
+  min-height: 0 !important;
+  gap: 8px !important;
+}
 /* ═══════════════════════════════════════════════════════════════════════
    OPTION 3 (feedbacks): the glassy transparent card treatment applied across
    the page — Our approach, About the DFSA and the hero cards — matching the
@@ -5453,10 +5549,17 @@ html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled .hero-nav-mega
   color: rgb(150, 22, 40);
 }
 
-/* NOTE: the "About the DFSA" pillar boxes are intentionally NOT resized on the
-   mega-menu tab — per client they stay exactly as on "Option 3 (feedbacks)"
-   (original card size + 48px icon). Only the hero quick-action boxes differ on
-   this tab (see below). */
+/* Option 3 (mega menu) ONLY — make the "About the DFSA" pillar boxes compact,
+   the same idea as the hero boxes: drop the tall 200px min-height (which left a
+   big empty gap between the icon and the bottom-anchored title) so the box hugs
+   its content, and trim the padding. The icon stays full size (48px). */
+html[data-feedback-mega="white"] .about-panel .about-pillar-card {
+  min-height: 0 !important;
+  padding: 16px !important;
+}
+html[data-feedback-mega="white"] .about-panel .about-pillar-head {
+  margin-bottom: 8px !important;
+}
 
 /* ─────────────────────────────────────────────────────────────────────────
    Option 3 (mega menu) ONLY — smaller hero quick-action boxes.
@@ -5485,4 +5588,81 @@ html[data-feedback-mega="white"] .hero-scope .hero-card-row .hero-service-card-i
 html[data-feedback-mega="white"] .hero-scope .hero-card-row .hero-service-card-icon svg {
   width: 18px !important;
   height: 18px !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Option 3 (mega menu) ONLY — same treatment as the DIFC Journey panel:
+   fixed 700px background panel, heading pinned to the top edge (40px
+   padding), card grid pinned to the bottom edge (40px padding). The panel
+   becomes a flex column so its one child (.approach-grid) can grow to fill
+   it; .approach-grid in turn is flexed to space its own two children
+   (.approach-left heading, .approach-card-stack) to opposite edges. */
+html[data-feedback-mega="white"] .approach-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 700px !important;
+  padding-top: 40px !important;
+  padding-bottom: 40px !important;
+}
+html[data-feedback-mega="white"] .approach-panel .approach-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  flex: 1 !important;
+}
+/* The REAL source of the still-tall cards: at >=981px, the shared
+   "feedback" font-version rule (approach.css) forces
+   .approach-card-stack { grid-auto-rows: minmax(224px, auto) } and
+   .approach-card-slot { min-height: 224px } — neither is touched by the
+   card-level overrides below, so the row/slot kept enforcing 224px
+   regardless. Clear both for the mega tab only. */
+html[data-feedback-mega="white"] .approach-card-stack {
+  grid-auto-rows: minmax(0, auto) !important;
+}
+html[data-feedback-mega="white"] .approach-card-slot {
+  min-height: 0 !important;
+}
+/* The card already hugs its content (icon + copy + arrow), so the height comes
+   from those parts + the gaps/padding. Clear the min-heights and tighten the
+   vertical gap, padding and arrow button to bring the height down; the icon and
+   the text are left as-is. */
+html[data-feedback-mega="white"] .approach-panel .approach-card {
+  min-height: 0 !important;
+  gap: 10px !important;
+  padding: 14px !important;
+}
+html[data-feedback-mega="white"] .approach-panel .approach-card-copy {
+  min-height: 0 !important;
+}
+html[data-feedback-mega="white"] .approach-panel .approach-card-arrow {
+  width: 36px !important;
+  height: 36px !important;
+}
+/* Per the Figma spec (node 456:3549): the icon badge is 48px (with a 24px
+   glyph inside) — noticeably bigger than the base 36px badge everywhere
+   else on the page. */
+html[data-feedback-mega="white"] .approach-panel .approach-card-domain-icon {
+  width: 48px !important;
+  height: 48px !important;
+}
+html[data-feedback-mega="white"] .approach-panel .approach-card-domain-icon svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+/* Per the Figma spec: 18px/regular title, 16px/2-line description — the
+   base card (21.6px+ title, 14px description with a 3.9em/4-line-clamp
+   min-height reserved for hover-reveal) was inflating the card well past
+   Figma's 180px. Fixed sizes here bring the card back down to match. */
+html[data-feedback-mega="white"] .approach-panel .approach-card h3 {
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.44px !important;
+  line-height: 1.18 !important;
+}
+html[data-feedback-mega="white"] .approach-panel .approach-card p {
+  font-size: 16px !important;
+  line-height: 24px !important;
+  min-height: 0 !important;
+  max-width: 360px !important;
+  -webkit-line-clamp: 2 !important;
 }

@@ -229,6 +229,7 @@ html[data-site-version="feedback-images"] .difc-panel-scrim {
 
 .difc-card {
   position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -251,6 +252,8 @@ html[data-site-version="feedback-images"] .difc-panel-scrim {
   box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.4);
 }
 .difc-card-icon {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -258,20 +261,83 @@ html[data-site-version="feedback-images"] .difc-panel-scrim {
   height: 48px;
   border-radius: 12px;
   flex-shrink: 0;
+  transition:
+    background 280ms var(--difc-ease),
+    color 280ms var(--difc-ease);
 }
 .difc-card-title {
+  position: relative;
+  z-index: 1;
   margin: 0;
   margin-top: auto;
   font-size: clamp(18px, 1.25vw, 22px);
   font-weight: 400;
   line-height: 1.18;
   max-width: 16ch;
+  transition: color 280ms var(--difc-ease);
 }
 .difc-card-desc {
+  position: relative;
+  z-index: 1;
   margin: -4px 0 0;
   font-size: clamp(13px, 0.92vw, 15px);
   line-height: 1.5;
   max-width: 42ch;
+  transition: color 280ms var(--difc-ease);
+}
+
+/* Hover-only video clip for the white cards — sits behind the card
+   content, hidden until hover, same play-on-hover reveal as
+   .resources-card-media/.about-pillar-media, using the policy clip
+   instead of a static gold pattern. Selector is `.difc-card
+   .difc-card-media` (two classes) rather than the bare class so it
+   outranks `.difc-card--feature > *` below, which would otherwise flip
+   this back to position:relative and collapse it to the video's
+   intrinsic size. */
+.difc-card .difc-card-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 420ms var(--difc-ease);
+}
+.difc-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(23, 24, 27, 0.6) 0%,
+    rgba(23, 24, 27, 0.22) 46%,
+    rgba(23, 24, 27, 0) 75%
+  );
+}
+.difc-card-media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Reveal scoped to "Option 3 (mega menu)" only (data-feedback-mega="white")
+   — every other tab, including "Option 3 (feedbacks)", keeps its existing
+   card treatment untouched. Applies to every card (white + feature); the
+   !important + .difc-panel prefix are needed to outrank that tab's own
+   always-on light-card rules (see hero.css) purely for the hover state. */
+html[data-feedback-mega="white"] .difc-panel .difc-card:hover .difc-card-media {
+  opacity: 1 !important;
+}
+html[data-feedback-mega="white"] .difc-panel .difc-card:hover .difc-card-title,
+html[data-feedback-mega="white"] .difc-panel .difc-card:hover .difc-card-desc {
+  color: #ffffff !important;
+}
+html[data-feedback-mega="white"] .difc-panel .difc-card:hover .difc-card-icon {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+}
+html[data-feedback-mega="white"] .difc-panel .difc-card:hover .difc-card-arrow {
+  background: #ffffff !important;
+  color: var(--difc-accent) !important;
 }
 
 @media (min-width: 981px) {
