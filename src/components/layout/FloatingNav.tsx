@@ -3,7 +3,13 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowRightIcon, CloseIcon, SearchIcon, TwoLinesIcon } from "@/components/ui/icons";
+import {
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  CloseIcon,
+  SearchIcon,
+  TwoLinesIcon,
+} from "@/components/ui/icons";
 import { getHeroLogoSrc } from "@/hooks/useHeroThemeOption";
 import { cn } from "@/lib/cn";
 import { NavSearchOverlay } from "./NavSearchOverlay";
@@ -248,14 +254,36 @@ export function FloatingNav({ themeOption }: Props) {
     if (label !== navMega) setActivePrimary(0);
     setNavMega(label);
   };
-  const closeMega = () => {
+  // Click behaviour (the mega opens on click, not hover): toggle the panel for the
+  // clicked label, and close immediately when it's already that label.
+  const closeMegaNow = () => {
     if (megaCloseTimer.current) window.clearTimeout(megaCloseTimer.current);
-    setMegaClosing(true);
-    megaCloseTimer.current = window.setTimeout(() => {
-      setNavMega(null);
-      setMegaClosing(false);
-    }, 180);
+    setMegaClosing(false);
+    setNavMega(null);
   };
+  const toggleMega = (label: string) => {
+    if (navMega === label) closeMegaNow();
+    else openMega(label);
+  };
+
+  // Close the click-opened mega on an outside click or Escape.
+  useEffect(() => {
+    if (!navMega) return;
+    function onDocPointerDown(event: MouseEvent) {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest(".hero-nav-mega-panel") || target?.closest(".hero-nav-mega-item")) return;
+      closeMegaNow();
+    }
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") closeMegaNow();
+    }
+    document.addEventListener("pointerdown", onDocPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onDocPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [navMega]);
 
   useEffect(() => {
     function onScroll() {
@@ -336,26 +364,29 @@ export function FloatingNav({ themeOption }: Props) {
               );
             }
             return (
-              <div
-                key={label}
-                className="hero-nav-mega-item"
-                onMouseEnter={() => openMega(label)}
-                onMouseLeave={closeMega}
-              >
-                <a href="#" className={cn(navMega === label && "is-open")}>
+              <div key={label} className="hero-nav-mega-item">
+                <a
+                  href="#"
+                  className={cn(navMega === label && "is-open")}
+                  aria-expanded={navMega === label}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    toggleMega(label);
+                  }}
+                >
                   {label}
                 </a>
               </div>
             );
           })}
-          {SECONDARY_LINKS.map((label) => (
-            <a key={label} href="#" className="hero-navbar-feedback-link">
+          {/* External-facing group (Enquiries, Services, E-portal) — a small
+              outward arrow marks them as leaving for a separate page, per client. */}
+          {[...SECONDARY_LINKS, "E-portal"].map((label) => (
+            <a key={label} href="#" className="hero-navbar-feedback-link hero-navbar-external-link">
               {label}
+              <ArrowUpRightIcon size={12} />
             </a>
           ))}
-          <a href="#" className="hero-navbar-feedback-link">
-            E-portal
-          </a>
         </nav>
 
         {isR2 &&
@@ -376,8 +407,6 @@ export function FloatingNav({ themeOption }: Props) {
               )}
               role="menu"
               aria-label={navMega}
-              onMouseEnter={() => openMega(navMega)}
-              onMouseLeave={closeMega}
             >
               {isMega ? (
                 <>

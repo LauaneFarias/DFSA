@@ -46,7 +46,7 @@ const FONT_OPTIONS = [
   // (all round-2 amendments) that additionally carries data-feedback-mega="white"
   // so the hover mega menu renders as a solid WHITE panel with DARK text — the
   // alternative the client asked to see alongside the glassy version.
-  { value: "feedback-0408-v7", label: "Option 3" },
+  { value: "feedback-0408-v7", label: "Option 3 (mega menu)" },
 ] as const;
 
 // Versions kept fully wired (styles, logic, and localStorage restore all
@@ -65,11 +65,6 @@ const HIDDEN_VERSIONS: readonly FontVersion[] = [
   "feedback-0408",
   "feedback-0408-v3",
   "feedback-0408-v5",
-  // Per client: hide the remaining alternates too — keep ONLY the mega-menu build
-  // (feedback-0408-v7), shown simply as "Option 3". The approved frozen v4 and the
-  // v6 feedbacks clone stay wired but off the bar.
-  "feedback-0408-v4",
-  "feedback-0408-v6",
 ];
 
 const VISIBLE_OPTIONS = FONT_OPTIONS.filter((option) => !HIDDEN_VERSIONS.includes(option.value));
@@ -159,11 +154,9 @@ function applyFontVersion(next: FontVersion) {
 }
 
 export function FontVersionSwitcher() {
-  // Default to the mega-menu build (feedback-0408-v7), now the only visible tab
-  // ("Option 3").
-  // (Prior note: default to "Option 3 (feedbacks)" (feedback-0408-v6) — the round-2 build the
+  // Default to "Option 3 (feedbacks)" (feedback-0408-v6) — the round-2 build the
   // client is now reviewing. The approved Option 3 (v4) stays on the bar too.
-  const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408-v7");
+  const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408-v6");
 
   useEffect(() => {
     const id = window.setTimeout(() => {

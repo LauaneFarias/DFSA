@@ -2010,6 +2010,18 @@ html[data-font-version="feedback"] .hero-navbar-outer:not(.is-scrolled) {
 html[data-font-version="feedback"] .hero-navbar-feedback-link {
   display: inline;
 }
+/* External-facing links (Enquiries, Services, E-portal) — inline-flex so the
+   small outward arrow sits beside the label, marking them as external. */
+html[data-font-version="feedback"] .hero-navbar-external-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+html[data-font-version="feedback"] .hero-navbar-external-link svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+  transform: translateY(0.5px);
+}
 html[data-font-version="feedback"] .hero-navbar-center {
   gap: var(--feedback-nav-gap);
 }
