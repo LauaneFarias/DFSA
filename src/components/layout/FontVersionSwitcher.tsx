@@ -46,7 +46,7 @@ const FONT_OPTIONS = [
   // (all round-2 amendments) that additionally carries data-feedback-mega="white"
   // so the hover mega menu renders as a solid WHITE panel with DARK text — the
   // alternative the client asked to see alongside the glassy version.
-  { value: "feedback-0408-v7", label: "Option 3 main" },
+  { value: "feedback-0408-v7", label: "Option 3 (main)" },
 ] as const;
 
 // Versions kept fully wired (styles, logic, and localStorage restore all
