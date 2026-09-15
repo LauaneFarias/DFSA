@@ -46,7 +46,7 @@ const FONT_OPTIONS = [
   // (all round-2 amendments) that additionally carries data-feedback-mega="white"
   // so the hover mega menu renders as a solid WHITE panel with DARK text — the
   // alternative the client asked to see alongside the glassy version.
-  { value: "feedback-0408-v7", label: "Option 3 (mega menu)" },
+  { value: "feedback-0408-v7", label: "Option 3 main" },
 ] as const;
 
 // Versions kept fully wired (styles, logic, and localStorage restore all
@@ -65,6 +65,9 @@ const HIDDEN_VERSIONS: readonly FontVersion[] = [
   "feedback-0408",
   "feedback-0408-v3",
   "feedback-0408-v5",
+  // Per client: remove the plain "Option 3" (approved v4) tab from the bar. It
+  // stays wired but hidden; "Option 3 (feedbacks)" and "Option 3 main" remain.
+  "feedback-0408-v4",
 ];
 
 const VISIBLE_OPTIONS = FONT_OPTIONS.filter((option) => !HIDDEN_VERSIONS.includes(option.value));
