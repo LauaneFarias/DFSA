@@ -8,8 +8,23 @@ import { getHeroLogoSrc } from "@/hooks/useHeroThemeOption";
 import { cn } from "@/lib/cn";
 import { NavSearchOverlay } from "./NavSearchOverlay";
 
-/** Visible in the center of the floating bar, always open (not hidden behind the hamburger). */
-const NAVBAR_LINKS = ["About", "Legal Framework", "What We Do", "Resources", "News", "More"];
+/** Visible in the center of the floating bar, always open (not hidden behind the hamburger).
+ *  Order per client (Sep 2026): About, What We Do, Legal Framework, Public Register,
+ *  Resources, News. "Contact" was removed from the bar (moved to the site footer). */
+const NAVBAR_LINKS = [
+  "About",
+  "What We Do",
+  "Legal Framework",
+  "Public Register",
+  "Resources",
+  "News",
+  "More",
+];
+
+/** Right-hand, external-facing group of the bar — rendered after the primary
+ *  links (before E-portal). These take the visitor to separate/external pages.
+ *  "Enquiries" is new per client; "Contact" was removed. */
+const SECONDARY_LINKS = ["Enquiries", "Services"];
 
 const MEGA_MENU = [
   {
@@ -146,6 +161,25 @@ const R2_MEGA: Record<string, { heading: string; links: string[] }[]> = {
   ],
 };
 
+// Option 3 (mega menu) — the richer hover-panel layout the client referenced:
+// a left intro (label + description), a primary sub-section list, the active
+// section's items on the right (+ a "View All" pill), and a supporting image.
+// Descriptions are placeholders until real copy is supplied.
+const MEGA_INTRO: Record<string, string> = {
+  About:
+    "Learn who the DFSA is, how we are governed, and how we regulate financial services in the DIFC.",
+  "Legal Framework":
+    "Explore the laws, rules and regulations that underpin the DIFC's regulatory framework.",
+  "What We Do": "Understand our authorisation, supervision and enforcement remit across the DIFC.",
+  Resources: "Access publications, guidance, tools and data to support your work with the DFSA.",
+};
+const MEGA_IMAGE: Record<string, string> = {
+  About: "/images/iStock-1163368822.jpg",
+  "Legal Framework": "/images/iStock-2270384014.jpg",
+  "What We Do": "/images/approach-0408-glass.jpg",
+  Resources: "/images/resources-0408-careers.jpg",
+};
+
 type Props = {
   /** Which of the two demo landing-page themes is active — see Hero.tsx. */
   themeOption: "1" | "2";
@@ -179,29 +213,48 @@ export function FloatingNav({ themeOption }: Props) {
   const activeMega = MEGA_MENU.find((item) => item.label === activeMegaLabel) ?? MEGA_MENU[0];
 
   // Option 3 (feedbacks): the client asked to drop "More" from the top nav.
+  // isMega marks the "Option 3 (mega menu)" tab, which uses a richer hover panel.
   const [isR2, setIsR2] = useState(false);
+  const [isMega, setIsMega] = useState(false);
   useEffect(() => {
-    const sync = () => setIsR2(document.documentElement.dataset.feedbackRound === "r2");
+    const sync = () => {
+      setIsR2(document.documentElement.dataset.feedbackRound === "r2");
+      setIsMega(document.documentElement.dataset.feedbackMega === "white");
+    };
     sync();
     const observer = new MutationObserver(sync);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-feedback-round"],
+      attributeFilter: ["data-feedback-round", "data-feedback-mega"],
     });
     return () => observer.disconnect();
   }, []);
+  // Which primary sub-section (middle column) is active in the mega-menu layout;
+  // its items fill the right column. Reset to the first whenever the open nav
+  // item changes.
+  const [activePrimary, setActivePrimary] = useState(0);
   const navbarLinks = isR2 ? NAVBAR_LINKS.filter((label) => label !== "More") : NAVBAR_LINKS;
 
   // Option 3 (feedbacks): full-width hover mega-menu, portaled to <body> so it
   // escapes the transformed nav bar and can span the viewport.
   const [navMega, setNavMega] = useState<string | null>(null);
+  // While closing, keep the panel mounted briefly so it can fade out instead of
+  // snapping shut (see .hero-nav-mega-panel--rich.is-closing).
+  const [megaClosing, setMegaClosing] = useState(false);
   const megaCloseTimer = useRef<number | null>(null);
   const openMega = (label: string) => {
     if (megaCloseTimer.current) window.clearTimeout(megaCloseTimer.current);
+    setMegaClosing(false);
+    if (label !== navMega) setActivePrimary(0);
     setNavMega(label);
   };
   const closeMega = () => {
-    megaCloseTimer.current = window.setTimeout(() => setNavMega(null), 140);
+    if (megaCloseTimer.current) window.clearTimeout(megaCloseTimer.current);
+    setMegaClosing(true);
+    megaCloseTimer.current = window.setTimeout(() => {
+      setNavMega(null);
+      setMegaClosing(false);
+    }, 180);
   };
 
   useEffect(() => {
@@ -295,9 +348,9 @@ export function FloatingNav({ themeOption }: Props) {
               </div>
             );
           })}
-          {MEGA_MENU.map((item) => (
-            <a key={item.label} href="#" className="hero-navbar-feedback-link">
-              {item.label}
+          {SECONDARY_LINKS.map((label) => (
+            <a key={label} href="#" className="hero-navbar-feedback-link">
+              {label}
             </a>
           ))}
           <a href="#" className="hero-navbar-feedback-link">
@@ -313,25 +366,87 @@ export function FloatingNav({ themeOption }: Props) {
               /* Portaled to <body>, so it can't inherit the header's is-scrolled
                  state via CSS — mirror it here so the mega can match the nav's
                  two looks: glassy/dark over the hero, light frosted when the nav
-                 has shrunk to its scrolled pill. */
-              className={cn("hero-nav-mega-panel", scrolled && "is-scrolled")}
+                 has shrunk to its scrolled pill. On the mega-menu tab it uses a
+                 richer intro / primary list / items / image layout (--rich). */
+              className={cn(
+                "hero-nav-mega-panel",
+                scrolled && "is-scrolled",
+                isMega && "hero-nav-mega-panel--rich",
+                megaClosing && "is-closing",
+              )}
               role="menu"
               aria-label={navMega}
               onMouseEnter={() => openMega(navMega)}
               onMouseLeave={closeMega}
             >
-              {R2_MEGA[navMega].map((col) => (
-                <div key={col.heading} className="hero-nav-mega-col">
-                  <div className="hero-nav-mega-heading">{col.heading}</div>
-                  <ul>
-                    {col.links.map((link) => (
-                      <li key={link}>
-                        <a href="#">{link}</a>
-                      </li>
+              {isMega ? (
+                <>
+                  {/* Left: section label + description. */}
+                  <div className="hero-nav-mega-intro">
+                    <p className="hero-nav-mega-intro-label">
+                      <span className="hero-nav-mega-dot" aria-hidden="true" />
+                      {navMega}
+                    </p>
+                    {MEGA_INTRO[navMega] && (
+                      <p className="hero-nav-mega-intro-desc">{MEGA_INTRO[navMega]}</p>
+                    )}
+                  </div>
+
+                  {/* Middle: primary sub-sections (the R2_MEGA column headings). */}
+                  <div className="hero-nav-mega-primary">
+                    {R2_MEGA[navMega].map((col, i) => (
+                      <button
+                        type="button"
+                        key={col.heading}
+                        className={cn(
+                          "hero-nav-mega-primary-item",
+                          i === activePrimary && "is-active",
+                        )}
+                        onMouseEnter={() => setActivePrimary(i)}
+                        onFocus={() => setActivePrimary(i)}
+                      >
+                        {col.heading}
+                      </button>
                     ))}
-                  </ul>
-                </div>
-              ))}
+                  </div>
+
+                  {/* Right: the active section's items + a View All action. */}
+                  <div className="hero-nav-mega-secondary">
+                    <ul>
+                      {(R2_MEGA[navMega][activePrimary] ?? R2_MEGA[navMega][0]).links.map(
+                        (link) => (
+                          <li key={link}>
+                            <a href="#">{link}</a>
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                    <a href="#" className="hero-nav-mega-viewall">
+                      <span>View All</span>
+                      <ArrowRightIcon size={18} />
+                    </a>
+                  </div>
+
+                  {/* Far right: supporting image. */}
+                  <div className="hero-nav-mega-media" aria-hidden="true">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={MEGA_IMAGE[navMega] ?? MEGA_IMAGE.About} alt="" />
+                  </div>
+                </>
+              ) : (
+                R2_MEGA[navMega].map((col) => (
+                  <div key={col.heading} className="hero-nav-mega-col">
+                    <div className="hero-nav-mega-heading">{col.heading}</div>
+                    <ul>
+                      {col.links.map((link) => (
+                        <li key={link}>
+                          <a href="#">{link}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))
+              )}
             </div>,
             document.body,
           )}

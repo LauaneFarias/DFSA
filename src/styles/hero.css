@@ -5087,8 +5087,8 @@ html[data-feedback-round="r2"] .home-flow > .resources-section {
    order. */
 html[data-feedback-round="r2"] .home-flow > .achievements-section {
   /* Per client: 100px of breathing room above the At a Glance ticker; below it
-     the large gap is removed so the section ends just after the stats. */
-  padding-block: 100px 40px;
+     the spacing is reduced further so the section ends tight under the stats. */
+  padding-block: 100px 0;
 }
 
 /* Drop the 460px min-height that centred the figures in a tall band — with At a
@@ -5536,9 +5536,11 @@ html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled {
   border: 1px solid rgba(20, 24, 32, 0.08);
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.28);
 }
+/* Per client: the column headings ("WHO WE ARE", "OUR STRUCTURE") read as dull
+   grey — colour them DFSA maroon so the mega panel has some life. */
 html[data-feedback-mega="white"] .hero-nav-mega-heading,
 html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled .hero-nav-mega-heading {
-  color: rgba(23, 24, 27, 0.5);
+  color: rgb(150, 22, 40);
 }
 html[data-feedback-mega="white"] .hero-nav-mega-col a,
 html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled .hero-nav-mega-col a {
@@ -5547,6 +5549,258 @@ html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled .hero-nav-mega
 html[data-feedback-mega="white"] .hero-nav-mega-col a:hover,
 html[data-feedback-mega="white"] .hero-nav-mega-panel.is-scrolled .hero-nav-mega-col a:hover {
   color: rgb(150, 22, 40);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Option 3 (mega menu) — rich hover-panel layout (per client reference):
+   [ intro: label + description ] [ primary sub-sections ] [ active items +
+   View All ] [ image ]. Only the mega-menu tab renders the --rich markup, and
+   it always sits on the white panel, so all text is dark.
+   ───────────────────────────────────────────────────────────────────────── */
+html[data-feedback-mega="white"] .hero-nav-mega-panel--rich {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.85fr) minmax(190px, 1fr) minmax(190px, 1fr) minmax(
+      230px,
+      0.95fr
+    );
+  gap: clamp(28px, 3.5vw, 64px);
+  align-items: start;
+  padding: clamp(32px, 3vw, 48px) clamp(40px, 5vw, 96px);
+}
+/* Left — section label + description. */
+.hero-nav-mega-panel--rich .hero-nav-mega-intro-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #17181b;
+}
+.hero-nav-mega-panel--rich .hero-nav-mega-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #17181b;
+  flex-shrink: 0;
+}
+.hero-nav-mega-panel--rich .hero-nav-mega-intro-desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(23, 24, 27, 0.6);
+  max-width: 32ch;
+}
+/* Middle — primary sub-sections (large, active one underlined). */
+.hero-nav-mega-panel--rich .hero-nav-mega-primary {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.4vw, 22px);
+}
+.hero-nav-mega-panel--rich .hero-nav-mega-primary-item {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font-size: clamp(18px, 1.4vw, 24px);
+  font-weight: 400;
+  line-height: 1.15;
+  color: #17181b;
+  transition: color 160ms ease;
+  width: fit-content;
+}
+.hero-nav-mega-panel--rich .hero-nav-mega-primary-item.is-active {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1px;
+}
+.hero-nav-mega-panel--rich .hero-nav-mega-primary-item:hover {
+  color: rgb(150, 22, 40);
+}
+/* Right — the active section's items + a View All pill. */
+.hero-nav-mega-panel--rich .hero-nav-mega-secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.hero-nav-mega-panel--rich .hero-nav-mega-secondary ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(11px, 1vw, 15px);
+}
+/* :not(.hero-nav-mega-viewall) so this dark link colour doesn't override the
+   View All button's own white text (the button is an <a> in this column too). */
+.hero-nav-mega-panel--rich .hero-nav-mega-secondary a:not(.hero-nav-mega-viewall) {
+  font-size: 15px;
+  color: rgba(23, 24, 27, 0.85);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+.hero-nav-mega-panel--rich .hero-nav-mega-secondary a:not(.hero-nav-mega-viewall):hover {
+  color: rgb(150, 22, 40);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.hero-nav-mega-panel--rich .hero-nav-mega-viewall {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 11px 22px;
+  border-radius: 999px;
+  background: rgb(150, 22, 40);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 180ms ease;
+}
+.hero-nav-mega-panel--rich .hero-nav-mega-viewall:hover {
+  background: rgb(120, 16, 32);
+}
+.hero-nav-mega-panel--rich .hero-nav-mega-viewall svg {
+  display: block;
+}
+/* Far right — supporting image. */
+.hero-nav-mega-panel--rich .hero-nav-mega-media {
+  height: clamp(200px, 20vw, 280px);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.hero-nav-mega-panel--rich .hero-nav-mega-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Mega tab — when a mega dropdown is open the nav bar turns WHITE with dark
+   text + logo, so the bar and the white panel read as one surface (reference
+   look). Only over the hero (not the scrolled pill, which is already light). */
+html[data-feedback-mega="white"] .hero-navbar-outer.has-open-mega:not(.is-scrolled) {
+  /* Flip every nav text element (links, lang, sign-in, search) to dark in one
+     move — they all resolve their colour from --hero-ink-rgb. NOTE: no white
+     background on the bar itself — the bar is inset ~40px so a background here
+     renders as a floating white RECTANGLE. The full-width white comes from the
+     panel (top:0, edge to edge) sitting behind the nav, so the whole top reads as
+     one continuous white header. */
+  --hero-ink-rgb: 23, 24, 27;
+}
+/* Snap the nav's white flip instantly on open — the outer bar and logo carry
+   long transitions on filter / backdrop-filter / background that animate a janky
+   colour-matrix + blur every time you hover. Killing them here lets ONLY the
+   panel fade, so the open reads smooth. (On close the class drops and the base
+   transitions return, easing the bar back.) */
+html[data-feedback-mega="white"] .hero-navbar-outer.has-open-mega:not(.is-scrolled),
+html[data-feedback-mega="white"] .hero-navbar-outer.has-open-mega:not(.is-scrolled) .hero-logo {
+  transition: none !important;
+}
+html[data-feedback-mega="white"] .hero-navbar-outer.has-open-mega:not(.is-scrolled)::after {
+  /* Hide the hairline divider so it doesn't sit inside the solid white bar. */
+  opacity: 0;
+}
+/* The feedback-images theme forces the nav text WHITE over the hero with a
+   high-specificity rule; override it explicitly (adding .has-open-mega lifts us
+   above it) so links/lang/sign-in/search read dark on the white bar. */
+html[data-feedback-mega="white"]
+  .hero-navbar-outer.has-open-mega:not(.is-scrolled)
+  .hero-navbar-center
+  a,
+html[data-feedback-mega="white"]
+  .hero-navbar-outer.has-open-mega:not(.is-scrolled)
+  .hero-navbar-feedback-link,
+html[data-feedback-mega="white"]
+  .hero-navbar-outer.has-open-mega:not(.is-scrolled)
+  .hero-profile-pill
+  .hero-profile-lang,
+html[data-feedback-mega="white"]
+  .hero-navbar-outer.has-open-mega:not(.is-scrolled)
+  .hero-navbar-sign-in,
+html[data-feedback-mega="white"]
+  .hero-navbar-outer.has-open-mega:not(.is-scrolled)
+  .hero-navbar-search-btn {
+  color: rgba(23, 24, 27, 0.82) !important;
+}
+/* Divider pips between lang / sign-in → dark on white. */
+html[data-feedback-mega="white"]
+  .hero-navbar-outer.has-open-mega:not(.is-scrolled)
+  .hero-profile-pill::before,
+html[data-feedback-mega="white"]
+  .hero-navbar-outer.has-open-mega:not(.is-scrolled)
+  .hero-navbar-sign-in::before {
+  background: rgba(23, 24, 27, 0.18);
+}
+html[data-feedback-mega="white"] .hero-navbar-outer.has-open-mega:not(.is-scrolled) .hero-logo {
+  /* The over-hero logo is light; tint the full lockup DFSA maroon so it reads on
+     white (same filter the scrolled mark already uses). */
+  filter: brightness(0) saturate(100%) invert(17%) sepia(64%) saturate(2886%) hue-rotate(337deg)
+    brightness(87%) contrast(91%);
+}
+/* Mega tab — the mega menu spans the FULL WIDTH but only as tall as its content
+   (per client: "width is perfect, reduce the height"): the white panel runs edge
+   to edge under the (white) nav bar and ends just below the content instead of
+   filling the whole viewport. */
+html[data-feedback-mega="white"] .hero-nav-mega-panel--rich {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+  box-shadow: 0 24px 40px -30px rgba(6, 10, 18, 0.28);
+  /* ~80px more height, added as bottom breathing room, plus a touch more space
+     under the nav so the content is comfortably composed. */
+  padding: clamp(112px, 13vh, 160px) clamp(48px, 6vw, 120px) clamp(80px, 9vh, 136px);
+  gap: clamp(32px, 4vw, 80px);
+  align-content: start;
+  /* Open INSTANTLY (no entrance animation): the nav bar snaps white at the same
+     moment, so the bar + panel appear together as one white sheet instead of the
+     "white rectangle first, then the menu" two-phase reveal. Only the close eases
+     out (see .is-closing). */
+  animation: none;
+}
+html[data-feedback-mega="white"] .hero-nav-mega-panel--rich.is-closing {
+  /* Close is instant too: the full-width white comes from this panel, so fading
+     it out would briefly leave the dark nav text over the hero. Just drop it. */
+  animation: none;
+  pointer-events: none;
+}
+@keyframes heroNavMegaRichIn {
+  from {
+    opacity: 0;
+    clip-path: none;
+  }
+  to {
+    opacity: 1;
+    clip-path: none;
+  }
+}
+@keyframes heroNavMegaRichOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+html[data-feedback-mega="white"] .hero-nav-mega-panel--rich .hero-nav-mega-media {
+  height: clamp(260px, 32vh, 400px);
+}
+html[data-feedback-mega="white"] .hero-nav-mega-panel--rich .hero-nav-mega-primary {
+  gap: clamp(16px, 1.7vw, 24px);
+}
+html[data-feedback-mega="white"] .hero-nav-mega-panel--rich .hero-nav-mega-primary-item {
+  /* Per client: the primary sub-section labels felt a bit too big — dial them
+     down a notch. */
+  font-size: clamp(17px, 1.25vw, 21px);
 }
 
 /* Option 3 (mega menu) ONLY — make the "About the DFSA" pillar boxes compact,
@@ -5561,34 +5815,11 @@ html[data-feedback-mega="white"] .about-panel .about-pillar-head {
   margin-bottom: 8px !important;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Option 3 (mega menu) ONLY — smaller hero quick-action boxes.
-   Same idea as the pillar cards: on the mega tab the hero cards are shorter
-   with a smaller icon, so this tab reads clearly different from the (original,
-   larger) "Option 3 (feedbacks)" cards. WIDTH is untouched — the cards keep
-   their existing width; only the fixed height + padding + icon shrink.
-   ───────────────────────────────────────────────────────────────────────── */
-html[data-feedback-mega="white"] .hero-scope .hero-card-row .hero-service-card {
-  /* Explicit box per client: 273px wide × 120px tall. Drop the 16/9
-     aspect-ratio (see the min-width:981px rule) and pin flex-basis so the row
-     can't stretch the cards past 273px. */
-  aspect-ratio: auto !important;
-  flex: 0 0 273px !important;
-  width: 273px !important;
-  max-width: 273px !important;
-  height: 120px !important;
-  padding: 14px !important;
-}
-html[data-feedback-mega="white"] .hero-scope .hero-card-row .hero-service-card-icon {
-  width: 32px !important;
-  height: 32px !important;
-}
-/* Per client: the glyph inside the circle looks too big for the smaller mega
-   badge — trim it a bit (24px → 18px) so it sits with more breathing room. */
-html[data-feedback-mega="white"] .hero-scope .hero-card-row .hero-service-card-icon svg {
-  width: 18px !important;
-  height: 18px !important;
-}
+/* NOTE: the hero quick-action "banner" boxes are intentionally NOT resized on
+   the mega-menu tab — per client they must stay exactly as on "Option 3
+   (feedbacks)". The earlier fixed 273px width pushed the 5 boxes out of frame,
+   so the mega-only override was removed and the cards keep the feedbacks tab's
+   responsive (16/9, flex-fill) sizing that fits the row. */
 
 /* ─────────────────────────────────────────────────────────────────────────
    Option 3 (mega menu) ONLY — same treatment as the DIFC Journey panel:

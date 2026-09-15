@@ -48,7 +48,9 @@ export function SiteFooter() {
     });
     return () => observer.disconnect();
   }, []);
-  const navLinks = isR2 ? [...FOOTER_LINKS, "Careers"] : FOOTER_LINKS;
+  // On r2, Careers was moved here from the hero, and Contact Us was moved here
+  // from the top nav bar (removed from the banner) per client.
+  const navLinks = isR2 ? [...FOOTER_LINKS, "Careers", "Contact Us"] : FOOTER_LINKS;
 
   useEffect(() => {
     const videos = [videoRef.current, feedbackImagesVideoRef.current].filter(
