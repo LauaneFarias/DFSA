@@ -413,7 +413,7 @@ export function FloatingNav({ themeOption }: Props) {
                   {/* Right: the active section's items + a View All action. */}
                   <div className="hero-nav-mega-secondary">
                     <ul>
-                      {(R2_MEGA[navMega][activePrimary] ?? R2_MEGA[navMega][0]).links.map(
+                      {(R2_MEGA[navMega][activePrimary] ?? R2_MEGA[navMega][0])?.links.map(
                         (link) => (
                           <li key={link}>
                             <a href="#">{link}</a>
