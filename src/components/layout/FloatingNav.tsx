@@ -307,6 +307,12 @@ export function FloatingNav({ themeOption }: Props) {
           introPlayed && "has-played-intro",
           navMega && "has-open-mega",
         )}
+        // Close only when the pointer leaves the WHOLE header (not each nav item),
+        // so moving between items — or down into the panel — never closes the menu
+        // mid-move. The panel's own onMouseEnter re-cancels the close as you enter it.
+        onMouseLeave={() => {
+          if (navMega) closeMega();
+        }}
       >
         <div className="hero-navbar-left">
           <Image
@@ -344,12 +350,7 @@ export function FloatingNav({ themeOption }: Props) {
               );
             }
             return (
-              <div
-                key={label}
-                className="hero-nav-mega-item"
-                onMouseEnter={() => openMega(label)}
-                onMouseLeave={closeMega}
-              >
+              <div key={label} className="hero-nav-mega-item" onMouseEnter={() => openMega(label)}>
                 <a
                   href="#"
                   className={cn(navMega === label && "is-open")}
