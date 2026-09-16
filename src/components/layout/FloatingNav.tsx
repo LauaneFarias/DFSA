@@ -254,36 +254,16 @@ export function FloatingNav({ themeOption }: Props) {
     if (label !== navMega) setActivePrimary(0);
     setNavMega(label);
   };
-  // Click behaviour (the mega opens on click, not hover): toggle the panel for the
-  // clicked label, and close immediately when it's already that label.
-  const closeMegaNow = () => {
+  // The mega opens on HOVER. Closing is delayed so the pointer can travel from
+  // the nav item down into the panel without the menu flickering shut.
+  const closeMega = () => {
     if (megaCloseTimer.current) window.clearTimeout(megaCloseTimer.current);
-    setMegaClosing(false);
-    setNavMega(null);
+    setMegaClosing(true);
+    megaCloseTimer.current = window.setTimeout(() => {
+      setNavMega(null);
+      setMegaClosing(false);
+    }, 180);
   };
-  const toggleMega = (label: string) => {
-    if (navMega === label) closeMegaNow();
-    else openMega(label);
-  };
-
-  // Close the click-opened mega on an outside click or Escape.
-  useEffect(() => {
-    if (!navMega) return;
-    function onDocPointerDown(event: MouseEvent) {
-      const target = event.target as HTMLElement | null;
-      if (target?.closest(".hero-nav-mega-panel") || target?.closest(".hero-nav-mega-item")) return;
-      closeMegaNow();
-    }
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") closeMegaNow();
-    }
-    document.addEventListener("pointerdown", onDocPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onDocPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [navMega]);
 
   useEffect(() => {
     function onScroll() {
@@ -364,15 +344,17 @@ export function FloatingNav({ themeOption }: Props) {
               );
             }
             return (
-              <div key={label} className="hero-nav-mega-item">
+              <div
+                key={label}
+                className="hero-nav-mega-item"
+                onMouseEnter={() => openMega(label)}
+                onMouseLeave={closeMega}
+              >
                 <a
                   href="#"
                   className={cn(navMega === label && "is-open")}
                   aria-expanded={navMega === label}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    toggleMega(label);
-                  }}
+                  onClick={(event) => event.preventDefault()}
                 >
                   {label}
                 </a>
@@ -407,6 +389,8 @@ export function FloatingNav({ themeOption }: Props) {
               )}
               role="menu"
               aria-label={navMega}
+              onMouseEnter={() => openMega(navMega)}
+              onMouseLeave={closeMega}
             >
               {isMega ? (
                 <>

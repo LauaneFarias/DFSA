@@ -65,9 +65,6 @@ const HIDDEN_VERSIONS: readonly FontVersion[] = [
   "feedback-0408",
   "feedback-0408-v3",
   "feedback-0408-v5",
-  // Per client: remove the plain "Option 3" (approved v4) tab from the bar. It
-  // stays wired but hidden; "Option 3 (feedbacks)" and "Option 3 main" remain.
-  "feedback-0408-v4",
 ];
 
 const VISIBLE_OPTIONS = FONT_OPTIONS.filter((option) => !HIDDEN_VERSIONS.includes(option.value));
