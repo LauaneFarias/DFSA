@@ -2061,7 +2061,12 @@ html[data-font-version="feedback"] .hero-navbar-sign-in {
   position: relative;
   display: inline-flex;
   align-items: center;
+  gap: 6px;
   white-space: nowrap;
+}
+html[data-font-version="feedback"] .hero-navbar-sign-in svg {
+  flex-shrink: 0;
+  opacity: 0.85;
 }
 html[data-font-version="feedback"] .hero-navbar-outer .hero-navbar-center a,
 html[data-font-version="feedback"] .hero-profile-pill .hero-profile-lang,
@@ -5369,10 +5374,14 @@ html[data-feedback-round="r2"] .difc-header-action {
    hero background instead of the Gate-reflection shot. Appended last so it wins
    over the v4 hero-bg rule; Option 3 keeps its own hero. */
 html[data-feedback-round="r2"] .hero-scope.hero-scope--light-bg .hero-bg {
-  /* A subtle flat overlay to take the edge off the bright fog. */
+  /* DIFC Gate at dusk (difc-gate-hero) — the fuller, symmetric banner with the
+     plaza: the open arch + calm blue sky sit behind the centre headline so the
+     text reads clearly, rather than the busy foggy skyline. A gentle flat overlay
+     softens the bright golden stone; the scrim layer above adds the top/bottom
+     fade. */
   background:
-    linear-gradient(rgba(12, 15, 20, 0.06), rgba(12, 15, 20, 0.06)),
-    url("/images/iStock-1163368822.jpg") center 40% / cover no-repeat;
+    linear-gradient(rgba(10, 13, 18, 0.16), rgba(10, 13, 18, 0.16)),
+    url("/images/difc-gate-hero.png") center 32% / cover no-repeat;
 }
 
 /* Feedbacks tab: the hero action cards stagger in over ~0.44s (110ms per card),
@@ -5908,4 +5917,154 @@ html[data-feedback-mega="white"] .approach-panel .approach-card p {
   min-height: 0 !important;
   max-width: 360px !important;
   -webkit-line-clamp: 2 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MOBILE (≤720px) — per client: turn every card section into a horizontal
+   swipe slider (like the hero cards): ~1 full card + a peek of the next, so
+   it's clear you can swipe. Native CSS scroll + snap, no JS. Scoped to the r2
+   tabs (feedbacks + main); the frozen "Option 3" (v4) tab is untouched.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
+  html[data-feedback-round="r2"] .about-panel .about-pillars,
+  html[data-feedback-round="r2"] .approach-panel .approach-card-stack,
+  html[data-feedback-round="r2"] .difc-panel .difc-grid,
+  html[data-feedback-round="r2"] .resources-grid {
+    display: flex !important;
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
+    grid-auto-rows: auto !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  html[data-feedback-round="r2"] .about-panel .about-pillars::-webkit-scrollbar,
+  html[data-feedback-round="r2"] .approach-panel .approach-card-stack::-webkit-scrollbar,
+  html[data-feedback-round="r2"] .difc-panel .difc-grid::-webkit-scrollbar,
+  html[data-feedback-round="r2"] .resources-grid::-webkit-scrollbar {
+    display: none;
+  }
+  /* Each card ~80% wide → the next peeks ~15–20% as a swipe affordance. */
+  html[data-feedback-round="r2"] .about-panel .about-pillars > .about-pillar-card,
+  html[data-feedback-round="r2"] .approach-panel .approach-card-stack > .approach-card-slot,
+  html[data-feedback-round="r2"] .difc-panel .difc-grid > .difc-card,
+  html[data-feedback-round="r2"] .resources-grid > .resources-card {
+    flex: 0 0 80% !important;
+    width: 80% !important;
+    max-width: 80% !important;
+    min-width: 0 !important;
+    scroll-snap-align: start;
+  }
+  /* The DIFC "feature" card spans full width in the stacked layout — let it be
+     a normal slider card instead. */
+  html[data-feedback-round="r2"] .difc-panel .difc-grid > .difc-card:first-child {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MOBILE (≤720px) — further per-client adjustments (r2 tabs).
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
+  /* Hero: don't force full-viewport height — the content ended well short of
+     100svh, leaving a big empty band below the ticker. Size to content. */
+  html[data-feedback-round="r2"] .hero-scope.hero-scope--light-bg,
+  html[data-feedback-round="r2"] .hero-scope.hero-scope--light-bg .hero-main {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+  html[data-feedback-round="r2"] .hero-scope.hero-scope--light-bg .hero-main {
+    padding-bottom: clamp(20px, 5vw, 32px) !important;
+  }
+
+  /* About: stack the content ABOVE the pillar slider (was a 2-col grid that
+     squished the cards into a narrow right column). */
+  html[data-feedback-round="r2"] .about-panel .about-layout {
+    grid-template-columns: 1fr !important;
+    gap: clamp(22px, 5vw, 34px) !important;
+  }
+
+  /* Latest News → horizontal slider: flatten the feature + 2×2 grid into a
+     single scroll row (feature + 4 cells), ~1 card + a peek of the next. */
+  html[data-feedback-round="r2"] .news-0408 {
+    display: flex !important;
+    grid-template-columns: none !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  html[data-feedback-round="r2"] .news-0408::-webkit-scrollbar {
+    display: none;
+  }
+  html[data-feedback-round="r2"] .news-0408-grid {
+    display: contents !important; /* cells become direct slider items */
+  }
+  html[data-feedback-round="r2"] .news-0408-feature,
+  html[data-feedback-round="r2"] .news-0408-cell {
+    flex: 0 0 80% !important;
+    width: 80% !important;
+    max-width: 80% !important;
+    min-width: 0 !important;
+    min-height: 360px !important;
+    scroll-snap-align: start;
+  }
+
+  /* Our Approach: drop the tall min-height now the cards are a compact slider,
+     so the panel isn't mostly empty. */
+  html[data-feedback-round="r2"] .approach-panel {
+    min-height: 0 !important;
+  }
+
+  /* DIFC header: the CTA is pinned bottom-right on desktop, which overlaps the
+     description on mobile — let it flow normally below the copy. */
+  html[data-feedback-round="r2"] .difc-header .difc-cta {
+    position: static !important;
+  }
+  /* DIFC panel: the mega tab forces min-height:700px + space-between (a desktop
+     tweak) which leaves a huge empty band on mobile — hug the content instead. */
+  html[data-feedback-mega="white"] .difc-panel {
+    min-height: 0 !important;
+    justify-content: flex-start !important;
+  }
+  /* DIFC title: the header is a column on mobile, so the desktop's
+     align-items:flex-end pushed the title to the RIGHT — left-align it. */
+  html[data-feedback-round="r2"] .difc-header {
+    align-items: flex-start !important;
+  }
+  html[data-feedback-round="r2"] .difc-header-action {
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+  }
+
+  /* Remove the rounded-corner CROP on the slider peek cards: the panels clip
+     with overflow:hidden + a 28px radius, which cuts the peeking card on a
+     curve. Let the panels overflow visibly on mobile so each slider's own
+     (straight) horizontal clip shows instead — the panel backgrounds stay
+     rounded (background-image is clipped by border-radius regardless of
+     overflow; the DIFC bg layers are clipped explicitly below). */
+  html[data-feedback-round="r2"] .about-panel,
+  html[data-feedback-round="r2"] .approach-panel,
+  html[data-feedback-round="r2"] .difc-panel {
+    overflow: visible !important;
+  }
+  html[data-feedback-round="r2"] .difc-panel-bg,
+  html[data-feedback-round="r2"] .difc-panel-scrim {
+    border-radius: inherit !important;
+    overflow: hidden !important;
+  }
 }

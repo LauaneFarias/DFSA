@@ -501,7 +501,8 @@ export function FloatingNav({ themeOption }: Props) {
           </div>
 
           <a href="#" className="hero-navbar-sign-in">
-            Sign in
+            <span>Sign in</span>
+            <ArrowRightIcon size={14} />
           </a>
 
           <button

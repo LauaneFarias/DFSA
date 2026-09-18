@@ -65,6 +65,10 @@ const HIDDEN_VERSIONS: readonly FontVersion[] = [
   "feedback-0408",
   "feedback-0408-v3",
   "feedback-0408-v5",
+  // Per client: keep ONLY "Option 3 (main)" (feedback-0408-v7) on the bar; hide
+  // the plain "Option 3" (v4) and "Option 3 (feedbacks)" (v6). Both stay wired.
+  "feedback-0408-v4",
+  "feedback-0408-v6",
 ];
 
 const VISIBLE_OPTIONS = FONT_OPTIONS.filter((option) => !HIDDEN_VERSIONS.includes(option.value));
@@ -156,7 +160,7 @@ function applyFontVersion(next: FontVersion) {
 export function FontVersionSwitcher() {
   // Default to "Option 3 (feedbacks)" (feedback-0408-v6) — the round-2 build the
   // client is now reviewing. The approved Option 3 (v4) stays on the bar too.
-  const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408-v6");
+  const [fontVersion, setFontVersion] = useState<FontVersion>("feedback-0408-v7");
 
   useEffect(() => {
     const id = window.setTimeout(() => {
